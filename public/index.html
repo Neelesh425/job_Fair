@@ -1,0 +1,116 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Job Fair Tracker</title><meta name="robots" content="noindex">
+<style>
+:root{--bg:#f5f6f8;--card:#fff;--tx:#1b1f24;--mu:#5d6772;--bd:#e1e5ea;--ac:#2a5bd7;--g:#157347;--gb:#e3f4ea;--y:#8a6100;--yb:#fff3d1;--r:#b3261e;--rb:#fde8e6;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#13161a;--card:#1c2026;--tx:#e8ebef;--mu:#9aa5b1;--bd:#2c323a;--ac:#7ba2ff;--g:#5fd39a;--gb:#17352a;--y:#f1c657;--yb:#3a2f10;--r:#ff8b82;--rb:#3d1b19;}}
+:root[data-theme="dark"]{--bg:#13161a;--card:#1c2026;--tx:#e8ebef;--mu:#9aa5b1;--bd:#2c323a;--ac:#7ba2ff;--g:#5fd39a;--gb:#17352a;--y:#f1c657;--yb:#3a2f10;--r:#ff8b82;--rb:#3d1b19;}
+html{background:var(--bg);scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--card);z-index:10}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:11;background:var(--card);border-bottom:1px solid var(--bd);padding:10px 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+header #reset{margin-left:auto}
+.wrap{max-width:1100px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:6px 0 4px}h3{margin:0 0 8px;font-size:15px}
+a{color:var(--ac)}.mu{color:var(--mu);font-size:13px}.back{font-size:13px;text-decoration:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin:14px 0}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:14px}
+a.card{display:block;color:inherit;text-decoration:none}a.card:hover{border-color:var(--ac)}.warn{border-style:dashed}
+.chips{margin-top:8px;display:flex;gap:6px;flex-wrap:wrap}.chip,.tag{display:inline-block;padding:1px 8px;border-radius:99px;font-size:12px;font-weight:600}
+.cg,.hg{background:var(--gb);color:var(--g)}.cy,.hy{background:var(--yb);color:var(--y)}.cr,.hr{background:var(--rb);color:var(--r)}
+.tag{background:var(--bd);color:var(--mu)}
+.list{display:grid;gap:8px;margin-top:12px}.row{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap}.g1{flex:1;min-width:220px}.rt{text-align:right}
+.tt{font-weight:600;color:var(--tx);text-decoration:none}.tt:hover{text-decoration:underline}
+.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px;align-items:start}
+@media(max-width:800px){.cols{grid-template-columns:1fr}.rt{text-align:left}}
+.col h3{padding:6px 10px;border-radius:8px;display:flex;justify-content:space-between}
+.cc{background:var(--card);border:1px solid var(--bd);border-left:4px solid var(--bd);border-radius:8px;padding:10px 12px;margin-bottom:8px;display:grid;gap:4px}
+.zg{border-left-color:var(--g)}.zy{border-left-color:var(--y)}.zr{border-left-color:var(--r)}
+.top{display:flex;gap:6px;align-items:center}.sc{margin-left:auto;font-weight:700}
+.why{font-size:13px}.note{font-size:13px;background:var(--bg);padding:4px 8px;border-radius:6px}.ovr{font-size:12px;font-weight:600;color:var(--y)}
+.act{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+button,select{font:inherit;font-size:13px;padding:4px 8px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx);cursor:pointer}
+.dng{background:var(--r);color:#fff;border-color:var(--r)}
+details{margin-top:6px}
+[hidden]{display:none!important}
+.nm{font-weight:700;color:var(--ac)}
+</style></head><body>
+<header><b>Job Fair Tracker</b><span class="tag">Prototype</span><span class="mu">Screening score is rule-based, from form answers. CVs are linked, not read.</span><button id="reset">Reset demo</button></header>
+<main class="wrap" id="app"></main>
+<script>
+let D;
+const ZN={g:'Green',y:'Yellow',r:'Red'};
+const $=s=>document.querySelector(s);
+const E=s=>String(s==null?'':s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+let S={ov:{},log:[]};
+try{S=JSON.parse(localStorage.getItem('jf')||'null')||S}catch(e){}
+const save=()=>{try{localStorage.setItem('jf',JSON.stringify(S))}catch(e){}};
+function rng(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const pk=(r,a)=>a[Math.floor(r()*a.length)];
+const FN=['Aarav','Priya','Rohan','Sneha','Karthik','Divya','Imran','Meera','Arjun','Neha','Vikram','Anjali','Suresh','Pooja','Rahul','Lakshmi','Farhan','Kavya','Manoj','Swati'];
+const LN=['Nair','Sharma','Reddy','Iyer','Khan','Patil','Menon','Gupta','Das','Rao','Joshi','Kulkarni','Singh','Pillai','Bhat'];
+const OR=['TCS','Wipro','Accenture','Cognizant','Amazon','HDFC Bank','Deloitte','Capgemini','Freelance','Fresher'];
+const EX=['0-1 years','1-3 years','1-3 years','3-5 years','3-5 years','5+ years'];
+const NP=['Immediate','15 Days','30 Days','30 Days','60 Days','90 Days'];
+const LC=['Bengaluru','Bengaluru','Bengaluru','Chennai','Hyderabad','Kochi','Mumbai','Pune'];
+let C=[];
+const SK=['Customer Communication','Data Analysis/Reporting','Problem Solving','MS Excel','Technical Documentation','Cross-functional Collaboration','Sales Support','Process Improvement'];
+function ai(c){return c._a||(c._a={s:c.sc,z:c.sc>=D.thr[0]?'g':c.sc>=D.thr[1]?'y':'r',r:c.rs})}
+const jdOf=c=>S.ov[c.id]?.jd??c.jd;
+const zone=c=>S.ov[c.id]?.z||ai(c).z;
+const gone=c=>!!S.ov[c.id]?.rm;
+const byJd=id=>C.filter(c=>jdOf(c)===id);
+function st(l){const o={g:0,y:0,r:0,n:0};l.forEach(c=>{if(gone(c))return;o[zone(c)]++;o.n++});return o}
+const chips=o=>`<span class="chip cg">${o.g} green</span><span class="chip cy">${o.y} yellow</span><span class="chip cr">${o.r} red</span>`;
+const set=(id,p,msg)=>{S.ov[id]=Object.assign(S.ov[id]||{},p);S.log.unshift(new Date().toLocaleString()+': '+msg);S.log=S.log.slice(0,50);save();render()};
+let pend=null,showRm=false;
+const head=(t,sub,back)=>`${back?`<a class="back" href="${back[0]}">← ${E(back[1])}</a>`:''}<h1>${E(t)}</h1>${sub?`<p class="mu">${sub}</p>`:''}`;
+function vHome(){const un=C.filter(c=>jdOf(c)==null&&!gone(c));
+ let h=head('Companies',`${C.filter(c=>!gone(c)).length} candidates have applied so far, across ${new Set(C.filter(c=>!gone(c)&&jdOf(c)!=null).map(jdOf)).size} JDs.`)+'<div class="grid">';
+ D.cos.forEach((n,i)=>{const js=D.jds.filter(j=>j.c===i),s=st(js.flatMap(j=>byJd(j.id)));
+  h+=`<a class="card" href="#/c/${i}"><b>${E(n)}</b><div class="mu">${js.length} JD${js.length==1?'':'s'}, ${s.n?s.n+' candidate'+(s.n==1?'':'s'):'no applicants yet'}</div>${s.n?`<div class="chips">${chips(s)}</div>`:''}</a>`});
+ if(un.length)h+=`<a class="card warn" href="#/u"><b>Unassigned</b><div class="mu">${un.length} candidates whose role matched no JD</div></a>`;
+ return h+'</div><details><summary>Change log ('+S.log.length+')</summary>'+(S.log.map(l=>'<div class="mu">'+E(l)+'</div>').join('')||'<div class="mu">No changes yet.</div>')+'</details>'}
+function vCo(i){i=+i;const js=D.jds.filter(j=>j.c===i);
+ let h=head(D.cos[i],js.length+' JDs',['#/','All companies'])+'<div class="list">';
+ js.forEach(j=>{const s=st(byJd(j.id));
+  h+=`<div class="card row"><div class="g1"><a class="tt" href="#/j/${j.id}">${E(j.t)}</a><div class="mu"><span class="tag">${E(j.ty)}</span> ${E(j.e)}${j.e&&j.l?', ':''}${E(j.l)} ${j.u?`<a href="${E(j.u)}" target="_blank" rel="noopener">JD file</a>`:''}</div></div><div class="rt"><div class="mu">${s.n?s.n+' candidate'+(s.n==1?'':'s'):'No applicants yet'}</div>${s.n?`<div class="chips">${chips(s)}</div>`:''}</div></div>`});
+ return h+'</div>'}
+function cc(c){const a=ai(c),z=zone(c),o=S.ov[c.id]||{};
+ const opts=['g','y','r'].filter(x=>x!==z).map(x=>`<option value="${x}">${ZN[x]}</option>`).join('');
+ const rmUI=pend===c.id?`<span class="mu">Remove?</span><button class="dng" data-rm2="${c.id}">Yes</button><button data-rc>No</button>`:`<button data-rm="${c.id}">Remove</button>`;
+ return `<div class="cc z${z}"><div class="top">${c.cv?`<a class="nm" href="${E(c.cv)}" target="_blank" rel="noopener" title="Open CV">${E(c.n)} 📄</a>`:`<b>${E(c.n)}</b>`}<span class="sc" title="Screening score">${a.s}</span></div>
+<div class="mu">${E(c.org)}, ${E(c.e)}, ${E(c.loc)}, ${E(c.np)} notice</div><div class="why">${E(a.r)}</div>
+${o.z&&o.z!==a.z?`<div class="ovr">Moved by you. AI said ${ZN[a.z]}.</div>`:''}
+${c.note?`<div class="note">Team note: ${E(c.note)}</div>`:''}
+<div class="mu">${E(c.em)}, ${E(c.ph)}</div>
+<details><summary>Full application</summary><div class="mu">Applied for: ${E(c.role)}<br>Qualification: ${E(c.q||'n/a')}<br>Skills: ${E(c.sk||'n/a')}<br>Current CTC: ${E(c.ct||'n/a')}. Expected: ${E(c.ex||'n/a')}<br>Applied: ${E(c.ts||'n/a')} (sheet: ${E(c.src)})<br>${c.cv?`<a href="${E(c.cv)}" target="_blank" rel="noopener">Open CV</a>`:'No CV link in the form'}</div></details>
+<div class="act"><select data-mv="${c.id}"><option value="">Move to…</option>${opts}</select>${rmUI}</div></div>`}
+function vJd(id){id=+id;const j=D.jds[id],all=byJd(id),live=all.filter(c=>!gone(c));
+ let h=head(j.t,`${E(D.cos[j.c])}, ${E(j.ty)}${j.e?', '+E(j.e):''}${j.l?', '+E(j.l):''}. ${j.u?`<a href="${E(j.u)}" target="_blank" rel="noopener">JD file</a>`:''}`,['#/c/'+j.c,D.cos[j.c]])+(all.length?'':'<div class="card"><b>No candidates have applied for this role yet.</b></div>')+'<div class="cols"'+(all.length?'':' hidden')+'>';
+ ['g','y','r'].forEach(z=>{const l=live.filter(c=>zone(c)===z).sort((a,b)=>ai(b).s-ai(a).s);
+  h+=`<section class="col"><h3 class="h${z}">${ZN[z]}<span>${l.length}</span></h3>${l.map(cc).join('')||'<p class="mu">No candidates here.</p>'}</section>`});
+ h+='</div>';const rm=all.filter(gone);
+ if(rm.length)h+=`<p><button data-sr>${showRm?'Hide':'Show'} removed (${rm.length})</button></p>`+(showRm?rm.map(c=>`<div class="cc"><b>${E(c.n)}</b><div class="act"><button data-rs="${c.id}">Restore</button></div></div>`).join(''):'');
+ return h}
+function vUn(){const l=C.filter(c=>jdOf(c)==null);
+ let h=head('Unassigned','These candidates applied for a role that matched no JD. Assign each to a JD, or remove them.',['#/','All companies']);
+ h+=l.map(c=>{const js=D.jds.filter(j=>j.c===c.co);
+  return `<div class="card row"><div class="g1"><b>${E(c.n)}</b><div class="mu">Applied for “${E(c.role)}” on the ${E(D.cos[c.co])} sheet</div></div><div class="act">`+(gone(c)?`<span class="mu">Removed</span><button data-rs="${c.id}">Restore</button>`:`<select data-as="${c.id}"><option value="">Assign to JD…</option>${js.map(j=>`<option value="${j.id}">${E(j.t)}</option>`).join('')}</select><button data-rm2="${c.id}">Remove</button>`)+`</div></div>`}).join('')||'<p class="mu">Nothing unassigned.</p>';
+ return h}
+const app=$('#app');
+function render(){if(!D)return;const[v,a]=location.hash.slice(2).split('/');app.innerHTML=v==='c'?vCo(a):v==='j'?vJd(a):v==='u'?vUn():vHome()}
+app.addEventListener('change',e=>{const t=e.target,c=C.find(x=>x.id===(t.dataset.mv||t.dataset.as));if(!c||!t.value)return;
+ if(t.dataset.mv)set(c.id,{z:t.value},`${c.n}: ${ZN[zone(c)]} to ${ZN[t.value]}`);else set(c.id,{jd:+t.value},`${c.n}: assigned to ${D.jds[+t.value].t}`)});
+app.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset,f=k=>C.find(x=>x.id===d[k]);
+ if(d.rm){pend=d.rm;render()}else if('rc' in d){pend=null;render()}
+ else if(d.rm2){const c=f('rm2');pend=null;set(c.id,{rm:1},c.n+': removed')}
+ else if(d.rs){const c=f('rs');set(c.id,{rm:0},c.n+': restored')}
+ else if('sr' in d){showRm=!showRm;render()}});
+addEventListener('hashchange',()=>{pend=null;showRm=false;render();scrollTo(0,0)});
+$('#reset').onclick=()=>{S={ov:{},log:[]};save();render()};
+const api=async p=>{const r=await fetch('/api/data',{headers:{'x-password':p||''}});if(!r.ok)throw r.status;return r.json()};
+function start(d){D=d;C=D.cands;render()}
+function login(s,tried){app.innerHTML=s===503?'<div class="card"><b>Not configured yet.</b><p class="mu">Set SITE_PASSWORD (or PUBLIC_ACCESS=true) in Vercel and redeploy.</p></div>':`<div class="card" style="max-width:340px;margin:40px auto"><b>Password required</b><p class="mu">${tried?'Wrong password. ':''}Ask the organiser.</p><input id="pw" type="password" style="width:100%;padding:8px;margin-bottom:8px"><button id="go">Open</button></div>`;
+ const go=$('#go');if(go)go.onclick=async()=>{const p=$('#pw').value;try{start(await api(p));try{sessionStorage.setItem('pw',p)}catch(e){}}catch(e){login(e,1)}}}
+(async()=>{let p='';try{p=sessionStorage.getItem('pw')||''}catch(e){}try{start(await api(p))}catch(s){login(s,0)}})();
+</script></body></html>

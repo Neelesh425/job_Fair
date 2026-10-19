@@ -17,6 +17,13 @@ Role/keyword fit 35, experience vs JD 25, location 15, notice period 10, form co
 Green >= 66, Yellow >= 52, Red below (`GREEN, YELLOW` in ingest.py). It only reads form answers; CVs and JD files are not read.
 Disability details, DOB, gender and address are not shown on the site and not used in scoring.
 
+## Excel sheets
+On every JD page: **Open as sheet** shows a table; **Download .xlsx** saves it. Columns: Timestamp, Job Role, Name, Mail id, Contact No, Current Organization, Relevant experience in years, Relevant Skillset, Disability Type, Disability%, Current location, Preferred Relocation, Current ctc, Expected ctc, Notice Period, Full Address, Upload cv, Column 1.
+Rows are coloured green/yellow/red; Column 1 holds the zone, score, team remark and reason. Downloads contain disability and address details, so share them carefully.
+
+## Talent pool candidates
+Candidates from the Naukri, Shortlist and Purchase Executive files have no applied JD. Each is matched to up to 5 JDs where keywords overlap and the score is at least Yellow. Those with no fit sit under *Other roles > Talent pool*.
+
 ## Notes
 - Moves/removals are saved in each viewer's own browser only. They are not shared between people.
 - CV links open Google Drive files; viewers need Drive access to those files.

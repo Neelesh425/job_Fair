@@ -73,19 +73,27 @@ def resolve(co,role,default,grp=False):
     if not r and len(js)==1:return js
     return [other(f'{r or "Application"} (no matching JD)')]
 # ---------- field extraction
-F={'name':[r'^full name$',r'^name$',r"^candidate.s name"],'em':[r'^email id$',r'^email$',r'^email address 2$',r'^email address$'],
-'ph':[r'^mobile number$',r'^contact (number|no|details)',r'^mobile'],'loc':[r'^current (city|location)'],'pref':[r'^preferred'],
-'exp':[r'^relevant (work )?experience',r'^total (work )?experience',r'^total years',r'^work experience in years',r'^total and relevant',r'previous work experience'],
+F={'name':[r'^full name$',r'^name$',r"^candidate.s name",r'^candidate name$'],
+'em':[r'^email id$',r'^mail id$',r'^email$',r'^email address 2$',r'^email address$'],
+'ph':[r'^mobile number$',r'^phone number$',r'^contact (number|no|details)',r'^mobile'],'loc':[r'^current (city|location)'],'pref':[r'^preff?erred'],
+'exp':[r'^relevant (work )?experience',r'^total (work )?experience',r'^total years',r'^work experience in years',r'^total and relevant',r'^experience$',r'previous work experience'],
 'np':[r'notice',r'when can you join|earliest joining|availability to join|joining availability'],
-'sk':[r'key skills',r'skillset',r'^which ai/ml',r'^specific required skill',r'additional skill'],'q':[r'^highest (educational )?qualification',r'^education level'],
-'org':[r'^current (or last )?(organi[sz]ation|company)'],'des':[r'^current (or last )?(designation|job role|role)',r'^designation',r'if experienced, mention'],
-'cv':[r'resume|\bcv\b'],'ct':[r'current.*ctc'],'ex':[r'^expected.*(ctc|salary)'],'rl':[r'relocate',r'^are you willing to work in',r'^are you available to work in'],'ts':[r'^timestamp']}
+'sk':[r'key skills',r'skillset',r'^skills$',r'^which ai/ml',r'^specific required skill',r'additional skill'],
+'q':[r'^highest (educational )?qualification',r'^qualification$',r'^under graduation degree',r'^education level'],
+'org':[r'^current (or last )?(organi[sz]ation|company)',r'^curr\. company name',r'^company$'],
+'des':[r'^current (or last )?(designation|job role|role)',r'^designation',r'^curr\. company designation',r'if experienced, mention'],
+'cv':[r'resume|\bcv\b'],'ct':[r'current.*ctc',r'^annual salary'],'ex':[r'^expected.*(ctc|salary)',r'expected ctc'],
+'rl':[r'relocate',r'^are you willing to work in',r'^are you available to work in'],'ts':[r'^timestamp',r'^date of application'],
+'dt':[r'disability types?|type of disability'],'dp':[r'disability (percentage|%)|percentage of disability'],'ad':[r'full address',r'^address$',r'permanent address'],
+'note':[r'^remarks?$'],'rt':[r'^job role$',r'^role$',r'^department$',r'^resume headline$',r'^job title$']}
 def cl(v):
     v=str(v if v is not None else '').strip();return '' if v.lower() in('nan','nat','none','') else v
 def yrs(t):
     t=t.lower()
     if not t:return None
     if 'fresh' in t or t.startswith('no exp'):return 0
+    ym=re.search(r'(\d+)\s*year',t);mm=re.search(r'(\d+)\s*month',t)
+    if ym and mm:return round(int(ym[1])+int(mm[1])/12,1)
     v=[float(x) for x in re.findall(r'\d+(?:\.\d+)?',t)[:2]]
     if not v or v[0]>40:return None
     if 'month' in t and 'year' not in t and len(v)==1:return round(v[0]/12,1)
@@ -124,36 +132,66 @@ def score(c,j,role):
     if not c['cv']:why.append('no CV link')
     return round(fit+ex+lo+nt+cp),'; '.join(why)
 # ---------- read & build
-rows=[];stats={}
-for f,sh,co,rc,dr in SRC:
-    df=pd.read_excel(f,sheet_name=sh,dtype=str).fillna('');cols=list(df.columns);cm={}
-    for k,pats in F.items():cm[k]=[c for p in pats for c in cols if re.search(p,c,re.I) and not (k=='cv' and re.search('certif',c,re.I))]
-    n0=len(rows)
+GEN={'manage','operat','servic','suppor','busine','commun'}
+NK=IN+'Naukri_PWD_hiring_sheets.xlsx';SL=IN+'Candidates_Complete_Details_Shortlist.xlsx';PE=IN+'Purchase-Executive_20260728113748_160.xlsx'
+POOL=[(PE,'MySheet'),(SL,'Complete Candidates')]+[(NK,s) for s in ['Sheet2','Sheet10','Sheet3','Sheet4','PWD CCDS','Sheet5','Sheet6','Sheet7']]
+GRP={'Form Responses 1','Form Responses 2'}   # sheets whose free-text role is grouped under one JD
+def dpct(v):
+    m=re.search(r'\d+(?:\.\d+)?',v)
+    if not m:return v[:20]
+    x=float(m[0]);x=x*100 if x<=1 else x
+    return f'{x:g}%'
+def load(f,sh):
+    df=pd.read_excel(f,sheet_name=sh,dtype=str).fillna('');cols=list(df.columns)
+    cm={k:[c for p in pats for c in cols if re.search(p,c,re.I) and not (k=='cv' and re.search('certif',c,re.I))] for k,pats in F.items()}
+    cm['cv']+=[c for c in cols if re.search(r'^candidate profile',c,re.I)]
     for _,r in df.iterrows():
         g=lambda k:next((cl(r[c]) for c in cm[k] if cl(r[c])),'')
-        c={k:g(k) for k in F};c['sk']='; '.join(dict.fromkeys(cl(r[x]) for x in cm['sk'] if cl(r[x])))
-        c['cv']=(re.search(r'https?://\S+',c['cv']) or [''])[0].rstrip(',');ph=re.sub(r'\D','',c['ph'].split('.')[0]);c['ph']=ph[-10:] if len(ph)>=10 else ''
+        c={k:g(k) for k in F}
+        for k in('sk','rt'):c[k]='; '.join(dict.fromkeys(v for v in (cl(r[x]) for x in cm[k]) if v and not v.lower().startswith('diversity hiring')))
+        c['cv']=next((m[0].rstrip(',') for x in cm['cv'] for m in [re.search(r'https?://\S+',cl(r[x]))] if m),'')
+        ph=re.sub(r'\D','',c['ph'].split('.')[0]);c['ph']=ph[-10:] if len(ph)>=10 else ''
         if not (c['name'] or c['em'] or c['cv']) or c['em'].lower().startswith('xyz@') or c['name'].lower() in('name','full name'):continue
-        c['name']=c['name'] or c['em'].split('@')[0] or 'Unnamed'
-        role=cl(r[rc]) if rc and rc in df.columns else '';sheetname=sh if isinstance(sh,str) else 'form'
-        if re.fullmatch(r'\d{10}|Contact No',role):continue   # stray header/phone rows in the Titan sheet
-        for jid in resolve(co,role,dr,sh in GRP):rows.append((c,jid,role,sheetname))
-    stats[str(sh)]=len(rows)-n0
+        c['name']=c['name'] or c['em'].split('@')[0] or 'Unnamed';c['dp']=dpct(c['dp']) if c['dp'] else ''
+        yield r,c
+items=[]   # (person, jd id, score, reason, is_pool, role, source sheet)
+for f,sh,co,rc,dr in SRC:
+    for r,c in load(f,sh):
+        role=cl(r[rc]) if rc and rc in r.index else ''
+        if re.fullmatch(r'\d{10}|Contact No',role):continue
+        for jid in resolve(co,role,dr,sh in GRP):
+            s,why=score(c,jds[jid],role);items.append((c,jid,s,why,0,role,sh if isinstance(sh,str) else 'form'))
+JM=[j for j in jds if j['c']!=OTH];npool=nomatch=0
+for f,sh in POOL:                       # candidates with no JD: match to every JD they fit (score >= YELLOW, best 5)
+    for r,c in load(f,sh):
+        c['des']=(c['des']+' '+c['rt']).strip();bag=set(toks(c['sk']+' '+c['des'],LV));hits=[];npool+=1
+        for j in JM:
+            sh_=set(toks(j['t'],LV))&bag
+            if not sh_ or (len(sh_)<2 and sh_<=GEN):continue
+            s,why=score(c,j,'')
+            if s>=YELLOW:hits.append((s,j['id'],why))
+        if not hits:
+            nomatch+=1;jid=other('Talent pool: no matching JD yet');s,why=score(c,jds[jid],'');hits=[(s,jid,why)]
+        for s,jid,why in sorted(hits,reverse=True)[:5]:items.append((c,jid,s,why,1,c['rt'][:60],sh))
 best={}
-for c,jid,role,s in rows:
-    k=((c['em'] or c['ph'] or c['name']).lower(),jid)
-    if k not in best or c['ts']>best[k][0]['ts']:best[k]=(c,jid,role,s)
-cands=[]
-for c,jid,role,s in best.values():
-    j=jds[jid];sc,why=score(c,j,role);nm=c['name'][:60].strip()
-    cands.append(dict(jd=jid,co=j['c'],role=role or j['t'],n=nm.title() if nm.isupper() else nm,org=c['org'][:40],e=c['exp'][:40],loc=c['loc'][:40],np=c['np'][:25],em=c['em'],ph=c['ph'],cv=c['cv'],sk=c['sk'][:160],q=c['q'][:50],ct=c['ct'][:20],ex=c['ex'][:20],ts=c['ts'][:16],src=s,sc=sc,rs=why))
-cands.sort(key=lambda c:(c['jd'],-c['sc']))
-for i,c in enumerate(cands):c['id']='c%d'%i
-json.dump(dict(cos=cos,jds=jds,cands=cands,thr=[GREEN,YELLOW]),open(OUT,'w'),ensure_ascii=False,separators=(',',':'))
+for it in items:                         # same person + same JD: explicit application beats pool match, then latest, then score
+    c,jid,s=it[0],it[1],it[2];k=((c['em'] or c['ph'] or c['name']).lower(),jid);key=(1-it[4],c['ts'],s)
+    if k not in best or key>best[k][0]:best[k]=(key,it)
+people=[];pidx={};pl=[]
+for _k,(c,jid,s,why,ispool,role,src) in best.values():
+    i=pidx.get(id(c))
+    if i is None:
+        i=pidx[id(c)]=len(people);nm=c['name'][:60].strip()
+        people.append(dict(n=nm.title() if nm.isupper() else nm,org=c['org'][:40],e=c['exp'][:40],loc=c['loc'][:40],np=c['np'][:25],em=c['em'],ph=c['ph'],cv=c['cv'],sk=c['sk'][:160],q=c['q'][:50],ct=c['ct'][:20],ex=c['ex'][:20],ts=c['ts'][:16],src=src,role=role,note=c['note'][:80],dt=c['dt'][:40],dp=c['dp'],ad=c['ad'][:110],pr=(c['pref'] or c['rl'])[:60]))
+    pl.append([jid,i,s,why,ispool])
+pl.sort(key=lambda r:(r[0],-r[2]))
+json.dump(dict(cos=cos,jds=jds,people=people,pl=pl,thr=[GREEN,YELLOW]),open(OUT,'w'),ensure_ascii=False,separators=(',',':'))
 if __name__=='__main__':
     import collections
-    print('rows per sheet',stats);print('submissions',len(rows),'after dedupe',len(cands),'JDs',len(jds))
-    print('zones',collections.Counter('g' if c['sc']>=GREEN else 'y' if c['sc']>=YELLOW else 'r' for c in cands))
-    cj=collections.Counter(c['jd'] for c in cands)
-    for j in jds:
-        if j['c']==OTH or cj[j['id']]:print(cos[j['c']][:12],'|',j['t'][:62],'|',cj[j['id']])
+    z=lambda s:'g' if s>=GREEN else 'y' if s>=YELLOW else 'r'
+    print('placements',len(pl),'| people records',len(people),'| pool people',npool,'no JD fit',nomatch,'| size KB',os.path.getsize(OUT)//1024)
+    t=collections.defaultdict(collections.Counter)
+    for jid,i,s,w,pp in pl:t[cos[jds[jid]['c']]][z(s)]+=1;t[cos[jds[jid]['c']]]['pool' if pp else 'form']+=1
+    for k,v in t.items():print(f"{k[:30]:30} form {v['form']:4} pool {v['pool']:4}  G{v['g']} Y{v['y']} R{v['r']}")
+    cj=collections.Counter(r[0] for r in pl)
+    print('top JDs:',[(jds[j]['t'][:34],n) for j,n in cj.most_common(8)])

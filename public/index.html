@@ -33,6 +33,7 @@ button,select{font:inherit;font-size:13px;padding:4px 8px;border:1px solid var(-
 details{margin-top:6px}
 [hidden]{display:none!important}
 .nm{font-weight:700;color:var(--ac)}
+.tw{overflow-x:auto;border:1px solid var(--bd);border-radius:8px;margin-top:8px}table.sh{border-collapse:collapse;font-size:12px;min-width:1600px}.sh th,.sh td{padding:5px 8px;border-bottom:1px solid var(--bd);white-space:nowrap;max-width:260px;overflow:hidden;text-overflow:ellipsis;text-align:left}.sh th{position:sticky;top:0;background:var(--card)}.sh tr.tg td{background:var(--gb)}.sh tr.ty td{background:var(--yb)}.sh tr.tr td{background:var(--rb)}
 </style></head><body>
 <header><b>Job Fair Tracker</b><span class="tag">Prototype</span><span class="mu">Screening score is rule-based, from form answers. CVs are linked, not read.</span><button id="reset">Reset demo</button></header>
 <main class="wrap" id="app"></main>
@@ -62,10 +63,10 @@ const byJd=id=>C.filter(c=>jdOf(c)===id);
 function st(l){const o={g:0,y:0,r:0,n:0};l.forEach(c=>{if(gone(c))return;o[zone(c)]++;o.n++});return o}
 const chips=o=>`<span class="chip cg">${o.g} green</span><span class="chip cy">${o.y} yellow</span><span class="chip cr">${o.r} red</span>`;
 const set=(id,p,msg)=>{S.ov[id]=Object.assign(S.ov[id]||{},p);S.log.unshift(new Date().toLocaleString()+': '+msg);S.log=S.log.slice(0,50);save();render()};
-let pend=null,showRm=false;
+let pend=null,showRm=false,sheet=false;
 const head=(t,sub,back)=>`${back?`<a class="back" href="${back[0]}">← ${E(back[1])}</a>`:''}<h1>${E(t)}</h1>${sub?`<p class="mu">${sub}</p>`:''}`;
 function vHome(){const un=C.filter(c=>jdOf(c)==null&&!gone(c));
- let h=head('Companies',`${C.filter(c=>!gone(c)).length} candidates have applied so far, across ${new Set(C.filter(c=>!gone(c)&&jdOf(c)!=null).map(jdOf)).size} JDs.`)+'<div class="grid">';
+ let h=head('Companies',`${new Set(C.filter(c=>!gone(c)).map(c=>(c.em||c.ph||c.n).toLowerCase())).size} people across ${new Set(C.filter(c=>!gone(c)).map(jdOf)).size} JDs. Candidates without an applied JD appear under every JD they fit.`)+'<div class="grid">';
  D.cos.forEach((n,i)=>{const js=D.jds.filter(j=>j.c===i),s=st(js.flatMap(j=>byJd(j.id)));
   h+=`<a class="card" href="#/c/${i}"><b>${E(n)}</b><div class="mu">${js.length} JD${js.length==1?'':'s'}, ${s.n?s.n+' candidate'+(s.n==1?'':'s'):'no applicants yet'}</div>${s.n?`<div class="chips">${chips(s)}</div>`:''}</a>`});
  if(un.length)h+=`<a class="card warn" href="#/u"><b>Unassigned</b><div class="mu">${un.length} candidates whose role matched no JD</div></a>`;
@@ -73,25 +74,46 @@ function vHome(){const un=C.filter(c=>jdOf(c)==null&&!gone(c));
 function vCo(i){i=+i;const js=D.jds.filter(j=>j.c===i);
  let h=head(D.cos[i],js.length+' JDs',['#/','All companies'])+'<div class="list">';
  js.forEach(j=>{const s=st(byJd(j.id));
-  h+=`<div class="card row"><div class="g1"><a class="tt" href="#/j/${j.id}">${E(j.t)}</a><div class="mu"><span class="tag">${E(j.ty)}</span> ${E(j.e)}${j.e&&j.l?', ':''}${E(j.l)} ${j.u?`<a href="${E(j.u)}" target="_blank" rel="noopener">JD file</a>`:''}</div></div><div class="rt"><div class="mu">${s.n?s.n+' candidate'+(s.n==1?'':'s'):'No applicants yet'}</div>${s.n?`<div class="chips">${chips(s)}</div>`:''}</div></div>`});
+  h+=`<div class="card row"><div class="g1"><a class="tt" href="#/j/${j.id}">${E(j.t)}</a><div class="mu"><span class="tag">${E(j.ty)}</span> ${E(j.e)}${j.e&&j.l?', ':''}${E(j.l)} ${j.u?`<a href="${E(j.u)}" target="_blank" rel="noopener">JD file</a>`:''}</div></div><div class="rt"><div class="mu">${s.n?s.n+' candidate'+(s.n==1?'':'s'):'No applicants yet'}</div>${s.n?`<div class="chips">${chips(s)}</div><div class="act" style="justify-content:flex-end"><button data-xl="${j.id}">⬇ .xlsx</button></div>`:''}</div></div>`});
  return h+'</div>'}
 function cc(c){const a=ai(c),z=zone(c),o=S.ov[c.id]||{};
  const opts=['g','y','r'].filter(x=>x!==z).map(x=>`<option value="${x}">${ZN[x]}</option>`).join('');
  const rmUI=pend===c.id?`<span class="mu">Remove?</span><button class="dng" data-rm2="${c.id}">Yes</button><button data-rc>No</button>`:`<button data-rm="${c.id}">Remove</button>`;
- return `<div class="cc z${z}"><div class="top">${c.cv?`<a class="nm" href="${E(c.cv)}" target="_blank" rel="noopener" title="Open CV">${E(c.n)} 📄</a>`:`<b>${E(c.n)}</b>`}<span class="sc" title="Screening score">${a.s}</span></div>
+ return `<div class="cc z${z}"><div class="top">${c.cv?`<a class="nm" href="${E(c.cv)}" target="_blank" rel="noopener" title="Open CV">${E(c.n)} 📄</a>`:`<b>${E(c.n)}</b>`}${c.pool?'<span class="tag">Pool match</span>':''}<span class="sc" title="Screening score">${a.s}</span></div>
 <div class="mu">${E(c.org)}, ${E(c.e)}, ${E(c.loc)}, ${E(c.np)} notice</div><div class="why">${E(a.r)}</div>
 ${o.z&&o.z!==a.z?`<div class="ovr">Moved by you. AI said ${ZN[a.z]}.</div>`:''}
 ${c.note?`<div class="note">Team note: ${E(c.note)}</div>`:''}
 <div class="mu">${E(c.em)}, ${E(c.ph)}</div>
 <details><summary>Full application</summary><div class="mu">Applied for: ${E(c.role)}<br>Qualification: ${E(c.q||'n/a')}<br>Skills: ${E(c.sk||'n/a')}<br>Current CTC: ${E(c.ct||'n/a')}. Expected: ${E(c.ex||'n/a')}<br>Applied: ${E(c.ts||'n/a')} (sheet: ${E(c.src)})<br>${c.cv?`<a href="${E(c.cv)}" target="_blank" rel="noopener">Open CV</a>`:'No CV link in the form'}</div></details>
 <div class="act"><select data-mv="${c.id}"><option value="">Move to…</option>${opts}</select>${rmUI}</div></div>`}
+const COLS=['Timestamp','Job Role','Name','Mail id','Contact No','Current Organization','Relevant experience in years','Relevant Skillset','Disability Type','Disability%','Current location','Preferred Relocation','Current ctc','Expected ctc','Notice Period','Full Address','Upload cv','Column 1'];
+const note=c=>`${ZN[zone(c)]} (${ai(c).s})`+(c.note?' | '+c.note:'')+(c.pool?' | Talent-pool match, their role: '+(c.role||'n/a'):'')+' | '+ai(c).r;
+const rowOf=(c,j)=>[c.ts,j.t,c.n,c.em,c.ph,c.org,c.e,c.sk,c.dt,c.dp,c.loc,c.pr,c.ct,c.ex,c.np,c.ad,c.cv,note(c)].map(v=>v==null?'':v);
+const listFor=id=>byJd(id).filter(c=>!gone(c)).sort((a,b)=>'gyr'.indexOf(zone(a))-'gyr'.indexOf(zone(b))||ai(b).s-ai(a).s);
+function vSheet(id){const j=D.jds[id],l=listFor(id);
+ return `<p class="mu">${l.length} rows, coloured green, yellow or red by zone. Your moves and removals are included.</p><div class="tw"><table class="sh"><thead><tr>${COLS.map(c=>`<th>${E(c)}</th>`).join('')}</tr></thead><tbody>${l.map(c=>`<tr class="t${zone(c)}">${rowOf(c,j).map((v,i)=>`<td title="${E(v)}">${i===16&&v?`<a href="${E(v)}" target="_blank" rel="noopener">Open CV</a>`:E(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`}
 function vJd(id){id=+id;const j=D.jds[id],all=byJd(id),live=all.filter(c=>!gone(c));
- let h=head(j.t,`${E(D.cos[j.c])}, ${E(j.ty)}${j.e?', '+E(j.e):''}${j.l?', '+E(j.l):''}. ${j.u?`<a href="${E(j.u)}" target="_blank" rel="noopener">JD file</a>`:''}`,['#/c/'+j.c,D.cos[j.c]])+(all.length?'':'<div class="card"><b>No candidates have applied for this role yet.</b></div>')+'<div class="cols"'+(all.length?'':' hidden')+'>';
+ let h=head(j.t,`${E(D.cos[j.c])}, ${E(j.ty)}${j.e?', '+E(j.e):''}${j.l?', '+E(j.l):''}. ${j.u?`<a href="${E(j.u)}" target="_blank" rel="noopener">JD file</a>`:''}`,['#/c/'+j.c,D.cos[j.c]]);
+ if(!all.length)return h+'<div class="card"><b>No candidates have applied for this role yet.</b></div>';
+ h+=`<div class="act" style="margin:10px 0"><button data-sh>${sheet?'Back to zones':'Open as sheet'}</button><button data-xl="${id}">Download .xlsx</button></div>`;
+ if(sheet)return h+vSheet(id);
+ h+='<div class="cols">';
  ['g','y','r'].forEach(z=>{const l=live.filter(c=>zone(c)===z).sort((a,b)=>ai(b).s-ai(a).s);
   h+=`<section class="col"><h3 class="h${z}">${ZN[z]}<span>${l.length}</span></h3>${l.map(cc).join('')||'<p class="mu">No candidates here.</p>'}</section>`});
  h+='</div>';const rm=all.filter(gone);
  if(rm.length)h+=`<p><button data-sr>${showRm?'Hide':'Show'} removed (${rm.length})</button></p>`+(showRm?rm.map(c=>`<div class="cc"><b>${E(c.n)}</b><div class="act"><button data-rs="${c.id}">Restore</button></div></div>`).join(''):'');
  return h}
+function buildWb(id){const j=D.jds[id],wb=new ExcelJS.Workbook(),ws=wb.addWorksheet(j.t.replace(/[\\/?*\[\]:]/g,' ').slice(0,31)||'JD');
+ ws.addRow(COLS).eachCell(x=>{x.font={bold:true,color:{argb:'FFFFFFFF'}};x.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1F2937'}}});
+ const FL={g:'FFC6EFCE',y:'FFFFEB9C',r:'FFFFC7CE'};
+ listFor(id).forEach(c=>{const r=ws.addRow(rowOf(c,j));r.eachCell({includeEmpty:true},x=>{x.fill={type:'pattern',pattern:'solid',fgColor:{argb:FL[zone(c)]}}});if(c.cv)r.getCell(17).value={text:c.cv,hyperlink:c.cv}});
+ [20,34,24,28,14,26,14,34,18,10,18,22,12,12,14,36,36,60].forEach((w,i)=>ws.getColumn(i+1).width=w);
+ ws.views=[{state:'frozen',ySplit:1}];ws.autoFilter={from:'A1',to:{row:1,column:18}};return wb}
+let xp;const loadX=()=>xp||(xp=new Promise((ok,no)=>{if(window.ExcelJS)return ok();const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js';s.onload=ok;s.onerror=()=>{xp=null;no()};document.head.appendChild(s)}));
+async function dl(id){try{await loadX()}catch(e){alert('Could not load the Excel library. Check your connection and try again.');return}
+ const j=D.jds[id],buf=await buildWb(id).xlsx.writeBuffer(),a=document.createElement('a');
+ a.href=URL.createObjectURL(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
+ a.download=(D.cos[j.c]+' - '+j.t).replace(/[^\w\-. &()]+/g,' ').trim().slice(0,90)+'.xlsx';document.body.appendChild(a);a.click();a.remove()}
 function vUn(){const l=C.filter(c=>jdOf(c)==null);
  let h=head('Unassigned','These candidates applied for a role that matched no JD. Assign each to a JD, or remove them.',['#/','All companies']);
  h+=l.map(c=>{const js=D.jds.filter(j=>j.c===c.co);
@@ -105,11 +127,11 @@ app.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return
  if(d.rm){pend=d.rm;render()}else if('rc' in d){pend=null;render()}
  else if(d.rm2){const c=f('rm2');pend=null;set(c.id,{rm:1},c.n+': removed')}
  else if(d.rs){const c=f('rs');set(c.id,{rm:0},c.n+': restored')}
- else if('sr' in d){showRm=!showRm;render()}});
-addEventListener('hashchange',()=>{pend=null;showRm=false;render();scrollTo(0,0)});
+ else if('sr' in d){showRm=!showRm;render()}else if(d.xl){dl(+d.xl)}else if('sh' in d){sheet=!sheet;render()}});
+addEventListener('hashchange',()=>{pend=null;showRm=false;sheet=false;render();scrollTo(0,0)});
 $('#reset').onclick=()=>{S={ov:{},log:[]};save();render()};
 const api=async p=>{const r=await fetch('/api/data',{headers:{'x-password':p||''}});if(!r.ok)throw r.status;return r.json()};
-function start(d){D=d;C=D.cands;render()}
+function start(d){D=d;C=D.pl.map((p,i)=>Object.assign({id:'p'+i},D.people[p[1]],{jd:p[0],co:D.jds[p[0]].c,sc:p[2],rs:p[3],pool:p[4]}));render()}
 function login(s,tried){app.innerHTML=s===503?'<div class="card"><b>Not configured yet.</b><p class="mu">Set SITE_PASSWORD (or PUBLIC_ACCESS=true) in Vercel and redeploy.</p></div>':`<div class="card" style="max-width:340px;margin:40px auto"><b>Password required</b><p class="mu">${tried?'Wrong password. ':''}Ask the organiser.</p><input id="pw" type="password" style="width:100%;padding:8px;margin-bottom:8px"><button id="go">Open</button></div>`;
  const go=$('#go');if(go)go.onclick=async()=>{const p=$('#pw').value;try{start(await api(p));try{sessionStorage.setItem('pw',p)}catch(e){}}catch(e){login(e,1)}}}
 (async()=>{let p='';try{p=sessionStorage.getItem('pw')||''}catch(e){}try{start(await api(p))}catch(s){login(s,0)}})();

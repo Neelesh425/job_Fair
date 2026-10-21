@@ -596,19 +596,73 @@ function extractTxtText(buf){
   return new TextDecoder('utf-8').decode(buf);
 }
 
-// Tokenizer matching the backend approach
+// Tokenizer — improved with better stemming and full-word tracking
 const CV_STOP=new Set('the and for with from work office location confirmed be to of in at grade a an is are was were has have had do does did will would can could should may might shall being been this that these those it its i me my we our you your he his she her they their them what which who whom when where how not no nor but or if then else than too very just also more most other some such only same so few between through during before after above below up down out off over under again further once here there all each every both any each few more most several do does did get got given given go goes going gone have has had having make makes making made take takes taking took run runs running ran say says said saying see sees seeing seen come comes coming came know knows knowing knew think thinks thinking thought tell tells telling told find finds finding found give gives gave giving work works working worked call calls called calling try tries trying tried need needs needing needed keep keeps keeping kept let lets letting leave leaves leaving left begin begins beginning began show shows showing showed seem seems seeming seemed help helps helping helped turn turns turning turned start starts starting started might should would could shall will may can must need want year years month months experience work working company role job position current total relevant'.split(' '));
 const CV_LV=new Set('executive associate manager deputy senior sr asst assistant officer specialist trainee chief lead director vp president intern junior'.split(' '));
 
 function cvToks(text){
   const d={};
-  const words=text.toLowerCase().replace(/[^a-z0-9#+\s]/g,' ').split(/\s+/);
+  const words=text.toLowerCase().replace(/[^a-z0-9#+.\s]/g,' ').split(/\s+/);
   for(const w of words){
     if(w.length<2||CV_STOP.has(w)||CV_LV.has(w))continue;
-    const k=w.slice(0,6);
+    // Use 7-char stems for better precision (was 6)
+    const k=w.length>7?w.slice(0,7):w;
     if(!d[k])d[k]=w;
   }
   return d;
+}
+
+// Full-word set for exact matching (no stemming)
+function cvFullWords(text){
+  return new Set(text.toLowerCase().replace(/[^a-z0-9#+.\s]/g,' ').split(/\s+/).filter(w=>w.length>=2));
+}
+
+// Domain-specific skill dictionaries for richer matching
+const DOMAIN_SKILLS={
+  tech_general:['python','java','javascript','sql','react','node','angular','vue','typescript','api','html','css','git','linux','devops','cloud','docker','kubernetes','aws','azure','gcp','mongodb','redis','graphql','microservices','ci','cd','agile','scrum','jira','rest','json','xml','bash','shell','powershell','terraform','jenkins','kafka','rabbitmq','elasticsearch'],
+  data_analytics:['data','analytics','analysis','tableau','power bi','powerbi','excel','reporting','dashboard','visualization','statistics','etl','warehouse','bigquery','snowflake','pandas','numpy','matplotlib','r','sas','spss','looker','qlik','dax'],
+  ai_ml:['machine learning','deep learning','nlp','neural','tensorflow','pytorch','keras','scikit','ai','artificial intelligence','computer vision','llm','gpt','transformers','reinforcement','supervised','unsupervised','classification','regression','clustering','model','training','inference'],
+  security:['security','infosec','soc','siem','vulnerability','penetration','firewall','ids','ips','encryption','compliance','iso27001','nist','gdpr','dlp','drm','owasp','incident response','threat','malware','forensics','cybersecurity','devsecops'],
+  networking:['networking','router','switch','firewall','tcp','ip','dns','dhcp','vpn','vlan','ospf','bgp','cisco','juniper','wan','lan','wifi','load balancer','f5','osi','subnet','routing','l2','l3','snmp','mpls'],
+  erp_sap:['sap','erp','mm','sd','fico','hana','abap','salesforce','crm','oracle','netsuite','dynamics','odoo'],
+  finance:['accounting','finance','financial','audit','taxation','gst','tds','tally','quickbooks','ledger','reconciliation','budgeting','forecasting','p&l','balance sheet','accounts payable','accounts receivable','invoice','billing','costing','pricing'],
+  supply_chain:['supply chain','logistics','warehouse','inventory','procurement','purchase','vendor','sourcing','distribution','shipping','freight','inbound','outbound','demand planning','material planning','mrp','wms','3pl','transportation'],
+  customer_service:['customer service','customer support','customer care','call center','bpo','voice','non-voice','chat support','email support','ticketing','freshdesk','zendesk','salesforce service','csat','nps','escalation','retention','crm','helpdesk','troubleshooting'],
+  insurance:['insurance','underwriting','claims','policy','premium','actuarial','reinsurance','bfsi','renewal','onboarding','payout','annuity','endowment','term plan','life insurance','health insurance','general insurance'],
+  hr_admin:['hr','human resources','recruitment','payroll','onboarding','employee engagement','performance management','talent acquisition','hris','workday','peoplesoft','successfactors','compensation','benefits','labour law','compliance'],
+  content_moderation:['content moderation','content review','trust and safety','trust & safety','content policy','annotation','labeling','moderation','sensitive content','community guidelines','content quality','review','audit']
+};
+
+// Build a rich JD profile including title, type, existing candidate skills
+function buildJdProfile(j){
+  let profileText=j.t+' '+j.ty+' '+(j.e||'')+' '+(j.l||'');
+  // Aggregate skills from existing candidates matched to this JD
+  const jdCands=C.filter(c=>jdOf(c)===j.id&&!gone(c));
+  const skillTexts=jdCands.map(c=>(c.sk||'')+(c.q?' '+c.q:'')).filter(Boolean);
+  if(skillTexts.length>0){
+    // Take top skills from candidates (limit to avoid noise)
+    profileText+=' '+skillTexts.slice(0,10).join(' ');
+  }
+  return profileText;
+}
+
+// Determine which domain categories a JD belongs to
+function jdDomains(j){
+  const t=(j.t+' '+j.ty+' '+(j.e||'')).toLowerCase();
+  const domains=[];
+  if(/network|cisco|routing|switch|l2|l3|vpn|wan|lan/i.test(t))domains.push('networking');
+  if(/secur|soc|infosec|devsecops|dlp|drm|threat|vulnerability/i.test(t))domains.push('security');
+  if(/data|analy|bi\b|report|tableau|power\s*bi|dashboard|mis/i.test(t))domains.push('data_analytics');
+  if(/\bai\b|machine\s*learn|deep\s*learn|nlp|ml\b/i.test(t))domains.push('ai_ml');
+  if(/sap|erp|salesforce|crm|mm\b|fico/i.test(t))domains.push('erp_sap');
+  if(/financ|account|audit|tax|billing|costing/i.test(t))domains.push('finance');
+  if(/supply|logistic|warehouse|procure|purchase|distribut|material|inbound|outbound|demand\s*plan/i.test(t))domains.push('supply_chain');
+  if(/customer|support|service|csa|care|call\s*center|bpo/i.test(t))domains.push('customer_service');
+  if(/insurance|claim|policy|premium|renewal|payout|actuarial|bfsi|underwriting/i.test(t))domains.push('insurance');
+  if(/content|moderator|moderation|trust.*safety|review/i.test(t))domains.push('content_moderation');
+  if(/\bhr\b|recruit|payroll|talent|human\s*resource/i.test(t))domains.push('hr_admin');
+  if(/python|java|react|node|angular|fullstack|full\s*stack|backend|frontend|sde|software|developer|engineer|devops|docker|kubernetes|aws|azure|cloud|vmware|infra/i.test(t))domains.push('tech_general');
+  return domains;
 }
 
 // Extract years of experience from CV text
@@ -634,61 +688,127 @@ function cvParseExp(text){
   return null;
 }
 
+// Extract qualification level from CV text
+function cvParseQual(text){
+  const t=text.toLowerCase();
+  if(/\b(ph\.?d|doctorate|doctoral)\b/i.test(t))return 5;
+  if(/\b(m\.?tech|mtech|m\.?s\b|m\.?sc|mca|mba|m\.?com|m\.?a\b|master|post\s*graduat|pg\s*diploma)\b/i.test(t))return 4;
+  if(/\b(b\.?tech|btech|b\.?e\b|b\.?sc|bca|b\.?com|b\.?a\b|bachelor|b\.?b\.?a|bbi|graduat|degree|ug)\b/i.test(t))return 3;
+  if(/\b(diploma|polytechnic|iti)\b/i.test(t))return 2;
+  if(/\b(12th|hsc|intermediate|10\+2)\b/i.test(t))return 1;
+  return 0;
+}
+
+// Parse JD qualification requirements
+function jdQualLevel(j){
+  const t=(j.t+' '+(j.e||'')).toLowerCase();
+  if(/ph\.?d|doctor/i.test(t))return 5;
+  if(/m\.?tech|mba|mca|master|post\s*grad|pg/i.test(t))return 4;
+  if(/b\.?tech|b\.?e\b|bca|b\.?com|bachelor|graduat|degree/i.test(t))return 3;
+  if(/diploma|iti/i.test(t))return 2;
+  return 0;// not specified
+}
+
 function matchCvToJds(cvText){
   const cvTokens=cvToks(cvText);
   const cvBag=new Set(Object.keys(cvTokens));
+  const cvWords=cvFullWords(cvText);
   const cvExp=cvParseExp(cvText);
+  const cvQual=cvParseQual(cvText);
+  const cvLower=cvText.toLowerCase();
   const results=[];
 
   for(const j of D.jds){
     // Skip "Other" / catch-all JDs
     if(j.ty==='Not in JD sheet')continue;
 
-    // Tokenize JD title
-    const jdToks=cvToks(j.t);
+    // Build rich JD profile from title + candidates
+    const profile=buildJdProfile(j);
+    const jdToks=cvToks(profile);
+    const titleToks=cvToks(j.t);
     const jdBag=new Set(Object.keys(jdToks));
-    if(!jdBag.size)continue;
+    const titleBag=new Set(Object.keys(titleToks));
+    if(!titleBag.size&&!jdBag.size)continue;
 
-    // Keyword overlap score (0-50)
-    const shared=new Set([...jdBag].filter(k=>cvBag.has(k)));
-    const kwScore=Math.round(50*(shared.size/Math.min(jdBag.size,6)));
-    const matchedWords=[...shared].map(k=>cvTokens[k]||jdToks[k]);
-    const missedWords=[...jdBag].filter(k=>!shared.has(k)).map(k=>jdToks[k]);
+    // === Signal 1: Title keyword match (0-30) ===
+    const titleShared=new Set([...titleBag].filter(k=>cvBag.has(k)));
+    const titleScore=titleBag.size>0?Math.round(30*(titleShared.size/Math.max(titleBag.size,1))):0;
+    const matchedWords=[...titleShared].map(k=>cvTokens[k]||titleToks[k]);
+    const missedWords=[...titleBag].filter(k=>!titleShared.has(k)).map(k=>titleToks[k]);
 
-    // Experience fit score (0-30)
-    let expScore=15; // default: unknown
+    // === Signal 2: Skill/profile overlap (0-25) ===
+    const profileShared=new Set([...jdBag].filter(k=>cvBag.has(k)));
+    const skillOverlapRatio=jdBag.size>0?profileShared.size/jdBag.size:0;
+    const skillScore=Math.round(25*Math.min(1,skillOverlapRatio*2));// scale up so 50% overlap = full score
+
+    // === Signal 3: Domain alignment (0-20) ===
+    const domains=jdDomains(j);
+    let domainScore=0;
+    let domainMatches=[];
+    if(domains.length>0){
+      let domainHits=0;
+      for(const dom of domains){
+        const domKws=DOMAIN_SKILLS[dom]||[];
+        const hits=domKws.filter(kw=>cvWords.has(kw)||cvLower.includes(kw));
+        if(hits.length>0){
+          domainHits++;
+          domainMatches.push(...hits.slice(0,3));
+        }
+      }
+      domainScore=Math.round(20*(domainHits/domains.length));
+    }else{
+      // No specific domain identified — give partial credit if general alignment exists
+      const isTech=/tech/i.test(j.ty)&&!/non/i.test(j.ty);
+      const cvHasTech=DOMAIN_SKILLS.tech_general.some(kw=>cvWords.has(kw)||cvLower.includes(kw));
+      if(isTech&&cvHasTech)domainScore=12;
+      else if(!isTech&&!cvHasTech)domainScore=10;
+      else domainScore=4;
+    }
+
+    // === Signal 4: Experience fit (0-15) ===
+    let expScore=8; // default: unknown
     let expFit='unknown';
     const rng=parseExpRange(j.e,j.t);
     if(cvExp!==null&&rng!==null){
       const [lo,hi]=rng;
       const inRange=cvExp>=lo&&(hi===null||cvExp<=hi+2);
-      if(inRange){expScore=30;expFit='yes';}
+      if(inRange){expScore=15;expFit='yes';}
       else{
         const gap=cvExp<lo?lo-cvExp:(hi!==null?cvExp-hi-2:0);
-        expScore=Math.max(0,30-Math.round(gap*6));
+        expScore=Math.max(0,15-Math.round(gap*3));
         expFit='no';
       }
     }
 
-    // Type match bonus (0-10) — check if CV mentions tech keywords for tech roles
-    const isTech=/tech/i.test(j.ty)&&!/non/i.test(j.ty);
-    const cvHasTech=/\b(python|java|javascript|sql|react|node|angular|aws|azure|docker|kubernetes|api|html|css|git|linux|devops|cloud|machine learning|ai|data|algorithm|coding|programming|software|developer|engineer)\b/i.test(cvText);
-    let typeScore=5; // neutral
-    if(isTech&&cvHasTech)typeScore=10;
-    else if(isTech&&!cvHasTech)typeScore=2;
+    // === Signal 5: Qualification match (0-10) ===
+    const jdQ=jdQualLevel(j);
+    let qualScore=5; // neutral (JD doesn't specify)
+    if(jdQ>0){
+      if(cvQual>=jdQ)qualScore=10;
+      else if(cvQual===jdQ-1)qualScore=6;
+      else qualScore=2;
+    }else if(cvQual>=3){
+      qualScore=7; // graduate+ is generally good
+    }
 
-    // Company candidate count bonus (0-10): prefer JDs with existing candidates
+    const total=Math.min(100,titleScore+skillScore+domainScore+expScore+qualScore);
+    if(total<8)continue;
+
+    // Enrich matched words with domain skill matches
+    const allMatched=[...new Set([...matchedWords,...domainMatches])].slice(0,10);
+
     const candCount=C.filter(c=>jdOf(c)===j.id&&!gone(c)).length;
-    const popScore=Math.min(10,Math.round(candCount/3));
-
-    const total=Math.min(100,kwScore+expScore+typeScore+popScore);
-    if(total<10)continue;
 
     results.push({
       jd:j,
       score:total,
-      kwScore,expScore,typeScore,
-      matchedWords:matchedWords.slice(0,8),
+      kwScore:titleScore,
+      skillScore,
+      domainScore,
+      expScore,
+      qualScore,
+      typeScore:domainScore,// backward compat for display
+      matchedWords:allMatched,
       missedWords:missedWords.slice(0,6),
       expFit,
       cvExp,
@@ -723,6 +843,8 @@ async function handleCvFile(file){
 
     cvState.text=text.trim();
     cvState.results=matchCvToJds(cvState.text);
+    cvState.cvExp=cvParseExp(cvState.text);
+    cvState.cvQual=cvParseQual(cvState.text);
     setCvProgress(100,'Done!');
     await new Promise(r=>setTimeout(r,300));
     cvState.loading=false;
@@ -760,7 +882,8 @@ function vCvMatch(){
     const strong=r.filter(x=>x.score>=60).length;
     const moderate=r.filter(x=>x.score>=35&&x.score<60).length;
 
-    h+=`<div class="cv-file-info"><span class="cv-file-icon">${cvState.file?.type==='pdf'?'📕':'📘'}</span><div><div class="cv-file-name">${E(cvState.file?.name||'File')}</div><div class="cv-file-size">${fmtSize(cvState.file?.size||0)} · ${cvState.text?.split(/\s+/).length||0} words extracted${cvState.cvExp!==null?' · '+cvState.cvExp+' yrs experience detected':''}</div></div><button class="cv-new-btn btn-primary" data-cvnew>↑ Upload Another</button></div>`;
+    const qualLabels=['','12th','Diploma','Graduate','Post-Grad','PhD'];
+    h+=`<div class="cv-file-info"><span class="cv-file-icon">${cvState.file?.type==='pdf'?'📕':'📘'}</span><div><div class="cv-file-name">${E(cvState.file?.name||'File')}</div><div class="cv-file-size">${fmtSize(cvState.file?.size||0)} · ${cvState.text?.split(/\s+/).length||0} words extracted${cvState.cvExp!==null?' · '+cvState.cvExp+' yrs experience detected':''}${cvState.cvQual?' · '+qualLabels[cvState.cvQual]+' level':''}</div></div><button class="cv-new-btn btn-primary" data-cvnew>↑ Upload Another</button></div>`;
 
     h+=`<div class="cv-results-summary">
       <div class="cv-stat"><div class="cv-stat-val">${r.length}</div><div class="cv-stat-label">JDs Compared</div></div>
@@ -802,6 +925,15 @@ function vCvMatch(){
           ${m.matchedWords.length?'<span class="mu" style="font-size:11px">MATCHING: </span>'+m.matchedWords.map(w=>'<span class="cv-kw hit">'+E(w)+'</span>').join('')+' ':''}
           ${m.missedWords.length?'<span class="mu" style="font-size:11px;margin-left:6px">MISSING: </span>'+m.missedWords.map(w=>'<span class="cv-kw miss">'+E(w)+'</span>').join(''):''}
         </div>
+        <details style="margin:4px 0 0 40px"><summary class="mu" style="font-size:11px;cursor:pointer">Score breakdown</summary>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0;font-size:11px">
+            <span class="tag">Title: ${m.kwScore}/30</span>
+            <span class="tag">Skills: ${m.skillScore||0}/25</span>
+            <span class="tag">Domain: ${m.domainScore||0}/20</span>
+            <span class="tag">Exp: ${m.expScore}/15</span>
+            <span class="tag">Qual: ${m.qualScore||0}/10</span>
+          </div>
+        </details>
       </div>`;
     });
 
@@ -822,8 +954,13 @@ function vCvMatch(){
     <div class="mu" style="line-height:1.8">
       <b>1.</b> Upload a resume (PDF, DOCX, or TXT)<br>
       <b>2.</b> Text is extracted entirely in your browser — nothing is sent to any server<br>
-      <b>3.</b> Keywords from the CV are matched against all ${D.jds.filter(j=>j.ty!=='Not in JD sheet').length} job descriptions<br>
-      <b>4.</b> Results are ranked by keyword overlap, experience fit, and role type match
+      <b>3.</b> CV is analyzed for skills, experience, qualifications, and domain expertise<br>
+      <b>4.</b> Each of the ${D.jds.filter(j=>j.ty!=='Not in JD sheet').length} JDs is scored on 5 signals:<br>
+      &nbsp;&nbsp;&nbsp;• <b>Title match</b> (30 pts) — keyword overlap with JD title<br>
+      &nbsp;&nbsp;&nbsp;• <b>Skill match</b> (25 pts) — overlap with skills of candidates in that JD<br>
+      &nbsp;&nbsp;&nbsp;• <b>Domain alignment</b> (20 pts) — tech, finance, supply chain, etc.<br>
+      &nbsp;&nbsp;&nbsp;• <b>Experience fit</b> (15 pts) — years match JD requirements<br>
+      &nbsp;&nbsp;&nbsp;• <b>Qualification</b> (10 pts) — education level alignment
     </div>
   </div>`;
   h+=`</div>`;

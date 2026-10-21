@@ -123,6 +123,24 @@ details{margin-top:6px}
 @keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .cv-match-card{animation:slideUp .4s ease both}
 .cv-match-card:nth-child(2){animation-delay:.05s}.cv-match-card:nth-child(3){animation-delay:.1s}.cv-match-card:nth-child(4){animation-delay:.15s}.cv-match-card:nth-child(5){animation-delay:.2s}
+/* Shortlist per-company */
+.sl-company-section{margin-bottom:24px}
+.sl-company-header{display:flex;align-items:center;gap:12px;padding:10px 14px;background:linear-gradient(135deg,rgba(79,70,229,.08),rgba(124,58,237,.08));border:1px solid var(--bd);border-radius:10px;margin-bottom:10px}
+.sl-company-name{font-size:17px;font-weight:700;color:var(--ac);flex:1}
+.sl-jd-section{margin-bottom:14px;padding-left:12px;border-left:3px solid var(--bd)}
+.sl-jd-header{font-size:13px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.04em;margin:0 0 8px;padding:4px 8px;background:var(--purplebg);border-radius:6px;display:inline-block}
+.sl-card{background:var(--card);border:1px solid var(--g);border-left:4px solid var(--g);border-radius:8px;padding:10px 12px;margin-bottom:8px;display:grid;gap:4px}
+.sl-card .sl-jd{font-size:12px;color:var(--mu)}
+/* Candidate pool upload */
+.pool-upload{border:2px dashed var(--bd);border-radius:12px;padding:28px 20px;text-align:center;cursor:pointer;transition:all .3s;background:var(--card);position:relative}
+.pool-upload:hover,.pool-upload.drag-over{border-color:var(--ac);background:var(--bluebg)}
+.pool-upload input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+/* Exp red-line badge */
+.exp-fail-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;background:var(--rb);color:var(--r);border:1px solid var(--r)}
+.cv-excluded{opacity:.55;filter:grayscale(.4)}
+.cv-exp-fail-banner{background:var(--rb);color:var(--r);border:1px solid var(--r);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;margin:4px 40px 0;display:flex;align-items:center;gap:6px}
+/* Candidate pool badge */
+.pool-badge{background:var(--bluebg);color:var(--blue);padding:2px 10px;border-radius:99px;font-size:11px;font-weight:600}
 </style></head><body>
 <header>
 <span class="logo">♿ Job Fair Tracker</span>
@@ -132,6 +150,7 @@ details{margin-top:6px}
 <a href="#/multi" id="nav-multi">Multi-JD</a>
 <a href="#/shortlist" id="nav-sl">Shortlisted</a>
 <a href="#/cv" id="nav-cv">CV Match</a>
+<a href="#/pool" id="nav-pool">+ Pool Upload</a>
 </div>
 <span class="mu">Screening score is rule-based, from form answers. CVs are linked, not read.</span>
 <button id="reset">Reset all data</button>
@@ -142,8 +161,8 @@ let D;
 const ZN={g:'Green',y:'Yellow',r:'Red'};
 const $=s=>document.querySelector(s);
 const E=s=>String(s==null?'':s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
-let S={ov:{},log:[],sl:{},qe:{}};
-try{const raw=JSON.parse(localStorage.getItem('jf')||'null');if(raw){S.ov=raw.ov||{};S.log=raw.log||[];S.sl=raw.sl||{};S.qe=raw.qe||{}}}catch(e){}
+let S={ov:{},log:[],sl:{},qe:{},pool:[]};
+try{const raw=JSON.parse(localStorage.getItem('jf')||'null');if(raw){S.ov=raw.ov||{};S.log=raw.log||[];S.sl=raw.sl||{};S.qe=raw.qe||{};S.pool=raw.pool||[]}}catch(e){}
 const save=()=>{try{localStorage.setItem('jf',JSON.stringify(S))}catch(e){}};
 
 /* ====== Disability Benchmark Check ====== */
@@ -328,10 +347,32 @@ function getMultiJdCandidates(){
 
 /* ====== Shortlist ====== */
 function isShortlisted(cid){return !!S.sl[cid]}
-function toggleShortlist(cid){
-  if(S.sl[cid]){delete S.sl[cid];S.log.unshift(new Date().toLocaleString()+': Removed from shortlist');} 
-  else{const c=C.find(x=>x.id===cid);S.sl[cid]={jd:jdOf(c),ts:Date.now(),notes:''};S.log.unshift(new Date().toLocaleString()+': '+c.n+' shortlisted');}
+function toggleShortlist(cid,companyIdx){
+  if(S.sl[cid]){
+    delete S.sl[cid];
+    S.log.unshift(new Date().toLocaleString()+': Removed from shortlist');
+  } else {
+    const c=C.find(x=>x.id===cid);
+    const coIdx=companyIdx!=null?companyIdx:(c?jdOf(c)!=null?D.jds[jdOf(c)]?.c:c.co:undefined);
+    S.sl[cid]={jd:jdOf(c),co:coIdx,ts:Date.now(),notes:''};
+    S.log.unshift(new Date().toLocaleString()+': '+c.n+' shortlisted for company '+D.cos[coIdx]);
+  }
   S.log=S.log.slice(0,100);save();render();
+}
+function shortlistTo(cid,coIdx,jdId){
+  const c=C.find(x=>x.id===cid);
+  if(!c)return;
+  S.sl[cid]={jd:jdId!=null?jdId:jdOf(c),co:coIdx,ts:Date.now(),notes:S.sl[cid]?.notes||''};
+  S.log.unshift(new Date().toLocaleString()+': '+c.n+' shortlisted → '+D.cos[coIdx]);
+  S.log=S.log.slice(0,100);save();render();
+}
+function removeFromShortlist(cid){
+  if(S.sl[cid]){
+    const c=C.find(x=>x.id===cid);
+    delete S.sl[cid];
+    S.log.unshift(new Date().toLocaleString()+': '+(c?c.n:'Candidate')+' removed from shortlist');
+    S.log=S.log.slice(0,100);save();render();
+  }
 }
 function updateSlNotes(cid,notes){
   if(S.sl[cid])S.sl[cid].notes=notes;
@@ -343,6 +384,20 @@ function getShortlisted(){
     if(!c)return null;
     return{c,jd:D.jds[info.jd],info};
   }).filter(Boolean).sort((a,b)=>(b.info.ts||0)-(a.info.ts||0));
+}
+// Group shortlisted by company then JD
+function getShortlistedByCompany(){
+  const byCompany={};
+  getShortlisted().forEach(item=>{
+    const coIdx=item.info.co!=null?item.info.co:(item.jd?item.jd.c:null);
+    if(coIdx==null)return;
+    if(!byCompany[coIdx])byCompany[coIdx]={name:D.cos[coIdx],jds:{}};
+    const jdId=item.info.jd;
+    const jdKey=jdId!=null?jdId:'_unassigned';
+    if(!byCompany[coIdx].jds[jdKey])byCompany[coIdx].jds[jdKey]={title:jdId!=null?(D.jds[jdId]?.t||'Unknown JD'):'Unassigned',items:[]};
+    byCompany[coIdx].jds[jdKey].items.push(item);
+  });
+  return byCompany;
 }
 
 /* ====== Views ====== */
@@ -451,21 +506,51 @@ function vMulti(){
   return h;
 }
 
-/* ====== Shortlist View ====== */
+/* ====== Shortlist View — Per-Company ====== */
 function vShortlist(){
-  const items=getShortlisted();
-  let h=head('Shortlisted Candidates',`${items.length} candidates manually shortlisted by HR`,['#/','Home']);
-  h+=`<div class="act" style="margin:10px 0"><button data-xlsl>⬇ Download Shortlist (.xlsx)</button></div>`;
-  if(!items.length)return h+'<div class="card"><b>No candidates shortlisted yet.</b><p class="mu">Go to a JD, and click "✓ Shortlist" on green-zone candidates to add them here.</p></div>';
-  items.forEach(({c,jd,info})=>{
-    const dc=disCheck(c);
-    h+=`<div class="sl-card"><div class="top">${c.cv?`<a class="nm" href="${E(c.cv)}" target="_blank" rel="noopener">${E(c.n)} 📄</a>`:`<b>${E(c.n)}</b>`}
-    <span class="dis-flag ${dc.cls}">${dc.ok?'♿✓':'⚠'} ${E(dc.label)}</span></div>
-    <div class="sl-jd">JD: <a href="#/j/${jd.id}">${E(jd.t)}</a> (${E(D.cos[jd.c])})</div>
-    <div class="mu">${E(c.org)} | ${E(c.e)} exp | ${E(c.loc)} | ${E(c.q||'—')}</div>
-    <div class="mu">${E(c.em)} | ${E(c.ph)}</div>
-    <div style="margin-top:4px"><label class="mu">Notes: </label><input class="inline-edit" type="text" value="${E(info.notes||'')}" data-slnote="${c.id}" placeholder="Add notes…" style="width:70%"></div>
-    <div class="act"><button class="dng" data-slrm="${c.id}">Remove from shortlist</button></div></div>`;
+  const byCompany=getShortlistedByCompany();
+  const totalCount=getShortlisted().length;
+  let h=head('Shortlisted Candidates',`${totalCount} candidates shortlisted across companies`,['#/','Home']);
+
+  // Control bar
+  h+=`<div class="act" style="margin:12px 0;flex-wrap:wrap;gap:8px">`;
+  h+=`<button data-xlsl-all>⬇ Download All Companies (.xlsx)</button>`;
+  // Per-company download buttons
+  Object.entries(byCompany).forEach(([coIdx,co])=>{
+    h+=`<button data-xlsl-co="${coIdx}">⬇ ${E(co.name)} (.xlsx)</button>`;
+  });
+  h+=`</div>`;
+
+  if(!totalCount) return h+'<div class="card"><b>No candidates shortlisted yet.</b><p class="mu">Go to a JD, click "✓ Shortlist" on green-zone candidates. You can also send candidates from the CV Match tab.</p></div>';
+
+  Object.entries(byCompany).forEach(([coIdx,co])=>{
+    h+=`<div class="sl-company-section">`;
+    h+=`<div class="sl-company-header">`;
+    h+=`<span class="sl-company-name">🏢 ${E(co.name)}</span>`;
+    const coTotal=Object.values(co.jds).reduce((n,jd)=>n+jd.items.length,0);
+    h+=`<span class="tag">${coTotal} candidate${coTotal===1?'':'s'}</span>`;
+    h+=`<button data-xlsl-co="${coIdx}" style="font-size:12px">⬇ Download</button>`;
+    h+=`</div>`;
+
+    Object.entries(co.jds).forEach(([jdKey,jdGroup])=>{
+      h+=`<div class="sl-jd-section">`;
+      h+=`<div class="sl-jd-header">📋 ${E(jdGroup.title)} <span class="mu" style="font-weight:400;text-transform:none;letter-spacing:0">(${jdGroup.items.length})</span></div>`;
+      jdGroup.items.forEach(({c,jd,info})=>{
+        const dc=disCheck(c);
+        const j=jd||{};
+        h+=`<div class="sl-card">
+          <div class="top">${c.cv?`<a class="nm" href="${E(c.cv)}" target="_blank" rel="noopener">${E(c.n)} 📄</a>`:`<b>${E(c.n)}</b>`}
+          <span class="dis-flag ${dc.cls}" title="${E(dc.label)}">${dc.ok?'♿✓':'⚠'} ${E(dc.label)}</span></div>
+          <div class="sl-jd">📌 JD: <b>${E(jdGroup.title)}</b>${j.l?` · 📍 ${E(j.l)}`:''}</div>
+          <div class="mu">${E(c.org)} | ${E(c.e)} exp | ${E(c.loc)} | ${E(c.q||'—')}</div>
+          <div class="mu">${E(c.em)} | ${E(c.ph)}${c.np?` | ${E(c.np)} notice`:''}</div>
+          <div style="margin-top:4px"><label class="mu">Notes: </label><input class="inline-edit" type="text" value="${E(info.notes||'')}" data-slnote="${c.id}" placeholder="Add notes…" style="width:60%"></div>
+          <div class="act"><button class="dng" data-slrm="${c.id}">✕ Remove</button>${jd?`<a class="btn-primary" style="text-decoration:none;padding:5px 12px;border-radius:8px;font-size:13px;font-weight:500" href="#/j/${jd.id}">View JD</a>`:''}</div>
+        </div>`;
+      });
+      h+=`</div>`;
+    });
+    h+=`</div>`;
   });
   return h;
 }
@@ -509,16 +594,63 @@ function buildMultiWb(){
   ws.views=[{state:'frozen',ySplit:1}];ws.autoFilter={from:'A1',to:{row:1,column:12}};
   return wb;
 }
-function buildSlWb(){
-  const wb=new ExcelJS.Workbook(),ws=wb.addWorksheet('Shortlisted');
-  ws.addRow(['Name','Email','Phone','Organization','Experience','Location','Qualification','Skills','Disability Type','Disability %','JD Title','Company','HR Notes']).eachCell(x=>{x.font={bold:true,color:{argb:'FFFFFFFF'}};x.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF157347'}}});
-  getShortlisted().forEach(({c,jd,info})=>{
-    ws.addRow([c.n,c.em,c.ph,c.org,c.e,c.loc,c.q,c.sk,c.dt,c.dp,jd.t,D.cos[jd.c],info.notes||'']);
+function buildSlWbAll(){
+  const wb=new ExcelJS.Workbook();
+  const byCompany=getShortlistedByCompany();
+  if(!Object.keys(byCompany).length){
+    const ws=wb.addWorksheet('Shortlisted');
+    ws.addRow(['No shortlisted candidates']);
+    return wb;
+  }
+  Object.entries(byCompany).forEach(([coIdx,co])=>{
+    const wsName=(co.name||'Company').replace(/[\\/?*\[\]:]/g,' ').slice(0,31);
+    const ws=wb.addWorksheet(wsName);
+    // Header row
+    ws.addRow(['Candidate Name','Email','Phone','Current Org','Experience','Location','Qualification','Skills','Disability Type','Disability %','Notice Period','Expected CTC','JD Title','Company','HR Notes'])
+      .eachCell(x=>{x.font={bold:true,color:{argb:'FFFFFFFF'}};x.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF157347'}}});
+    // Rows grouped by JD
+    Object.values(co.jds).forEach(jdGroup=>{
+      // JD sub-header
+      const subRow=ws.addRow([`📋 JD: ${jdGroup.title}`,'','','','','','','','','','','','','','']);
+      ws.mergeCells(`A${subRow.number}:O${subRow.number}`);
+      subRow.getCell(1).font={bold:true,italic:true,color:{argb:'FF4F46E5'}};
+      subRow.getCell(1).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF0F0FF'}};
+      jdGroup.items.forEach(({c,jd,info})=>{
+        const r=ws.addRow([c.n,c.em,c.ph,c.org,c.e,c.loc,c.q,c.sk,c.dt,c.dp,c.np,c.ex,jdGroup.title,co.name,info.notes||'']);
+        r.eachCell({includeEmpty:true},x=>{x.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFC6EFCE'}}});
+        if(c.cv)r.getCell(16)&&(r.getCell(1).note='CV: '+c.cv);
+      });
+    });
+    [24,28,14,26,14,18,18,34,20,10,14,12,34,20,40].forEach((w,i)=>ws.getColumn(i+1).width=w);
+    ws.views=[{state:'frozen',ySplit:1}];
   });
-  [24,28,14,26,14,18,18,34,20,10,34,20,40].forEach((w,i)=>ws.getColumn(i+1).width=w);
-  ws.views=[{state:'frozen',ySplit:1}];ws.autoFilter={from:'A1',to:{row:1,column:13}};
   return wb;
 }
+function buildSlWbCo(coIdx){
+  const wb=new ExcelJS.Workbook();
+  const byCompany=getShortlistedByCompany();
+  const co=byCompany[coIdx];
+  if(!co){const ws=wb.addWorksheet('Empty');ws.addRow(['No data']);return wb;}
+  const wsName=(co.name||'Company').replace(/[\\/?*\[\]:]/g,' ').slice(0,31);
+  const ws=wb.addWorksheet(wsName);
+  ws.addRow(['Candidate Name','Email','Phone','Current Org','Experience','Location','Qualification','Skills','Disability Type','Disability %','Notice Period','Expected CTC','JD Title','Company','HR Notes'])
+    .eachCell(x=>{x.font={bold:true,color:{argb:'FFFFFFFF'}};x.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF157347'}}});
+  Object.values(co.jds).forEach(jdGroup=>{
+    const subRow=ws.addRow([`📋 JD: ${jdGroup.title}`,'','','','','','','','','','','','','','']);
+    ws.mergeCells(`A${subRow.number}:O${subRow.number}`);
+    subRow.getCell(1).font={bold:true,italic:true,color:{argb:'FF4F46E5'}};
+    subRow.getCell(1).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF0F0FF'}};
+    jdGroup.items.forEach(({c,jd,info})=>{
+      const r=ws.addRow([c.n,c.em,c.ph,c.org,c.e,c.loc,c.q,c.sk,c.dt,c.dp,c.np,c.ex,jdGroup.title,co.name,info.notes||'']);
+      r.eachCell({includeEmpty:true},x=>{x.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFC6EFCE'}}});
+    });
+  });
+  [24,28,14,26,14,18,18,34,20,10,14,12,34,20,40].forEach((w,i)=>ws.getColumn(i+1).width=w);
+  ws.views=[{state:'frozen',ySplit:1}];
+  return wb;
+}
+// Legacy alias
+function buildSlWb(){return buildSlWbAll();}
 
 let xp;const loadX=()=>xp||(xp=new Promise((ok,no)=>{if(window.ExcelJS)return ok();const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js';s.onload=ok;s.onerror=()=>{xp=null;no()};document.head.appendChild(s)}));
 async function dl(id){try{await loadX()}catch(e){alert('Could not load the Excel library. Check your connection and try again.');return}
@@ -533,10 +665,16 @@ async function dlMulti(){try{await loadX()}catch(e){alert('Excel library error')
   const buf=await buildMultiWb().xlsx.writeBuffer(),a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
   a.download='Multi-JD Candidates.xlsx';document.body.appendChild(a);a.click();a.remove()}
-async function dlSl(){try{await loadX()}catch(e){alert('Excel library error');return}
-  const buf=await buildSlWb().xlsx.writeBuffer(),a=document.createElement('a');
+async function dlSlAll(){try{await loadX()}catch(e){alert('Excel library error');return}
+  const buf=await buildSlWbAll().xlsx.writeBuffer(),a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
-  a.download='Shortlisted Candidates.xlsx';document.body.appendChild(a);a.click();a.remove()}
+  a.download='Shortlisted Candidates - All Companies.xlsx';document.body.appendChild(a);a.click();a.remove()}
+async function dlSlCo(coIdx){try{await loadX()}catch(e){alert('Excel library error');return}
+  const coName=(D.cos[coIdx]||'Company').replace(/[^\w\-. &()]+/g,' ').trim();
+  const buf=await buildSlWbCo(coIdx).xlsx.writeBuffer(),a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
+  a.download='Shortlisted - '+coName+'.xlsx';document.body.appendChild(a);a.click();a.remove()}
+async function dlSl(){return dlSlAll();}
 
 /* ====== CV-to-JD Matching Engine ====== */
 let cvState={text:null,file:null,results:null,loading:false,progress:0,step:''};
@@ -765,20 +903,37 @@ function matchCvToJds(cvText){
       else domainScore=4;
     }
 
-    // === Signal 4: Experience fit (0-15) ===
+    // === Signal 4: Experience fit — HARD RED LINE ===
+    // If JD specifies experience and the CV experience is known but doesn't meet
+    // the MINIMUM requirement, the candidate is EXCLUDED entirely (expFail=true).
     let expScore=8; // default: unknown
     let expFit='unknown';
+    let expFail=false;
     const rng=parseExpRange(j.e,j.t);
     if(cvExp!==null&&rng!==null){
       const [lo,hi]=rng;
       const inRange=cvExp>=lo&&(hi===null||cvExp<=hi+2);
-      if(inRange){expScore=15;expFit='yes';}
-      else{
-        const gap=cvExp<lo?lo-cvExp:(hi!==null?cvExp-hi-2:0);
-        expScore=Math.max(0,15-Math.round(gap*3));
+      if(inRange){
+        expScore=15;expFit='yes';
+      } else {
         expFit='no';
+        // Hard disqualifier: if candidate clearly doesn't meet minimum experience
+        // (more than 0.5 yr gap below minimum), exclude from results entirely.
+        if(cvExp<lo-0.5){
+          expFail=true; // will be excluded
+        } else {
+          // Within 0.5yr tolerance — penalise but don't exclude
+          const gap=cvExp<lo?lo-cvExp:(hi!==null?cvExp-hi-2:0);
+          expScore=Math.max(0,15-Math.round(gap*3));
+        }
       }
+    } else if(cvExp!==null&&rng===null){
+      // JD has no experience range specified — neutral
+      expScore=8;
     }
+
+    // If experience fails the red line — skip this JD entirely
+    if(expFail)continue;
 
     // === Signal 5: Qualification match (0-10) ===
     const jdQ=jdQualLevel(j);
@@ -842,14 +997,26 @@ async function handleCvFile(file){
     await new Promise(r=>setTimeout(r,200)); // brief pause for UI
 
     cvState.text=text.trim();
-    cvState.results=matchCvToJds(cvState.text);
     cvState.cvExp=cvParseExp(cvState.text);
     cvState.cvQual=cvParseQual(cvState.text);
+    // Count how many JDs would be disqualified due to experience mismatch
+    let expDisqualCount=0;
+    for(const j of D.jds){
+      if(j.ty==='Not in JD sheet')continue;
+      if(cvState.cvExp!==null){
+        const rng=parseExpRange(j.e,j.t);
+        if(rng!==null){
+          const [lo]=rng;
+          if(cvState.cvExp<lo-0.5)expDisqualCount++;
+        }
+      }
+    }
+    cvState.expDisqualCount=expDisqualCount;
+    cvState.results=matchCvToJds(cvState.text);
     setCvProgress(100,'Done!');
     await new Promise(r=>setTimeout(r,300));
     cvState.loading=false;
     render();
-    // Animate score bars after render
     setTimeout(()=>{
       document.querySelectorAll('.cv-score-fill[data-w]').forEach(el=>{
         el.style.width=el.dataset.w+'%';
@@ -869,24 +1036,29 @@ function vCvMatch(){
   let h=head('CV → JD Matcher','Upload a resume to find the best matching job descriptions',['#/','Home']);
 
   if(cvState.loading){
-    // Show progress
     h+=`<div class="cv-file-info"><span class="cv-file-icon">📄</span><div><div class="cv-file-name">${E(cvState.file?.name||'File')}</div><div class="cv-file-size">${fmtSize(cvState.file?.size||0)}</div></div></div>`;
     h+=`<div class="cv-progress"><div class="cv-progress-text"><span class="cv-step-text">${E(cvState.step)}</span><span>${cvState.progress}%</span></div><div class="cv-progress-bar"><div class="cv-progress-fill" style="width:${cvState.progress}%"></div></div></div>`;
     return h;
   }
 
   if(cvState.results){
-    // Show results
     const r=cvState.results;
-    const top5=r.slice(0,5);
     const strong=r.filter(x=>x.score>=60).length;
     const moderate=r.filter(x=>x.score>=35&&x.score<60).length;
-
     const qualLabels=['','12th','Diploma','Graduate','Post-Grad','PhD'];
+
     h+=`<div class="cv-file-info"><span class="cv-file-icon">${cvState.file?.type==='pdf'?'📕':'📘'}</span><div><div class="cv-file-name">${E(cvState.file?.name||'File')}</div><div class="cv-file-size">${fmtSize(cvState.file?.size||0)} · ${cvState.text?.split(/\s+/).length||0} words extracted${cvState.cvExp!==null?' · '+cvState.cvExp+' yrs experience detected':''}${cvState.cvQual?' · '+qualLabels[cvState.cvQual]+' level':''}</div></div><button class="cv-new-btn btn-primary" data-cvnew>↑ Upload Another</button></div>`;
 
+    // Experience red-line notice
+    if(cvState.cvExp!==null){
+      const expDisqualCount=cvState.expDisqualCount||0;
+      if(expDisqualCount>0){
+        h+=`<div style="padding:10px 14px;margin:8px 0;background:var(--rb);color:var(--r);border:1px solid var(--r);border-radius:8px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px">🚫 <span>${expDisqualCount} JD${expDisqualCount===1?'':'s'} were excluded because your experience (${cvState.cvExp} yrs) did not meet their minimum requirement. Experience is a hard criterion.</span></div>`;
+      }
+    }
+
     h+=`<div class="cv-results-summary">
-      <div class="cv-stat"><div class="cv-stat-val">${r.length}</div><div class="cv-stat-label">JDs Compared</div></div>
+      <div class="cv-stat"><div class="cv-stat-val">${r.length}</div><div class="cv-stat-label">Eligible JDs</div></div>
       <div class="cv-stat"><div class="cv-stat-val">${strong}</div><div class="cv-stat-label">Strong Matches</div></div>
       <div class="cv-stat"><div class="cv-stat-val">${moderate}</div><div class="cv-stat-label">Moderate</div></div>
       <div class="cv-stat"><div class="cv-stat-val">${cvState.cvExp!==null?cvState.cvExp+'y':'?'}</div><div class="cv-stat-label">Exp Detected</div></div>
@@ -895,17 +1067,21 @@ function vCvMatch(){
     h+=`<details style="margin:8px 0"><summary class="mu">Extracted text preview (${cvState.text?.length||0} chars)</summary><div class="cv-extracted">${E(cvState.text?.slice(0,2000)||'')}${(cvState.text?.length||0)>2000?'\n...truncated...':''}</div></details>`;
 
     if(!r.length){
-      h+='<div class="card"><b>No matching JDs found.</b><p class="mu">The CV text did not match any job description keywords. Try a different resume.</p></div>';
+      h+='<div class="card"><b>No eligible JDs found.</b><p class="mu">Either the CV text did not match any JD keywords, or all JDs were excluded due to experience requirements. Try a different resume.</p></div>';
       return h;
     }
 
-    h+='<h2>Top Matches</h2>';
+    h+='<h2>Top Matches <span class="mu" style="font-size:14px;font-weight:400">(JDs where your experience meets the minimum requirement)</span></h2>';
     r.slice(0,20).forEach((m,i)=>{
       const pct=m.score;
       const cls=pct>=60?'high':pct>=35?'medium':'low';
       const rankCls=i<3?'top':pct>=50?'good':'fair';
       const rng=parseExpRange(m.jd.e,m.jd.t);
       const rngStr=rng?rng[1]!==null?rng[0]+'-'+rng[1]+' yrs':rng[0]+'+ yrs':'any';
+
+      // Shortlist to company buttons
+      const coIdx=m.jd.c;
+      const alreadySl=isShortlisted('_cv_'+m.jd.id); // pool-style shortlist not applicable here, just show UI
 
       h+=`<div class="cv-match-card">
         <div class="cv-match-rank ${rankCls}">#${i+1}</div>
@@ -917,7 +1093,7 @@ function vCvMatch(){
         <div class="cv-match-meta">
           <span class="tag">${E(D.cos[m.jd.c])}</span>
           <span class="tag">${E(m.jd.ty)}</span>
-          ${m.jd.e?`<span class="cv-exp-fit ${m.expFit}">${m.expFit==='yes'?'✓ Exp fits':'⚠ Exp'}: ${E(rngStr)}${m.cvExp!==null?' (you: '+m.cvExp+'y)':''}</span>`:''}
+          ${m.jd.e?`<span class="cv-exp-fit ${m.expFit}">${m.expFit==='yes'?'✓ Exp fits':'~ Exp close'}: ${E(rngStr)}${m.cvExp!==null?' (you: '+m.cvExp+'y)':''}</span>`:''}
           <span class="tag">${m.candCount} existing candidate${m.candCount===1?'':'s'}</span>
           ${m.jd.l?`<span class="tag">📍 ${E(m.jd.l)}</span>`:''}
         </div>
@@ -930,7 +1106,7 @@ function vCvMatch(){
             <span class="tag">Title: ${m.kwScore}/30</span>
             <span class="tag">Skills: ${m.skillScore||0}/25</span>
             <span class="tag">Domain: ${m.domainScore||0}/20</span>
-            <span class="tag">Exp: ${m.expScore}/15</span>
+            <span class="tag">Exp: ${m.expScore}/15 ✓</span>
             <span class="tag">Qual: ${m.qualScore||0}/10</span>
           </div>
         </details>
@@ -948,22 +1124,291 @@ function vCvMatch(){
     <div class="cv-upload-title">Drop your CV here</div>
     <div class="cv-upload-sub">or click to browse · PDF, DOCX, TXT supported</div>
   </div>`;
+
   h+=`<div style="margin-top:20px">`;
+  h+=`<div class="card" style="border-left:4px solid var(--r);margin-bottom:12px">
+    <h3 style="margin:0 0 6px;color:var(--r)">🚫 Experience is a Hard Red Line</h3>
+    <div class="mu" style="line-height:1.8">
+      If a CV does not meet the minimum experience for a JD, that JD is <b>completely excluded</b> from results — it will not show up even with a high skill or domain match score.
+      <br>This ensures only genuinely eligible candidates are surfaced.
+    </div>
+  </div>`;
   h+=`<div class="card" style="border-left:4px solid var(--ac)">
     <h3 style="margin:0 0 6px">How it works</h3>
     <div class="mu" style="line-height:1.8">
       <b>1.</b> Upload a resume (PDF, DOCX, or TXT)<br>
       <b>2.</b> Text is extracted entirely in your browser — nothing is sent to any server<br>
       <b>3.</b> CV is analyzed for skills, experience, qualifications, and domain expertise<br>
-      <b>4.</b> Each of the ${D.jds.filter(j=>j.ty!=='Not in JD sheet').length} JDs is scored on 5 signals:<br>
-      &nbsp;&nbsp;&nbsp;• <b>Title match</b> (30 pts) — keyword overlap with JD title<br>
-      &nbsp;&nbsp;&nbsp;• <b>Skill match</b> (25 pts) — overlap with skills of candidates in that JD<br>
-      &nbsp;&nbsp;&nbsp;• <b>Domain alignment</b> (20 pts) — tech, finance, supply chain, etc.<br>
-      &nbsp;&nbsp;&nbsp;• <b>Experience fit</b> (15 pts) — years match JD requirements<br>
-      &nbsp;&nbsp;&nbsp;• <b>Qualification</b> (10 pts) — education level alignment
+      <b>4.</b> <b>Experience check (Red Line):</b> JDs where your experience doesn't meet the minimum are excluded<br>
+      <b>5.</b> Remaining JDs are scored on:<br>
+      &nbsp;&nbsp;&nbsp;• <b>Title match</b> (30 pts) · <b>Skill match</b> (25 pts) · <b>Domain alignment</b> (20 pts) · <b>Experience fit</b> (15 pts) · <b>Qualification</b> (10 pts)
     </div>
   </div>`;
   h+=`</div>`;
+  return h;
+}
+
+/* ====== Candidate Pool Upload (Google Sheet / Excel) ====== */
+let poolState={loading:false,progress:0,step:'',lastAdded:0,lastSkipped:0};
+
+// Map common Google Sheet / Excel column headers to our internal fields
+const POOL_COL_MAP={
+  // Name
+  'name':              'n',
+  'candidate name':    'n',
+  'full name':         'n',
+  'applicant name':    'n',
+  // Email
+  'email':             'em',
+  'mail id':           'em',
+  'email id':          'em',
+  'e-mail':            'em',
+  // Phone
+  'phone':             'ph',
+  'mobile':            'ph',
+  'contact':           'ph',
+  'contact no':        'ph',
+  'phone number':      'ph',
+  'mobile number':     'ph',
+  // Organization
+  'organization':      'org',
+  'current organization': 'org',
+  'company':           'org',
+  'employer':          'org',
+  'current company':   'org',
+  // Experience
+  'experience':        'e',
+  'relevant experience': 'e',
+  'relevant experience in years': 'e',
+  'total experience':  'e',
+  'exp':               'e',
+  'years of experience': 'e',
+  // Skills
+  'skills':            'sk',
+  'skillset':          'sk',
+  'relevant skillset': 'sk',
+  'key skills':        'sk',
+  'technical skills':  'sk',
+  // Disability type
+  'disability type':   'dt',
+  'type of disability':'dt',
+  'disability':        'dt',
+  // Disability %
+  'disability%':       'dp',
+  'disability percentage': 'dp',
+  'disability %':      'dp',
+  // Location
+  'location':          'loc',
+  'current location':  'loc',
+  'city':              'loc',
+  // Role / position
+  'role':              'role',
+  'job role':          'role',
+  'position':          'role',
+  'applied role':      'role',
+  'designation':       'role',
+  // Qualification
+  'qualification':     'q',
+  'education':         'q',
+  'highest qualification': 'q',
+  // CTC
+  'current ctc':       'ct',
+  'ctc':               'ct',
+  'expected ctc':      'ex',
+  // Notice period
+  'notice period':     'np',
+  // Address
+  'address':           'ad',
+  'full address':      'ad',
+  // CV / resume
+  'cv':                'cv',
+  'resume':            'cv',
+  'upload cv':         'cv',
+  'cv link':           'cv',
+  // Preferred relocation
+  'preferred relocation': 'pr',
+  'relocation':        'pr',
+  // Notes
+  'notes':             'note',
+  'screening notes':   'note',
+  'remarks':           'note',
+  // Timestamp
+  'timestamp':         'ts',
+  'date':              'ts',
+  'applied date':      'ts',
+};
+
+async function handlePoolFile(file){
+  const ext=file.name.split('.').pop().toLowerCase();
+  if(!['xlsx','xls','csv'].includes(ext)){
+    alert('Please upload an Excel (.xlsx/.xls) or CSV file.');
+    return;
+  }
+  poolState={loading:true,progress:0,step:'Loading library...',lastAdded:0,lastSkipped:0};
+  render();
+  try{
+    // Load SheetJS
+    await loadSheetJs();
+    poolState.step='Reading file...';
+    poolState.progress=20;
+    render();
+    const buf=await file.arrayBuffer();
+    const wb=XLSX.read(buf,{type:'array'});
+    const ws=wb.Sheets[wb.SheetNames[0]];
+    const rows=XLSX.utils.sheet_to_json(ws,{defval:''});
+    if(!rows.length){alert('The sheet appears empty.');poolState.loading=false;render();return;}
+
+    poolState.step='Mapping columns...';
+    poolState.progress=40;
+    render();
+
+    // Find column mappings from first row keys
+    const colKeys=Object.keys(rows[0]);
+    const mapping={};
+    colKeys.forEach(k=>{
+      const norm=k.trim().toLowerCase();
+      if(POOL_COL_MAP[norm])mapping[k]=POOL_COL_MAP[norm];
+    });
+
+    let added=0,skipped=0;
+    // Existing identifiers (email+phone) to avoid duplicates
+    const existing=new Set(C.map(c=>((c.em||'')+'|'+(c.ph||'')).toLowerCase()));
+    // Also include pool candidates already added
+    S.pool.forEach(p=>existing.add(((p.em||'')+'|'+(p.ph||'')).toLowerCase()));
+
+    const newCandidates=[];
+    rows.forEach((row,i)=>{
+      const candidate={src:file.name,pool:true,_poolIdx:Date.now()+'_'+i};
+      Object.entries(mapping).forEach(([col,field])=>{
+        candidate[field]=String(row[col]||'').trim();
+      });
+      // Skip blank rows
+      if(!candidate.n&&!candidate.em&&!candidate.ph)return;
+      // Skip duplicates
+      const key=((candidate.em||'')+'|'+(candidate.ph||'')).toLowerCase();
+      if(existing.has(key)){skipped++;return;}
+      existing.add(key);
+      newCandidates.push(candidate);
+      added++;
+    });
+
+    poolState.step='Matching to JDs...';
+    poolState.progress=70;
+    render();
+
+    // Assign each pool candidate to the best matching JD
+    newCandidates.forEach(cand=>{
+      let bestJd=null,bestScore=-1;
+      D.jds.forEach(j=>{
+        if(j.ty==='Not in JD sheet')return;
+        // Simple role title match
+        const roleText=(cand.role||cand.n||'').toLowerCase();
+        const jdText=(j.t||'').toLowerCase();
+        // Match on experience (hard red line)
+        const expY=parseYrs(cand.e);
+        const rng=parseExpRange(j.e,j.t);
+        if(expY!==null&&rng!==null&&expY<rng[0]-0.5)return; // skip if experience doesn't meet minimum
+        // Score: keyword overlap between role/skills and JD title
+        let score=0;
+        const roleWords=roleText.split(/\W+/).filter(w=>w.length>2);
+        const jdWords=jdText.split(/\W+/).filter(w=>w.length>2);
+        roleWords.forEach(w=>{if(jdWords.some(jw=>jw.startsWith(w.slice(0,5))))score++;});
+        // Boost: skills alignment
+        const skillText=(cand.sk||'').toLowerCase();
+        jdWords.forEach(w=>{if(skillText.includes(w))score+=0.5;});
+        if(score>bestScore){bestScore=score;bestJd=j;}
+      });
+      cand._matchedJd=bestJd?bestJd.id:null;
+      cand._matchScore=bestScore;
+    });
+
+    poolState.step='Saving...';
+    poolState.progress=90;
+    render();
+
+    S.pool.push(...newCandidates);
+    S.log.unshift(new Date().toLocaleString()+': Uploaded pool file "'+file.name+'" — '+added+' added, '+skipped+' duplicates skipped');
+    S.log=S.log.slice(0,100);
+    save();
+
+    // Reload C to include pool candidates
+    rebuildCandidateList();
+
+    poolState={loading:false,progress:100,step:'Done',lastAdded:added,lastSkipped:skipped};
+    render();
+  }catch(err){
+    console.error(err);
+    poolState.loading=false;
+    alert('Error reading pool file: '+err.message);
+    render();
+  }
+}
+
+let sheetJsP;
+const loadSheetJs=()=>sheetJsP||(sheetJsP=new Promise((ok,no)=>{
+  if(window.XLSX)return ok();
+  const s=document.createElement('script');
+  s.src='https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+  s.onload=ok;s.onerror=()=>{sheetJsP=null;no(new Error('Could not load XLSX library'))};
+  document.head.appendChild(s);
+}));
+
+function rebuildCandidateList(){
+  C=D.pl.map((p,i)=>Object.assign({id:'p'+i},D.people[p[1]],{jd:p[0],co:D.jds[p[0]].c,sc:p[2],rs:p[3],pool:p[4]}));
+  // Add pool candidates
+  S.pool.forEach((pc,i)=>{
+    const pid='pool_'+i;
+    const jdId=pc._matchedJd;
+    const j=jdId!=null?D.jds[jdId]:null;
+    C.push(Object.assign({},pc,{
+      id:pid,
+      jd:jdId,
+      co:j?j.c:undefined,
+      sc:50,// default score
+      rs:'Pool candidate',
+      pool:true
+    }));
+  });
+}
+
+function vPoolUpload(){
+  let h=head('Candidate Pool Upload','Upload a Google Sheet or Excel file to add candidates to the pool',['#/','Home']);
+  h+=`<div class="card" style="border-left:4px solid var(--blue);margin-bottom:14px">
+    <h3 style="margin:0 0 4px">📊 How Pool Upload Works</h3>
+    <div class="mu" style="line-height:1.8;font-size:13px">
+      • Upload your Google Sheet (downloaded as .xlsx) or any Excel/CSV candidate list<br>
+      • Columns are automatically mapped — no formatting required<br>
+      • <b>Experience is a hard red line:</b> candidates who don't meet a JD's minimum will not be matched to it<br>
+      • Duplicates (same email + phone) are automatically skipped<br>
+      • Matched candidates appear in the relevant JD views and can be shortlisted
+    </div>
+  </div>`;
+  if(poolState.loading){
+    h+=`<div class="cv-progress"><div class="cv-progress-text"><span class="cv-step-text">${E(poolState.step)}</span><span>${poolState.progress}%</span></div><div class="cv-progress-bar"><div class="cv-progress-fill" style="width:${poolState.progress}%"></div></div></div>`;
+    return h;
+  }
+  if(poolState.lastAdded>0||poolState.lastSkipped>0){
+    h+=`<div style="padding:12px 16px;margin-bottom:14px;background:var(--gb);color:var(--g);border:1px solid var(--g);border-radius:8px;font-size:13px;font-weight:600">✓ Upload complete — ${poolState.lastAdded} candidates added, ${poolState.lastSkipped} duplicates skipped. <a href="#/" style="color:var(--g)">View dashboard →</a></div>`;
+  }
+  const poolCount=S.pool.length;
+  if(poolCount>0){
+    h+=`<div style="padding:10px 14px;margin-bottom:14px;background:var(--bluebg);color:var(--blue);border:1px solid var(--blue);border-radius:8px;font-size:13px">
+      <b>${poolCount}</b> pool candidates currently loaded. <button data-clearpol style="font-size:12px;margin-left:8px">Clear Pool</button>
+    </div>`;
+  }
+  h+=`<div class="pool-upload" id="pool-drop">
+    <input type="file" id="pool-file" accept=".xlsx,.xls,.csv">
+    <div style="font-size:40px;margin-bottom:10px">📊</div>
+    <div style="font-size:16px;font-weight:700;margin-bottom:4px">Drop your Excel / Google Sheet here</div>
+    <div class="mu">or click to browse · .xlsx, .xls, .csv supported</div>
+  </div>`;
+
+  h+=`<div class="card" style="margin-top:14px">
+    <h3 style="margin:0 0 8px">Recognized Column Headers</h3>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">`;
+  const sampleCols=['Name','Email','Phone','Organization','Experience','Skills','Disability Type','Disability %','Location','Role','Qualification','Current CTC','Expected CTC','Notice Period','Timestamp'];
+  sampleCols.forEach(c=>h+=`<span class="tag">${E(c)}</span>`);
+  h+=`</div><p class="mu" style="font-size:12px;margin:8px 0 0">Column names are matched case-insensitively. Extra columns are ignored.</p></div>`;
   return h;
 }
 
@@ -977,8 +1422,8 @@ function render(){
   if(!D)return;
   updateNav();
   const[v,a]=location.hash.slice(2).split('/');
-  app.innerHTML=v==='c'?vCo(a):v==='j'?vJd(a):v==='u'?vUn():v==='multi'?vMulti():v==='shortlist'?vShortlist():v==='cv'?vCvMatch():vHome();
-  // Bind CV upload events after render
+  app.innerHTML=v==='c'?vCo(a):v==='j'?vJd(a):v==='u'?vUn():v==='multi'?vMulti():v==='shortlist'?vShortlist():v==='cv'?vCvMatch():v==='pool'?vPoolUpload():vHome();
+  // Bind CV upload events
   if(v==='cv'&&!cvState.loading&&!cvState.results){
     const drop=document.getElementById('cv-drop');
     const inp=document.getElementById('cv-file');
@@ -988,6 +1433,17 @@ function render(){
       drop.addEventListener('drop',e=>{e.preventDefault();drop.classList.remove('drag-over');if(e.dataTransfer.files[0])handleCvFile(e.dataTransfer.files[0])});
     }
     if(inp)inp.addEventListener('change',e=>{if(e.target.files[0])handleCvFile(e.target.files[0])});
+  }
+  // Bind Pool upload events
+  if(v==='pool'&&!poolState.loading){
+    const drop=document.getElementById('pool-drop');
+    const inp=document.getElementById('pool-file');
+    if(drop){
+      drop.addEventListener('dragover',e=>{e.preventDefault();drop.classList.add('drag-over')});
+      drop.addEventListener('dragleave',()=>drop.classList.remove('drag-over'));
+      drop.addEventListener('drop',e=>{e.preventDefault();drop.classList.remove('drag-over');if(e.dataTransfer.files[0])handlePoolFile(e.dataTransfer.files[0])});
+    }
+    if(inp)inp.addEventListener('change',e=>{if(e.target.files[0])handlePoolFile(e.target.files[0])});
   }
 }
 
@@ -1007,7 +1463,7 @@ app.addEventListener('input',e=>{
   }
 });
 
-app.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset,f=k=>C.find(x=>x.id===d[k]);
+app.addEventListener('click',e=>{const b=e.target.closest('button,a[data-slrm]');if(!b)return;const d=b.dataset,f=k=>C.find(x=>x.id===d[k]);
   if(d.rm){pend=d.rm;render()}else if('rc' in d){pend=null;render()}
   else if(d.rm2){const c=f('rm2');pend=null;set(c.id,{rm:1},c.n+': removed')}
   else if(d.rs){const c=f('rs');set(c.id,{rm:0},c.n+': restored')}
@@ -1015,21 +1471,28 @@ app.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return
   else if(d.xl){dl(+d.xl)}
   else if(d.tab){activeTab=d.tab;render()}
   else if(d.sl){toggleShortlist(d.sl)}
-  else if(d.slrm){toggleShortlist(d.slrm)}
+  else if(d.slrm){removeFromShortlist(d.slrm)}
   else if(d.dlq){dlQ(+d.dlq)}
   else if(d.addq){addQuestion(+d.addq)}
   else if(d.rmq!==undefined){removeQuestion(+d.rmq,+d.rqi)}
   else if(d.resetq!==undefined){delete S.qe[+d.resetq];save();render()}
   else if('xlmulti' in d){dlMulti()}
   else if('xlsl' in d){dlSl()}
+  else if('xlslAll' in d||b.dataset.xlslAll!=null){dlSlAll()}
+  else if(d.xlslCo!=null){dlSlCo(+d.xlslCo)}
   else if('cvnew' in d){cvState={text:null,file:null,results:null,loading:false,progress:0,step:''};render()}
+  else if('clearpol' in d){if(confirm('Clear all '+S.pool.length+' pool candidates? This cannot be undone.')){S.pool=[];save();rebuildCandidateList();render()}}
 });
 
 addEventListener('hashchange',()=>{pend=null;showRm=false;activeTab='zones';render();scrollTo(0,0)});
-$('#reset').onclick=()=>{if(confirm('This will reset ALL your changes (zone moves, shortlists, notes, custom questions). Continue?')){S={ov:{},log:[],sl:{},qe:{}};save();render()}};
+$('#reset').onclick=()=>{if(confirm('This will reset ALL your changes (zone moves, shortlists, notes, custom questions, pool candidates). Continue?')){S={ov:{},log:[],sl:{},qe:{},pool:[]};save();rebuildCandidateList();render()}};
 
 const api=async p=>{const r=await fetch('/api/data',{headers:{'x-password':p||''}});if(!r.ok)throw r.status;return r.json()};
-function start(d){D=d;C=D.pl.map((p,i)=>Object.assign({id:'p'+i},D.people[p[1]],{jd:p[0],co:D.jds[p[0]].c,sc:p[2],rs:p[3],pool:p[4]}));render()}
+function start(d){
+  D=d;
+  rebuildCandidateList();
+  render();
+}
 function login(s,tried){app.innerHTML=s===503?'<div class="card"><b>Not configured yet.</b><p class="mu">Set SITE_PASSWORD (or PUBLIC_ACCESS=true) in Vercel and redeploy.</p></div>':`<div class="card" style="max-width:380px;margin:40px auto"><b style="font-size:18px">🔒 Password Required</b><p class="mu">${tried?'Wrong password. ':''}Ask the organiser for access.</p><input id="pw" type="password" placeholder="Enter password…" style="width:100%;padding:10px;margin-bottom:10px;border:1px solid var(--bd);border-radius:8px;font:inherit;background:var(--bg);color:var(--tx)"><button id="go" class="btn-primary" style="width:100%;padding:10px">Open Dashboard</button></div>`;
   const go=$('#go');if(go)go.onclick=async()=>{const p=$('#pw').value;try{start(await api(p));try{sessionStorage.setItem('pw',p)}catch(e){}}catch(e){login(e,1)}}}
 (async()=>{let p='';try{p=sessionStorage.getItem('pw')||''}catch(e){}try{start(await api(p))}catch(s){login(s,0)}})();

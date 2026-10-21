@@ -114,13 +114,17 @@ def rng(e,t):
     if m:return (float(m[1]),float(m[2]))
     m=re.search(r'(\d+)\s*(\+|yr|year)',e);return (float(m[1]),None) if m else None
 def score(c,j,role):
-    y=yrs(c['exp']);rg=rng(j['e'],j['t']);why=[]
-    ex=8 if y is None else 15 if rg is None else 25 if (y>=rg[0] and (rg[1] is None or y<=rg[1]+3)) else 18 if y>rg[0] else max(0,25-12*(rg[0]-y))
-    why.append(('experience not stated' if y is None else f'{y:g} yrs experience')+(f" (JD: {j['e'][:30]})" if rg and j['e'] else ''))
+    y=yrs(c['exp']);rg=rng(j['e'],j['t']);why=[];exp_mismatch=False
+    ex=8 if y is None else 15 if rg is None else 25 if (y>=rg[0] and (rg[1] is None or y<=rg[1]+2)) else max(0,25-12*abs(rg[0]-y) if y<rg[0] else 25-5*(y-(rg[1]+2)) if rg[1] is not None else 0)
+    # Flag experience mismatch for hard cap
+    if y is not None and rg is not None:
+        in_range = y>=rg[0] and (rg[1] is None or y<=rg[1]+2)
+        if not in_range: exp_mismatch=True
+    why.append(('experience not stated' if y is None else f'{y:g} yrs experience'+(' MISMATCH' if exp_mismatch else ''))+(f" (JD: {j['e'][:30]})" if rg and j['e'] else ''))
     jt=set(toks(j['t'].split(': ',1)[-1],LV));wd=toks(' '.join([c['sk'],c['des'],c['q']]),LV);bag=set(wd)
     sh=jt&bag;fit=35*(.3+.7*min(1,len(sh)/min(len(jt),4)))*(1 if bag else .6) if jt else 21
     why.append(('matches: '+', '.join(sorted(wd[k] for k in sh)[:4])) if sh else 'little keyword overlap with role')
-    jc=cities(j['l'])|cities(j['t'])|cities(role);cc=cities(c['loc']);yes=re.match(r'\s*y',c['rl'].lower())
+    jc=cities(j['l'])|cities(j['t'])|cities(role);cc=cities(c['loc']);yes=re.match(r'\\s*y',c['rl'].lower())
     if 'remote' in (j['l']+j['t']).lower():lo=15;why.append('remote role')
     elif not jc:lo=8
     elif cc&jc:lo=15;why.append('based in role city')
@@ -130,7 +134,12 @@ def score(c,j,role):
     why.append('notice n/a' if n is None else 'immediate joiner' if n==0 else f'{n} days notice')
     cp=5*bool(c['cv'])+4*bool(c['ph'] or c['em'])+3*bool(c['q'])+3*bool(c['sk'] or c['des'])
     if not c['cv']:why.append('no CV link')
-    return round(fit+ex+lo+nt+cp),'; '.join(why)
+    total=round(fit+ex+lo+nt+cp)
+    # Hard cap: experience mismatch prevents green zone
+    if exp_mismatch and total>=GREEN:
+        total=GREEN-1
+        why.append('capped: exp out of range')
+    return total,'; '.join(why)
 # ---------- read & build
 GEN={'manage','operat','servic','suppor','busine','commun'}
 NK=IN+'Naukri_PWD_hiring_sheets.xlsx';SL=IN+'Candidates_Complete_Details_Shortlist.xlsx';PE=IN+'Purchase-Executive_20260728113748_160.xlsx'

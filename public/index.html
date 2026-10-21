@@ -79,6 +79,50 @@ details{margin-top:6px}
 /* Editable notes */
 .inline-edit{border:1px dashed var(--bd);padding:2px 6px;border-radius:4px;min-width:60px;font:inherit;font-size:13px;background:transparent;color:var(--tx)}
 .inline-edit:focus{border-color:var(--ac);outline:none;background:var(--bg)}
+/* CV Match feature */
+.cv-upload{border:2px dashed var(--bd);border-radius:16px;padding:48px 24px;text-align:center;cursor:pointer;transition:all .3s ease;background:var(--card);position:relative;overflow:hidden}
+.cv-upload::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(79,70,229,.03),rgba(124,58,237,.03));opacity:0;transition:opacity .3s}.cv-upload:hover::before,.cv-upload.drag-over::before{opacity:1}
+.cv-upload:hover,.cv-upload.drag-over{border-color:var(--ac);transform:translateY(-2px);box-shadow:0 8px 24px rgba(79,70,229,.12)}
+.cv-upload.drag-over{border-color:var(--purple);background:var(--purplebg)}
+.cv-upload-icon{font-size:48px;margin-bottom:12px;display:block;filter:grayscale(.3);transition:filter .3s}.cv-upload:hover .cv-upload-icon{filter:none}
+.cv-upload-title{font-size:18px;font-weight:700;margin-bottom:4px;color:var(--tx)}
+.cv-upload-sub{font-size:13px;color:var(--mu)}
+.cv-upload input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.cv-progress{margin:20px 0;padding:20px;background:var(--card);border:1px solid var(--bd);border-radius:12px}
+.cv-progress-bar{height:6px;border-radius:3px;background:var(--bd);overflow:hidden;margin:10px 0}
+.cv-progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--ac),var(--purple));transition:width .4s ease;width:0}
+.cv-progress-text{font-size:13px;color:var(--mu);display:flex;justify-content:space-between}
+.cv-extracted{margin:16px 0;padding:14px;background:var(--bg);border:1px solid var(--bd);border-radius:10px;max-height:180px;overflow-y:auto;font-size:12px;color:var(--mu);line-height:1.6;white-space:pre-wrap;font-family:'Inter',monospace}
+.cv-match-card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:10px;transition:all .2s;position:relative;overflow:hidden}
+.cv-match-card:hover{border-color:var(--ac);box-shadow:0 4px 16px rgba(0,0,0,.06);transform:translateY(-1px)}
+.cv-match-rank{position:absolute;top:0;left:0;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;border-radius:0 0 10px 0}
+.cv-match-rank.top{background:linear-gradient(135deg,var(--ac),var(--purple));color:#fff}
+.cv-match-rank.good{background:var(--gb);color:var(--g)}
+.cv-match-rank.fair{background:var(--yb);color:var(--y)}
+.cv-match-head{display:flex;align-items:center;gap:10px;margin-left:40px}
+.cv-match-title{font-weight:700;font-size:15px;color:var(--tx);text-decoration:none;flex:1}.cv-match-title:hover{color:var(--ac);text-decoration:underline}
+.cv-match-score{font-size:22px;font-weight:800;background:linear-gradient(135deg,var(--ac),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cv-match-meta{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 8px 40px;font-size:12px}
+.cv-score-bar{height:8px;border-radius:4px;background:var(--bd);overflow:hidden;margin:6px 40px 0}
+.cv-score-fill{height:100%;border-radius:4px;transition:width .8s cubic-bezier(.4,0,.2,1);width:0}
+.cv-score-fill.high{background:linear-gradient(90deg,var(--g),#22c55e)}
+.cv-score-fill.medium{background:linear-gradient(90deg,var(--y),#f59e0b)}
+.cv-score-fill.low{background:linear-gradient(90deg,var(--r),#ef4444)}
+.cv-match-detail{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 0 40px;font-size:13px}
+@media(max-width:600px){.cv-match-detail{grid-template-columns:1fr}}
+.cv-match-detail dt{color:var(--mu);font-weight:500}.cv-match-detail dd{margin:0;font-weight:600}
+.cv-kw{display:inline-block;padding:1px 8px;border-radius:99px;font-size:11px;font-weight:600;margin:1px 2px}
+.cv-kw.hit{background:var(--gb);color:var(--g)}.cv-kw.miss{background:var(--bg);color:var(--mu)}
+.cv-exp-fit{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:99px;font-size:11px;font-weight:700}
+.cv-exp-fit.yes{background:var(--gb);color:var(--g)}.cv-exp-fit.no{background:var(--rb);color:var(--r)}.cv-exp-fit.unknown{background:var(--bd);color:var(--mu)}
+.cv-results-summary{display:flex;gap:16px;flex-wrap:wrap;margin:12px 0;padding:14px;background:linear-gradient(135deg,rgba(79,70,229,.06),rgba(124,58,237,.06));border:1px solid var(--bd);border-radius:12px}
+.cv-stat{text-align:center;flex:1;min-width:100px}.cv-stat-val{font-size:24px;font-weight:800;background:linear-gradient(135deg,var(--ac),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.cv-stat-label{font-size:11px;color:var(--mu);text-transform:uppercase;letter-spacing:.04em}
+.cv-file-info{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--card);border:1px solid var(--bd);border-radius:10px;margin:12px 0}
+.cv-file-icon{font-size:28px}.cv-file-name{font-weight:600;font-size:14px}.cv-file-size{font-size:12px;color:var(--mu)}
+.cv-new-btn{margin-left:auto}
+@keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.cv-match-card{animation:slideUp .4s ease both}
+.cv-match-card:nth-child(2){animation-delay:.05s}.cv-match-card:nth-child(3){animation-delay:.1s}.cv-match-card:nth-child(4){animation-delay:.15s}.cv-match-card:nth-child(5){animation-delay:.2s}
 </style></head><body>
 <header>
 <span class="logo">♿ Job Fair Tracker</span>
@@ -87,6 +131,7 @@ details{margin-top:6px}
 <a href="#/" id="nav-home">Companies</a>
 <a href="#/multi" id="nav-multi">Multi-JD</a>
 <a href="#/shortlist" id="nav-sl">Shortlisted</a>
+<a href="#/cv" id="nav-cv">CV Match</a>
 </div>
 <span class="mu">Screening score is rule-based, from form answers. CVs are linked, not read.</span>
 <button id="reset">Reset all data</button>
@@ -493,6 +538,298 @@ async function dlSl(){try{await loadX()}catch(e){alert('Excel library error');re
   a.href=URL.createObjectURL(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
   a.download='Shortlisted Candidates.xlsx';document.body.appendChild(a);a.click();a.remove()}
 
+/* ====== CV-to-JD Matching Engine ====== */
+let cvState={text:null,file:null,results:null,loading:false,progress:0,step:''};
+
+// Lazy-load PDF.js
+let pdfP;const loadPdf=()=>pdfP||(pdfP=new Promise((ok,no)=>{
+  if(window.pdfjsLib)return ok();
+  const s=document.createElement('script');
+  s.src='https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.min.mjs';
+  s.type='module';
+  // Use a classic script fallback for broader compat
+  const s2=document.createElement('script');
+  s2.src='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js';
+  s2.onload=()=>{window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';ok()};
+  s2.onerror=()=>{pdfP=null;no(new Error('Could not load PDF.js'))};
+  document.head.appendChild(s2);
+}));
+// Lazy-load mammoth.js for DOCX
+let mamP;const loadMammoth=()=>mamP||(mamP=new Promise((ok,no)=>{
+  if(window.mammoth)return ok();
+  const s=document.createElement('script');
+  s.src='https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js';
+  s.onload=ok;s.onerror=()=>{mamP=null;no(new Error('Could not load mammoth.js'));};
+  document.head.appendChild(s);
+}));
+
+function setCvProgress(pct,step){
+  cvState.progress=pct;cvState.step=step;
+  const bar=document.querySelector('.cv-progress-fill');
+  const txt=document.querySelector('.cv-step-text');
+  if(bar)bar.style.width=pct+'%';
+  if(txt)txt.textContent=step;
+}
+
+async function extractPdfText(buf){
+  await loadPdf();
+  setCvProgress(20,'Loading PDF...');
+  const pdf=await pdfjsLib.getDocument({data:buf}).promise;
+  let text='';
+  for(let i=1;i<=pdf.numPages;i++){
+    setCvProgress(20+60*(i/pdf.numPages),'Reading page '+i+'/'+pdf.numPages+'...');
+    const page=await pdf.getPage(i);
+    const tc=await page.getTextContent();
+    text+=tc.items.map(x=>x.str).join(' ')+'\n';
+  }
+  return text;
+}
+
+async function extractDocxText(buf){
+  await loadMammoth();
+  setCvProgress(40,'Extracting DOCX text...');
+  const result=await mammoth.extractRawText({arrayBuffer:buf});
+  return result.value;
+}
+
+function extractTxtText(buf){
+  return new TextDecoder('utf-8').decode(buf);
+}
+
+// Tokenizer matching the backend approach
+const CV_STOP=new Set('the and for with from work office location confirmed be to of in at grade a an is are was were has have had do does did will would can could should may might shall being been this that these those it its i me my we our you your he his she her they their them what which who whom when where how not no nor but or if then else than too very just also more most other some such only same so few between through during before after above below up down out off over under again further once here there all each every both any each few more most several do does did get got given given go goes going gone have has had having make makes making made take takes taking took run runs running ran say says said saying see sees seeing seen come comes coming came know knows knowing knew think thinks thinking thought tell tells telling told find finds finding found give gives gave giving work works working worked call calls called calling try tries trying tried need needs needing needed keep keeps keeping kept let lets letting leave leaves leaving left begin begins beginning began show shows showing showed seem seems seeming seemed help helps helping helped turn turns turning turned start starts starting started might should would could shall will may can must need want year years month months experience work working company role job position current total relevant'.split(' '));
+const CV_LV=new Set('executive associate manager deputy senior sr asst assistant officer specialist trainee chief lead director vp president intern junior'.split(' '));
+
+function cvToks(text){
+  const d={};
+  const words=text.toLowerCase().replace(/[^a-z0-9#+\s]/g,' ').split(/\s+/);
+  for(const w of words){
+    if(w.length<2||CV_STOP.has(w)||CV_LV.has(w))continue;
+    const k=w.slice(0,6);
+    if(!d[k])d[k]=w;
+  }
+  return d;
+}
+
+// Extract years of experience from CV text
+function cvParseExp(text){
+  const t=text.toLowerCase();
+  // Look for patterns like "X years of experience", "X+ years", "X yrs"
+  const patterns=[
+    /(\d+(?:\.\d+)?)\s*\+?\s*(?:years?|yrs?)\s*(?:of\s+)?(?:experience|exp|work)/i,
+    /(?:experience|exp|work)\s*(?:of\s+|:?\s*)(\d+(?:\.\d+)?)\s*\+?\s*(?:years?|yrs?)/i,
+    /(?:total|overall|relevant)\s*(?:experience|exp)\s*(?:of\s+|:?\s*)(\d+(?:\.\d+)?)\s*(?:years?|yrs?)/i,
+    /(\d+(?:\.\d+)?)\s*(?:years?|yrs?)\s*(\d+)?\s*(?:months?|mos?)?/i,
+  ];
+  for(const p of patterns){
+    const m=t.match(p);
+    if(m){
+      let y=parseFloat(m[1]);
+      if(m[2])y+=parseInt(m[2])/12;
+      if(y>0&&y<=40)return Math.round(y*10)/10;
+    }
+  }
+  // Fresher check
+  if(/\bfresher\b|\bfresh graduate\b|\b0\s*years?\s*experience/i.test(t))return 0;
+  return null;
+}
+
+function matchCvToJds(cvText){
+  const cvTokens=cvToks(cvText);
+  const cvBag=new Set(Object.keys(cvTokens));
+  const cvExp=cvParseExp(cvText);
+  const results=[];
+
+  for(const j of D.jds){
+    // Skip "Other" / catch-all JDs
+    if(j.ty==='Not in JD sheet')continue;
+
+    // Tokenize JD title
+    const jdToks=cvToks(j.t);
+    const jdBag=new Set(Object.keys(jdToks));
+    if(!jdBag.size)continue;
+
+    // Keyword overlap score (0-50)
+    const shared=new Set([...jdBag].filter(k=>cvBag.has(k)));
+    const kwScore=Math.round(50*(shared.size/Math.min(jdBag.size,6)));
+    const matchedWords=[...shared].map(k=>cvTokens[k]||jdToks[k]);
+    const missedWords=[...jdBag].filter(k=>!shared.has(k)).map(k=>jdToks[k]);
+
+    // Experience fit score (0-30)
+    let expScore=15; // default: unknown
+    let expFit='unknown';
+    const rng=parseExpRange(j.e,j.t);
+    if(cvExp!==null&&rng!==null){
+      const [lo,hi]=rng;
+      const inRange=cvExp>=lo&&(hi===null||cvExp<=hi+2);
+      if(inRange){expScore=30;expFit='yes';}
+      else{
+        const gap=cvExp<lo?lo-cvExp:(hi!==null?cvExp-hi-2:0);
+        expScore=Math.max(0,30-Math.round(gap*6));
+        expFit='no';
+      }
+    }
+
+    // Type match bonus (0-10) — check if CV mentions tech keywords for tech roles
+    const isTech=/tech/i.test(j.ty)&&!/non/i.test(j.ty);
+    const cvHasTech=/\b(python|java|javascript|sql|react|node|angular|aws|azure|docker|kubernetes|api|html|css|git|linux|devops|cloud|machine learning|ai|data|algorithm|coding|programming|software|developer|engineer)\b/i.test(cvText);
+    let typeScore=5; // neutral
+    if(isTech&&cvHasTech)typeScore=10;
+    else if(isTech&&!cvHasTech)typeScore=2;
+
+    // Company candidate count bonus (0-10): prefer JDs with existing candidates
+    const candCount=C.filter(c=>jdOf(c)===j.id&&!gone(c)).length;
+    const popScore=Math.min(10,Math.round(candCount/3));
+
+    const total=Math.min(100,kwScore+expScore+typeScore+popScore);
+    if(total<10)continue;
+
+    results.push({
+      jd:j,
+      score:total,
+      kwScore,expScore,typeScore,
+      matchedWords:matchedWords.slice(0,8),
+      missedWords:missedWords.slice(0,6),
+      expFit,
+      cvExp,
+      candCount
+    });
+  }
+
+  results.sort((a,b)=>b.score-a.score);
+  return results;
+}
+
+async function handleCvFile(file){
+  const ext=file.name.split('.').pop().toLowerCase();
+  if(!['pdf','docx','doc','txt'].includes(ext)){
+    alert('Please upload a PDF, DOCX, or TXT file.');
+    return;
+  }
+  cvState={text:null,file:{name:file.name,size:file.size,type:ext},results:null,loading:true,progress:0,step:'Starting...'};
+  render();
+
+  try{
+    const buf=await file.arrayBuffer();
+    setCvProgress(10,'Reading file...');
+
+    let text;
+    if(ext==='pdf')text=await extractPdfText(buf);
+    else if(ext==='docx'||ext==='doc')text=await extractDocxText(buf);
+    else text=extractTxtText(buf);
+
+    setCvProgress(85,'Matching against JDs...');
+    await new Promise(r=>setTimeout(r,200)); // brief pause for UI
+
+    cvState.text=text.trim();
+    cvState.results=matchCvToJds(cvState.text);
+    setCvProgress(100,'Done!');
+    await new Promise(r=>setTimeout(r,300));
+    cvState.loading=false;
+    render();
+    // Animate score bars after render
+    setTimeout(()=>{
+      document.querySelectorAll('.cv-score-fill[data-w]').forEach(el=>{
+        el.style.width=el.dataset.w+'%';
+      });
+    },50);
+  }catch(err){
+    console.error(err);
+    cvState.loading=false;
+    alert('Error reading file: '+err.message);
+    render();
+  }
+}
+
+function fmtSize(b){return b<1024?b+' B':b<1048576?Math.round(b/1024)+' KB':Math.round(b/1048576*10)/10+' MB'}
+
+function vCvMatch(){
+  let h=head('CV → JD Matcher','Upload a resume to find the best matching job descriptions',['#/','Home']);
+
+  if(cvState.loading){
+    // Show progress
+    h+=`<div class="cv-file-info"><span class="cv-file-icon">📄</span><div><div class="cv-file-name">${E(cvState.file?.name||'File')}</div><div class="cv-file-size">${fmtSize(cvState.file?.size||0)}</div></div></div>`;
+    h+=`<div class="cv-progress"><div class="cv-progress-text"><span class="cv-step-text">${E(cvState.step)}</span><span>${cvState.progress}%</span></div><div class="cv-progress-bar"><div class="cv-progress-fill" style="width:${cvState.progress}%"></div></div></div>`;
+    return h;
+  }
+
+  if(cvState.results){
+    // Show results
+    const r=cvState.results;
+    const top5=r.slice(0,5);
+    const strong=r.filter(x=>x.score>=60).length;
+    const moderate=r.filter(x=>x.score>=35&&x.score<60).length;
+
+    h+=`<div class="cv-file-info"><span class="cv-file-icon">${cvState.file?.type==='pdf'?'📕':'📘'}</span><div><div class="cv-file-name">${E(cvState.file?.name||'File')}</div><div class="cv-file-size">${fmtSize(cvState.file?.size||0)} · ${cvState.text?.split(/\s+/).length||0} words extracted${cvState.cvExp!==null?' · '+cvState.cvExp+' yrs experience detected':''}</div></div><button class="cv-new-btn btn-primary" data-cvnew>↑ Upload Another</button></div>`;
+
+    h+=`<div class="cv-results-summary">
+      <div class="cv-stat"><div class="cv-stat-val">${r.length}</div><div class="cv-stat-label">JDs Compared</div></div>
+      <div class="cv-stat"><div class="cv-stat-val">${strong}</div><div class="cv-stat-label">Strong Matches</div></div>
+      <div class="cv-stat"><div class="cv-stat-val">${moderate}</div><div class="cv-stat-label">Moderate</div></div>
+      <div class="cv-stat"><div class="cv-stat-val">${cvState.cvExp!==null?cvState.cvExp+'y':'?'}</div><div class="cv-stat-label">Exp Detected</div></div>
+    </div>`;
+
+    h+=`<details style="margin:8px 0"><summary class="mu">Extracted text preview (${cvState.text?.length||0} chars)</summary><div class="cv-extracted">${E(cvState.text?.slice(0,2000)||'')}${(cvState.text?.length||0)>2000?'\n...truncated...':''}</div></details>`;
+
+    if(!r.length){
+      h+='<div class="card"><b>No matching JDs found.</b><p class="mu">The CV text did not match any job description keywords. Try a different resume.</p></div>';
+      return h;
+    }
+
+    h+='<h2>Top Matches</h2>';
+    r.slice(0,20).forEach((m,i)=>{
+      const pct=m.score;
+      const cls=pct>=60?'high':pct>=35?'medium':'low';
+      const rankCls=i<3?'top':pct>=50?'good':'fair';
+      const rng=parseExpRange(m.jd.e,m.jd.t);
+      const rngStr=rng?rng[1]!==null?rng[0]+'-'+rng[1]+' yrs':rng[0]+'+ yrs':'any';
+
+      h+=`<div class="cv-match-card">
+        <div class="cv-match-rank ${rankCls}">#${i+1}</div>
+        <div class="cv-match-head">
+          <a class="cv-match-title" href="#/j/${m.jd.id}">${E(m.jd.t)}</a>
+          <div class="cv-match-score">${pct}%</div>
+        </div>
+        <div class="cv-score-bar"><div class="cv-score-fill ${cls}" data-w="${pct}"></div></div>
+        <div class="cv-match-meta">
+          <span class="tag">${E(D.cos[m.jd.c])}</span>
+          <span class="tag">${E(m.jd.ty)}</span>
+          ${m.jd.e?`<span class="cv-exp-fit ${m.expFit}">${m.expFit==='yes'?'✓ Exp fits':'⚠ Exp'}: ${E(rngStr)}${m.cvExp!==null?' (you: '+m.cvExp+'y)':''}</span>`:''}
+          <span class="tag">${m.candCount} existing candidate${m.candCount===1?'':'s'}</span>
+          ${m.jd.l?`<span class="tag">📍 ${E(m.jd.l)}</span>`:''}
+        </div>
+        <div style="margin:6px 0 0 40px">
+          ${m.matchedWords.length?'<span class="mu" style="font-size:11px">MATCHING: </span>'+m.matchedWords.map(w=>'<span class="cv-kw hit">'+E(w)+'</span>').join('')+' ':''}
+          ${m.missedWords.length?'<span class="mu" style="font-size:11px;margin-left:6px">MISSING: </span>'+m.missedWords.map(w=>'<span class="cv-kw miss">'+E(w)+'</span>').join(''):''}
+        </div>
+      </div>`;
+    });
+
+    if(r.length>20)h+=`<p class="mu">${r.length-20} more matches with lower scores not shown.</p>`;
+    return h;
+  }
+
+  // Show upload zone
+  h+=`<div class="cv-upload" id="cv-drop">
+    <input type="file" id="cv-file" accept=".pdf,.docx,.doc,.txt">
+    <span class="cv-upload-icon">📄</span>
+    <div class="cv-upload-title">Drop your CV here</div>
+    <div class="cv-upload-sub">or click to browse · PDF, DOCX, TXT supported</div>
+  </div>`;
+  h+=`<div style="margin-top:20px">`;
+  h+=`<div class="card" style="border-left:4px solid var(--ac)">
+    <h3 style="margin:0 0 6px">How it works</h3>
+    <div class="mu" style="line-height:1.8">
+      <b>1.</b> Upload a resume (PDF, DOCX, or TXT)<br>
+      <b>2.</b> Text is extracted entirely in your browser — nothing is sent to any server<br>
+      <b>3.</b> Keywords from the CV are matched against all ${D.jds.filter(j=>j.ty!=='Not in JD sheet').length} job descriptions<br>
+      <b>4.</b> Results are ranked by keyword overlap, experience fit, and role type match
+    </div>
+  </div>`;
+  h+=`</div>`;
+  return h;
+}
+
 /* ====== Render & Events ====== */
 const app=$('#app');
 function updateNav(){
@@ -503,7 +840,18 @@ function render(){
   if(!D)return;
   updateNav();
   const[v,a]=location.hash.slice(2).split('/');
-  app.innerHTML=v==='c'?vCo(a):v==='j'?vJd(a):v==='u'?vUn():v==='multi'?vMulti():v==='shortlist'?vShortlist():vHome();
+  app.innerHTML=v==='c'?vCo(a):v==='j'?vJd(a):v==='u'?vUn():v==='multi'?vMulti():v==='shortlist'?vShortlist():v==='cv'?vCvMatch():vHome();
+  // Bind CV upload events after render
+  if(v==='cv'&&!cvState.loading&&!cvState.results){
+    const drop=document.getElementById('cv-drop');
+    const inp=document.getElementById('cv-file');
+    if(drop){
+      drop.addEventListener('dragover',e=>{e.preventDefault();drop.classList.add('drag-over')});
+      drop.addEventListener('dragleave',()=>drop.classList.remove('drag-over'));
+      drop.addEventListener('drop',e=>{e.preventDefault();drop.classList.remove('drag-over');if(e.dataTransfer.files[0])handleCvFile(e.dataTransfer.files[0])});
+    }
+    if(inp)inp.addEventListener('change',e=>{if(e.target.files[0])handleCvFile(e.target.files[0])});
+  }
 }
 
 // Delegated events
@@ -537,6 +885,7 @@ app.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return
   else if(d.resetq!==undefined){delete S.qe[+d.resetq];save();render()}
   else if('xlmulti' in d){dlMulti()}
   else if('xlsl' in d){dlSl()}
+  else if('cvnew' in d){cvState={text:null,file:null,results:null,loading:false,progress:0,step:''};render()}
 });
 
 addEventListener('hashchange',()=>{pend=null;showRm=false;activeTab='zones';render();scrollTo(0,0)});

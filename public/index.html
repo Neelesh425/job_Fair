@@ -678,7 +678,15 @@ async function dlSlCo(coIdx){try{await loadX()}catch(e){alert('Excel library err
 async function dlSl(){return dlSlAll();}
 
 /* ====== CV-to-JD Matching Engine ====== */
-let cvState={text:null,file:null,results:null,loading:false,progress:0,step:''};
+let cvState={
+  text:null,file:null,results:null,loading:false,progress:0,step:'',
+  // Batch fields
+  batch:[],          // array of File objects being processed
+  batchIdx:0,        // which file is currently being processed (0-based)
+  batchTotal:0,      // total files in this batch
+  batchResults:[],   // [{file, results, cvExp, cvQual, text, expDisqualCount, ucEntry}]
+  batchDone:false    // true once all batch files are done
+};
 
 // Lazy-load PDF.js
 let pdfP;const loadPdf=()=>pdfP||(pdfP=new Promise((ok,no)=>{
@@ -998,107 +1006,265 @@ function cvExtractInfo(text){
   return{name,em,ph,ad};
 }
 
-async function handleCvFile(file){
+/* processOneCv — extracts text, matches JDs, saves to uploadedCvs, returns result object */
+async function processOneCv(file, progressCb){
   const ext=file.name.split('.').pop().toLowerCase();
-  if(!['pdf','docx','doc','txt'].includes(ext)){
-    alert('Please upload a PDF, DOCX, or TXT file.');
+  if(!['pdf','docx','doc','txt'].includes(ext)) throw new Error('Unsupported file type: '+file.name);
+  progressCb(5,'Reading '+file.name+'...');
+  const buf=await file.arrayBuffer();
+  let text;
+  if(ext==='pdf'){
+    await loadPdf();
+    progressCb(20,'Loading PDF...');
+    const pdf=await pdfjsLib.getDocument({data:buf}).promise;
+    text='';
+    for(let i=1;i<=pdf.numPages;i++){
+      progressCb(20+50*(i/pdf.numPages),'Reading page '+i+'/'+pdf.numPages+'...');
+      const page=await pdf.getPage(i);
+      const tc=await page.getTextContent();
+      text+=tc.items.map(x=>x.str).join(' ')+'\n';
+    }
+  } else if(ext==='docx'||ext==='doc'){
+    await loadMammoth();
+    progressCb(40,'Extracting DOCX text...');
+    const result=await mammoth.extractRawText({arrayBuffer:buf});
+    text=result.value;
+  } else {
+    text=new TextDecoder('utf-8').decode(buf);
+  }
+  progressCb(80,'Matching against JDs...');
+  await new Promise(r=>setTimeout(r,50));
+  const trimmed=text.trim();
+  const cvExp=cvParseExp(trimmed);
+  const cvQual=cvParseQual(trimmed);
+  let expDisqualCount=0;
+  for(const j of D.jds){
+    if(j.ty==='Not in JD sheet')continue;
+    if(cvExp!==null){
+      const rng=parseExpRange(j.e,j.t);
+      if(rng!==null&&cvExp<rng[0]-0.5)expDisqualCount++;
+    }
+  }
+  const results=matchCvToJds(trimmed);
+  progressCb(100,'Done!');
+  // Build uploadedCvs entry
+  const extracted=cvExtractInfo(trimmed);
+  const top2=results.slice(0,2);
+  const expYrs=cvExp;
+  const isHitachi=(results.length===0)&&(expYrs!==null&&expYrs>=1);
+  const ucEntry={
+    _id:Date.now()+'_'+Math.random().toString(36).slice(2),
+    fileName:file.name,
+    fileSize:file.size,
+    uploadedAt:new Date().toISOString(),
+    name:extracted.name,
+    em:extracted.em,
+    ph:extracted.ph,
+    ad:extracted.ad,
+    expYrs,
+    jd1:top2[0]?{company:D.cos[top2[0].jd.c],role:top2[0].jd.t,pct:top2[0].score}:null,
+    jd2:top2[1]?{company:D.cos[top2[1].jd.c],role:top2[1].jd.t,pct:top2[1].score}:null,
+    isHitachi,
+    topMatches:results.slice(0,5).map(r=>({company:D.cos[r.jd.c],role:r.jd.t,pct:r.score}))
+  };
+  // Dedupe & save
+  const dupKey=file.name+'|'+file.size;
+  const existIdx=S.uploadedCvs.findIndex(u=>u.fileName+'|'+(u.fileSize||0)===dupKey);
+  if(existIdx>=0)S.uploadedCvs[existIdx]=ucEntry;
+  else S.uploadedCvs.push(ucEntry);
+  S.log.unshift(new Date().toLocaleString()+': CV uploaded: '+file.name+(isHitachi?' (→ Hitachi bucket)':top2[0]?' (→ '+D.cos[top2[0].jd.c]+')':''));
+  S.log=S.log.slice(0,100);
+  save();
+  return{file:{name:file.name,size:file.size,type:ext},text:trimmed,results,cvExp,cvQual,expDisqualCount,ucEntry};
+}
+
+/* handleCvFiles — main entry point for CV upload (single or batch) */
+async function handleCvFiles(fileList){
+  const files=[...fileList].filter(f=>/\.(pdf|docx|doc|txt)$/i.test(f.name));
+  if(!files.length){alert('Please upload PDF, DOCX, DOC, or TXT files.');return;}
+
+  const isBatch=files.length>1;
+
+  if(!isBatch){
+    // ---- SINGLE FILE: classic detailed-results flow ----
+    const file=files[0];
+    const ext=file.name.split('.').pop().toLowerCase();
+    cvState={
+      text:null,file:{name:file.name,size:file.size,type:ext},results:null,
+      loading:true,progress:0,step:'Starting...',
+      batch:[],batchIdx:0,batchTotal:1,batchResults:[],batchDone:false
+    };
+    render();
+    try{
+      const res=await processOneCv(file,(pct,step)=>{
+        cvState.progress=pct;cvState.step=step;
+        const bar=document.querySelector('.cv-progress-fill');
+        const txt=document.querySelector('.cv-step-text');
+        if(bar)bar.style.width=pct+'%';
+        if(txt)txt.textContent=step;
+      });
+      cvState.text=res.text;
+      cvState.cvExp=res.cvExp;
+      cvState.cvQual=res.cvQual;
+      cvState.expDisqualCount=res.expDisqualCount;
+      cvState.results=res.results;
+      cvState.loading=false;
+      render();
+      setTimeout(()=>document.querySelectorAll('.cv-score-fill[data-w]').forEach(el=>{el.style.width=el.dataset.w+'%'}),50);
+    }catch(err){
+      console.error(err);cvState.loading=false;
+      alert('Error reading file: '+err.message);render();
+    }
     return;
   }
-  cvState={text:null,file:{name:file.name,size:file.size,type:ext},results:null,loading:true,progress:0,step:'Starting...'};
+
+  // ---- BATCH MODE: process files one by one ----
+  cvState={
+    text:null,file:null,results:null,
+    loading:true,progress:0,step:'',
+    batch:files,batchIdx:0,batchTotal:files.length,batchResults:[],batchDone:false
+  };
   render();
 
-  try{
-    const buf=await file.arrayBuffer();
-    setCvProgress(10,'Reading file...');
-
-    let text;
-    if(ext==='pdf')text=await extractPdfText(buf);
-    else if(ext==='docx'||ext==='doc')text=await extractDocxText(buf);
-    else text=extractTxtText(buf);
-
-    setCvProgress(85,'Matching against JDs...');
-    await new Promise(r=>setTimeout(r,200)); // brief pause for UI
-
-    cvState.text=text.trim();
-    cvState.cvExp=cvParseExp(cvState.text);
-    cvState.cvQual=cvParseQual(cvState.text);
-    // Count how many JDs would be disqualified due to experience mismatch
-    let expDisqualCount=0;
-    for(const j of D.jds){
-      if(j.ty==='Not in JD sheet')continue;
-      if(cvState.cvExp!==null){
-        const rng=parseExpRange(j.e,j.t);
-        if(rng!==null){
-          const [lo]=rng;
-          if(cvState.cvExp<lo-0.5)expDisqualCount++;
-        }
-      }
-    }
-    cvState.expDisqualCount=expDisqualCount;
-    cvState.results=matchCvToJds(cvState.text);
-    setCvProgress(100,'Done!');
-    await new Promise(r=>setTimeout(r,300));
-    cvState.loading=false;
-
-    // === Persist this CV into uploadedCvs store ===
-    const extracted=cvExtractInfo(cvState.text);
-    const top2=cvState.results.slice(0,2);
-    // Determine Hitachi bundling:
-    // If no JD matches at all but candidate has >=1yr exp -> Hitachi
-    const expYrs=cvState.cvExp;
-    const isHitachi=(cvState.results.length===0)&&(expYrs!==null&&expYrs>=1);
-    const ucEntry={
-      _id: Date.now()+'_'+Math.random().toString(36).slice(2),
-      fileName: file.name,
-      uploadedAt: new Date().toISOString(),
-      // Extracted fields
-      name: extracted.name,
-      em: extracted.em,
-      ph: extracted.ph,
-      ad: extracted.ad,
-      expYrs: expYrs,
-      // Top 2 JD matches
-      jd1: top2[0]?{company:D.cos[top2[0].jd.c],role:top2[0].jd.t,pct:top2[0].score}:null,
-      jd2: top2[1]?{company:D.cos[top2[1].jd.c],role:top2[1].jd.t,pct:top2[1].score}:null,
-      isHitachi: isHitachi,
-      // Raw top match list for reference (top 5)
-      topMatches: cvState.results.slice(0,5).map(r=>({company:D.cos[r.jd.c],role:r.jd.t,pct:r.score}))
-    };
-    // Avoid duplicate by fileName+size (same file uploaded twice)
-    const dupKey=file.name+'|'+file.size;
-    const existIdx=S.uploadedCvs.findIndex(u=>u.fileName+'|'+(u.fileSize||0)===dupKey);
-    if(existIdx>=0)S.uploadedCvs[existIdx]=Object.assign(ucEntry,{fileSize:file.size});
-    else S.uploadedCvs.push(Object.assign(ucEntry,{fileSize:file.size}));
-    S.log.unshift(new Date().toLocaleString()+': CV uploaded: '+file.name+(isHitachi?' (→ Hitachi bucket)':top2[0]?' (→ '+D.cos[top2[0].jd.c]+')':''));
-    S.log=S.log.slice(0,100);
-    save();
-    // ================================================
-
+  for(let i=0;i<files.length;i++){
+    cvState.batchIdx=i;
+    cvState.file={name:files[i].name,size:files[i].size,type:files[i].name.split('.').pop().toLowerCase()};
+    cvState.step='Processing file '+(i+1)+' of '+files.length+': '+files[i].name;
+    cvState.progress=0;
+    // Update overall progress bar element if already rendered
+    const obar=document.querySelector('.cv-progress-fill');
+    const otxt=document.querySelector('.cv-step-text');
+    if(obar)obar.style.width='0%';
+    if(otxt)otxt.textContent=cvState.step;
     render();
-    setTimeout(()=>{
-      document.querySelectorAll('.cv-score-fill[data-w]').forEach(el=>{
-        el.style.width=el.dataset.w+'%';
+    try{
+      const res=await processOneCv(files[i],(pct,step)=>{
+        cvState.progress=pct;
+        cvState.step='File '+(i+1)+'/'+files.length+' — '+step;
+        const bar=document.querySelector('.cv-progress-fill');
+        const txt=document.querySelector('.cv-step-text');
+        if(bar)bar.style.width=pct+'%';
+        if(txt)txt.textContent=cvState.step;
       });
-    },50);
-  }catch(err){
-    console.error(err);
-    cvState.loading=false;
-    alert('Error reading file: '+err.message);
-    render();
+      cvState.batchResults.push(res);
+    }catch(err){
+      console.error('Batch error on',files[i].name,err);
+      cvState.batchResults.push({file:{name:files[i].name,size:files[i].size,type:''},error:err.message,results:[],cvExp:null,cvQual:null,expDisqualCount:0});
+    }
+    await new Promise(r=>setTimeout(r,80));// brief yield between files
   }
+  cvState.loading=false;
+  cvState.batchDone=true;
+  cvState.step='All '+files.length+' CVs processed!';
+  render();
 }
+
+/* Legacy single-file entry point kept for backward compat */
+async function handleCvFile(file){return handleCvFiles([file]);}
 
 function fmtSize(b){return b<1024?b+' B':b<1048576?Math.round(b/1024)+' KB':Math.round(b/1048576*10)/10+' MB'}
 
 function vCvMatch(){
-  let h=head('CV → JD Matcher','Upload a resume to find the best matching job descriptions',['#/','Home']);
+  const isBatch=cvState.batchTotal>1||(cvState.batchDone&&cvState.batchResults.length>1);
+  let h=head('CV → JD Matcher',
+    isBatch&&cvState.batchTotal>1
+      ?`Upload CVs to find matching job descriptions — ${cvState.batchTotal} files selected`
+      :'Upload a resume to find the best matching job descriptions',
+    ['#/','Home']);
 
   if(cvState.loading){
-    h+=`<div class="cv-file-info"><span class="cv-file-icon">📄</span><div><div class="cv-file-name">${E(cvState.file?.name||'File')}</div><div class="cv-file-size">${fmtSize(cvState.file?.size||0)}</div></div></div>`;
-    h+=`<div class="cv-progress"><div class="cv-progress-text"><span class="cv-step-text">${E(cvState.step)}</span><span>${cvState.progress}%</span></div><div class="cv-progress-bar"><div class="cv-progress-fill" style="width:${cvState.progress}%"></div></div></div>`;
+    // Batch loading state
+    if(cvState.batchTotal>1){
+      const done=cvState.batchResults.length;
+      const total=cvState.batchTotal;
+      const overall=Math.round((done/total)*100+(cvState.progress/total));
+      h+=`<div class="cv-progress" style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <b>Batch processing ${total} CVs</b>
+          <span class="tag">${done}/${total} done</span>
+        </div>
+        <div class="cv-progress-text"><span class="cv-step-text">${E(cvState.step)}</span><span>${cvState.progress}%</span></div>
+        <div class="cv-progress-bar"><div class="cv-progress-fill" style="width:${cvState.progress}%"></div></div>
+        <div class="cv-progress-bar" style="margin-top:6px;background:var(--bd)"><div style="height:6px;border-radius:3px;background:linear-gradient(90deg,var(--g),#22c55e);width:${overall}%"></div></div>
+        <div class="cv-progress-text" style="margin-top:2px"><span class="mu" style="font-size:11px">Overall progress</span><span class="mu" style="font-size:11px">${overall}%</span></div>
+        ${done>0?`<div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px">${cvState.batchResults.map(r=>`<span class="chip ${r.error?'cr':'cg'}" style="font-size:11px">${r.error?'✕':'✓'} ${E(r.file.name.slice(0,28))}</span>`).join('')}</div>`:''}
+      </div>`;
+    } else {
+      h+=`<div class="cv-file-info"><span class="cv-file-icon">📄</span><div><div class="cv-file-name">${E(cvState.file?.name||'File')}</div><div class="cv-file-size">${fmtSize(cvState.file?.size||0)}</div></div></div>`;
+      h+=`<div class="cv-progress"><div class="cv-progress-text"><span class="cv-step-text">${E(cvState.step)}</span><span>${cvState.progress}%</span></div><div class="cv-progress-bar"><div class="cv-progress-fill" style="width:${cvState.progress}%"></div></div></div>`;
+    }
     return h;
   }
 
+  // ---- BATCH RESULTS VIEW ----
+  if(cvState.batchDone&&cvState.batchResults.length>1){
+    const brs=cvState.batchResults;
+    const totalFiles=brs.length;
+    const errCount=brs.filter(r=>r.error).length;
+    const hitachiCount=brs.filter(r=>!r.error&&r.results.length===0&&r.cvExp>=1).length;
+    const matchedCount=totalFiles-errCount-hitachiCount;
+    h+=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">`;
+    h+=`<div style="flex:1;min-width:200px"><span class="tag-purple" style="display:inline-block;padding:4px 12px;border-radius:99px;font-size:13px;font-weight:700;background:var(--purplebg);color:var(--purple)">✅ ${totalFiles} CVs processed</span></div>`;
+    h+=`<button class="btn-primary" data-cvnew>↑ Upload More CVs</button>`;
+    h+=`<a class="btn-primary" href="#/uploaded-cvs" style="text-decoration:none;padding:5px 12px;border-radius:8px;font-size:13px;font-weight:500;background:var(--g);color:#fff;border:1px solid var(--g)">📁 View in Uploaded CVs</a>`;
+    h+=`</div>`;
+    h+=`<div class="stats-bar" style="margin-bottom:14px">`;
+    h+=`<div class="stat"><div class="stat-val">${totalFiles}</div><div class="stat-label">Total CVs</div></div>`;
+    h+=`<div class="stat"><div class="stat-val">${matchedCount}</div><div class="stat-label">JD Matched</div></div>`;
+    h+=`<div class="stat"><div class="stat-val">${hitachiCount}</div><div class="stat-label">Hitachi Pool</div></div>`;
+    if(errCount)h+=`<div class="stat"><div class="stat-val" style="color:var(--r)">${errCount}</div><div class="stat-label">Errors</div></div>`;
+    h+=`</div>`;
+    // Compact result cards for each CV
+    brs.forEach((res,ri)=>{
+      if(res.error){
+        h+=`<div class="card" style="border-left:4px solid var(--r);margin-bottom:8px">`;
+        h+=`<div class="top"><span class="chip cr">✕ Error</span> <b>${E(res.file.name)}</b></div>`;
+        h+=`<div class="mu" style="font-size:13px">⚠ ${E(res.error)}</div></div>`;
+        return;
+      }
+      const r=res.results;
+      const top=r[0];
+      const isHitachi=r.length===0&&res.cvExp!==null&&res.cvExp>=1;
+      const cls=isHitachi?'cy':r.length===0?'cr':r[0].score>=60?'cg':'cy';
+      const badge=isHitachi?'Hitachi Pool':r.length===0?'No match':r[0].score>=60?'Strong match':'Moderate match';
+      const qualLabels=['','12th','Diploma','Graduate','Post-Grad','PhD'];
+      h+=`<details class="card" style="border-left:4px solid ${isHitachi?'var(--y)':r.length===0?'var(--r)':r[0]?.score>=60?'var(--g)':'var(--y)'};margin-bottom:8px;padding:10px 12px">`;
+      h+=`<summary style="cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;flex-wrap:wrap">`;
+      h+=`<span class="chip ${cls}">${badge}</span>`;
+      h+=`<b style="flex:1;min-width:160px">${E(res.file.name)}</b>`;
+      if(res.cvExp!==null)h+=`<span class="tag">${res.cvExp} yrs exp</span>`;
+      if(res.cvQual)h+=`<span class="tag">${qualLabels[res.cvQual]||''}</span>`;
+      if(top)h+=`<span class="tag-blue" style="background:var(--bluebg);color:var(--blue);padding:2px 10px;border-radius:99px;font-size:11px;font-weight:600">#1: ${E(D.cos[top.jd.c])} — ${E(top.jd.t)} (${top.score}%)</span>`;
+      if(isHitachi)h+=`<span class="tag-purple" style="background:var(--purplebg);color:var(--purple);padding:2px 10px;border-radius:99px;font-size:11px;font-weight:600">→ Hitachi</span>`;
+      h+=`<span class="mu" style="font-size:11px">${fmtSize(res.file.size)}</span>`;
+      h+=`</summary>`;
+      // Expanded: top 5 matches
+      h+=`<div style="margin-top:10px">`;
+      if(!r.length){
+        h+=`<div class="mu" style="font-size:13px">${isHitachi?'No JD match, but has ≥1yr exp → bundled into Hitachi pool.':'No eligible JD matches found (all excluded by experience or no keyword overlap).'}</div>`;
+      } else {
+        h+=`<div style="display:grid;gap:6px;margin-top:6px">`;
+        r.slice(0,5).forEach((m,i)=>{
+          const pct=m.score;
+          const mcls=pct>=60?'high':pct>=35?'medium':'low';
+          h+=`<div style="display:flex;align-items:center;gap:8px;font-size:13px">`;
+          h+=`<span style="min-width:20px;font-weight:700;color:var(--mu)">#${i+1}</span>`;
+          h+=`<span style="flex:1">${E(m.jd.t)} <span class="mu">(${E(D.cos[m.jd.c])})</span></span>`;
+          h+=`<div style="width:120px;height:6px;background:var(--bd);border-radius:3px;overflow:hidden"><div class="cv-score-fill ${mcls}" data-w="${pct}" style="height:100%;width:0;border-radius:3px"></div></div>`;
+          h+=`<span style="font-weight:700;min-width:36px;text-align:right">${pct}%</span>`;
+          h+=`</div>`;
+        });
+        h+=`</div>`;
+        if(r.length>5)h+=`<div class="mu" style="font-size:12px;margin-top:4px">+${r.length-5} more matches</div>`;
+      }
+      h+=`</div></details>`;
+    });
+    // Animate score bars after render
+    setTimeout(()=>document.querySelectorAll('.cv-score-fill[data-w]').forEach(el=>{el.style.width=el.dataset.w+'%'}),80);
+    return h;
+  }
+
+  // ---- SINGLE FILE RESULTS VIEW (unchanged) ----
   if(cvState.results){
     const r=cvState.results;
     const strong=r.filter(x=>x.score>=60).length;
@@ -1137,10 +1303,6 @@ function vCvMatch(){
       const rng=parseExpRange(m.jd.e,m.jd.t);
       const rngStr=rng?rng[1]!==null?rng[0]+'-'+rng[1]+' yrs':rng[0]+'+ yrs':'any';
 
-      // Shortlist to company buttons
-      const coIdx=m.jd.c;
-      const alreadySl=isShortlisted('_cv_'+m.jd.id); // pool-style shortlist not applicable here, just show UI
-
       h+=`<div class="cv-match-card">
         <div class="cv-match-rank ${rankCls}">#${i+1}</div>
         <div class="cv-match-head">
@@ -1175,12 +1337,13 @@ function vCvMatch(){
     return h;
   }
 
-  // Show upload zone
+  // Show upload zone (multi-file enabled)
   h+=`<div class="cv-upload" id="cv-drop">
-    <input type="file" id="cv-file" accept=".pdf,.docx,.doc,.txt">
+    <input type="file" id="cv-file" accept=".pdf,.docx,.doc,.txt" multiple>
     <span class="cv-upload-icon">📄</span>
-    <div class="cv-upload-title">Drop your CV here</div>
-    <div class="cv-upload-sub">or click to browse · PDF, DOCX, TXT supported</div>
+    <div class="cv-upload-title">Drop CVs here</div>
+    <div class="cv-upload-sub">or click to browse · Select <b>one or many</b> files · PDF, DOCX, TXT supported</div>
+    <div style="margin-top:10px;font-size:12px;color:var(--mu)">💡 You can select <b>unlimited files</b> at once — they'll be processed one by one</div>
   </div>`;
 
   h+=`<div style="margin-top:20px">`;
@@ -1194,12 +1357,13 @@ function vCvMatch(){
   h+=`<div class="card" style="border-left:4px solid var(--ac)">
     <h3 style="margin:0 0 6px">How it works</h3>
     <div class="mu" style="line-height:1.8">
-      <b>1.</b> Upload a resume (PDF, DOCX, or TXT)<br>
+      <b>1.</b> Upload one or multiple resumes (PDF, DOCX, or TXT) — select as many as you like at once<br>
       <b>2.</b> Text is extracted entirely in your browser — nothing is sent to any server<br>
-      <b>3.</b> CV is analyzed for skills, experience, qualifications, and domain expertise<br>
-      <b>4.</b> <b>Experience check (Red Line):</b> JDs where your experience doesn't meet the minimum are excluded<br>
+      <b>3.</b> Each CV is analyzed for skills, experience, qualifications, and domain expertise<br>
+      <b>4.</b> <b>Experience check (Red Line):</b> JDs where experience doesn't meet the minimum are excluded<br>
       <b>5.</b> Remaining JDs are scored on:<br>
-      &nbsp;&nbsp;&nbsp;• <b>Title match</b> (30 pts) · <b>Skill match</b> (25 pts) · <b>Domain alignment</b> (20 pts) · <b>Experience fit</b> (15 pts) · <b>Qualification</b> (10 pts)
+      &nbsp;&nbsp;&nbsp;• <b>Title match</b> (30 pts) · <b>Skill match</b> (25 pts) · <b>Domain alignment</b> (20 pts) · <b>Experience fit</b> (15 pts) · <b>Qualification</b> (10 pts)<br>
+      <b>6.</b> All uploaded CVs are auto-saved to the <a href="#/uploaded-cvs">📁 Uploaded CVs</a> tab for bulk download
     </div>
   </div>`;
   h+=`</div>`;
@@ -1629,15 +1793,17 @@ function render(){
   const[v,a]=location.hash.slice(2).split('/');
   app.innerHTML=v==='c'?vCo(a):v==='j'?vJd(a):v==='u'?vUn():v==='multi'?vMulti():v==='shortlist'?vShortlist():v==='cv'?vCvMatch():v==='pool'?vPoolUpload():v==='uploaded-cvs'?vUploadedCvs():vHome();
   // Bind CV upload events
-  if(v==='cv'&&!cvState.loading&&!cvState.results){
+  if(v==='cv'&&!cvState.loading&&!cvState.results&&!cvState.batchDone){
     const drop=document.getElementById('cv-drop');
     const inp=document.getElementById('cv-file');
     if(drop){
       drop.addEventListener('dragover',e=>{e.preventDefault();drop.classList.add('drag-over')});
       drop.addEventListener('dragleave',()=>drop.classList.remove('drag-over'));
-      drop.addEventListener('drop',e=>{e.preventDefault();drop.classList.remove('drag-over');if(e.dataTransfer.files[0])handleCvFile(e.dataTransfer.files[0])});
+      // Accept multiple dropped files
+      drop.addEventListener('drop',e=>{e.preventDefault();drop.classList.remove('drag-over');if(e.dataTransfer.files.length)handleCvFiles(e.dataTransfer.files)});
     }
-    if(inp)inp.addEventListener('change',e=>{if(e.target.files[0])handleCvFile(e.target.files[0])});
+    // Accept multiple selected files
+    if(inp)inp.addEventListener('change',e=>{if(e.target.files.length)handleCvFiles(e.target.files)});
   }
   // Bind Pool upload events
   if(v==='pool'&&!poolState.loading){
@@ -1685,7 +1851,7 @@ app.addEventListener('click',e=>{const b=e.target.closest('button,a[data-slrm]')
   else if('xlsl' in d){dlSl()}
   else if('xlslAll' in d||b.dataset.xlslAll!=null){dlSlAll()}
   else if(d.xlslCo!=null){dlSlCo(+d.xlslCo)}
-  else if('cvnew' in d){cvState={text:null,file:null,results:null,loading:false,progress:0,step:''};render()}
+  else if('cvnew' in d){cvState={text:null,file:null,results:null,loading:false,progress:0,step:'',batch:[],batchIdx:0,batchTotal:0,batchResults:[],batchDone:false};render()}
   else if('clearpol' in d){if(confirm('Clear all '+S.pool.length+' pool candidates? This cannot be undone.')){S.pool=[];save();rebuildCandidateList();render()}}
   else if('dlUcvs' in d){dlUploadedCvs()}
   else if('clearUcvs' in d){if(confirm('Clear all '+S.uploadedCvs.length+' uploaded CVs? This cannot be undone.')){S.uploadedCvs=[];save();render()}}

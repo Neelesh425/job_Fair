@@ -151,6 +151,7 @@ details{margin-top:6px}
 <a href="#/shortlist" id="nav-sl">Shortlisted</a>
 <a href="#/cv" id="nav-cv">CV Match</a>
 <a href="#/pool" id="nav-pool">+ Pool Upload</a>
+<a href="#/uploaded-cvs" id="nav-uploaded-cvs">📁 Uploaded CVs</a>
 </div>
 <span class="mu">Screening score is rule-based, from form answers. CVs are linked, not read.</span>
 <button id="reset">Reset all data</button>
@@ -161,8 +162,8 @@ let D;
 const ZN={g:'Green',y:'Yellow',r:'Red'};
 const $=s=>document.querySelector(s);
 const E=s=>String(s==null?'':s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
-let S={ov:{},log:[],sl:{},qe:{},pool:[]};
-try{const raw=JSON.parse(localStorage.getItem('jf')||'null');if(raw){S.ov=raw.ov||{};S.log=raw.log||[];S.sl=raw.sl||{};S.qe=raw.qe||{};S.pool=raw.pool||[]}}catch(e){}
+let S={ov:{},log:[],sl:{},qe:{},pool:[],uploadedCvs:[]};
+try{const raw=JSON.parse(localStorage.getItem('jf')||'null');if(raw){S.ov=raw.ov||{};S.log=raw.log||[];S.sl=raw.sl||{};S.qe=raw.qe||{};S.pool=raw.pool||[];S.uploadedCvs=raw.uploadedCvs||[]}}catch(e){}
 const save=()=>{try{localStorage.setItem('jf',JSON.stringify(S))}catch(e){}};
 
 /* ====== Disability Benchmark Check ====== */
@@ -975,6 +976,28 @@ function matchCvToJds(cvText){
   return results;
 }
 
+// Helper: extract candidate info from CV text (best-effort heuristics)
+function cvExtractInfo(text){
+  const t=text;
+  const tl=t.toLowerCase();
+  // Name: first non-empty line that looks like a name (2+ words, no digits, <40 chars)
+  let name='';
+  for(const line of t.split('\n')){
+    const l=line.trim();
+    if(l&&l.length<50&&l.split(/\s+/).length>=2&&!/\d/.test(l)&&!/[@:;,]/.test(l)){name=l;break;}
+  }
+  // Email
+  const emM=t.match(/[\w.+-]+@[\w-]+\.[a-z]{2,}/i);
+  const em=emM?emM[0]:'';
+  // Phone (10-digit Indian numbers)
+  const phM=t.replace(/[\s\-().+]/g,'').match(/(?:91)?(\d{10})/);
+  const ph=phM?phM[1]:'';
+  // Address: try to find lines with common address keywords
+  const adLines=t.split('\n').filter(l=>/address|flat|house|street|road|nagar|colony|sector|city|pin|\d{6}/.test(l.toLowerCase())).slice(0,2);
+  const ad=adLines.join(', ').trim();
+  return{name,em,ph,ad};
+}
+
 async function handleCvFile(file){
   const ext=file.name.split('.').pop().toLowerCase();
   if(!['pdf','docx','doc','txt'].includes(ext)){
@@ -1016,6 +1039,41 @@ async function handleCvFile(file){
     setCvProgress(100,'Done!');
     await new Promise(r=>setTimeout(r,300));
     cvState.loading=false;
+
+    // === Persist this CV into uploadedCvs store ===
+    const extracted=cvExtractInfo(cvState.text);
+    const top2=cvState.results.slice(0,2);
+    // Determine Hitachi bundling:
+    // If no JD matches at all but candidate has >=1yr exp -> Hitachi
+    const expYrs=cvState.cvExp;
+    const isHitachi=(cvState.results.length===0)&&(expYrs!==null&&expYrs>=1);
+    const ucEntry={
+      _id: Date.now()+'_'+Math.random().toString(36).slice(2),
+      fileName: file.name,
+      uploadedAt: new Date().toISOString(),
+      // Extracted fields
+      name: extracted.name,
+      em: extracted.em,
+      ph: extracted.ph,
+      ad: extracted.ad,
+      expYrs: expYrs,
+      // Top 2 JD matches
+      jd1: top2[0]?{company:D.cos[top2[0].jd.c],role:top2[0].jd.t,pct:top2[0].score}:null,
+      jd2: top2[1]?{company:D.cos[top2[1].jd.c],role:top2[1].jd.t,pct:top2[1].score}:null,
+      isHitachi: isHitachi,
+      // Raw top match list for reference (top 5)
+      topMatches: cvState.results.slice(0,5).map(r=>({company:D.cos[r.jd.c],role:r.jd.t,pct:r.score}))
+    };
+    // Avoid duplicate by fileName+size (same file uploaded twice)
+    const dupKey=file.name+'|'+file.size;
+    const existIdx=S.uploadedCvs.findIndex(u=>u.fileName+'|'+(u.fileSize||0)===dupKey);
+    if(existIdx>=0)S.uploadedCvs[existIdx]=Object.assign(ucEntry,{fileSize:file.size});
+    else S.uploadedCvs.push(Object.assign(ucEntry,{fileSize:file.size}));
+    S.log.unshift(new Date().toLocaleString()+': CV uploaded: '+file.name+(isHitachi?' (→ Hitachi bucket)':top2[0]?' (→ '+D.cos[top2[0].jd.c]+')':''));
+    S.log=S.log.slice(0,100);
+    save();
+    // ================================================
+
     render();
     setTimeout(()=>{
       document.querySelectorAll('.cv-score-fill[data-w]').forEach(el=>{
@@ -1146,6 +1204,153 @@ function vCvMatch(){
   </div>`;
   h+=`</div>`;
   return h;
+}
+
+/* ====== Uploaded CVs View ====== */
+function vUploadedCvs(){
+  const list=S.uploadedCvs||[];
+  let h=head('Uploaded CVs',`${list.length} CV${list.length===1?'':'s'} uploaded via CV Match tab`,['#/','Home']);
+  h+=`<div class="act" style="margin:12px 0;flex-wrap:wrap;gap:8px">`;
+  h+=`<button data-dl-ucvs class="btn-primary">⬇ Download All as .xlsx</button>`;
+  if(list.length>0)h+=`<button data-clear-ucvs class="dng">🗑 Clear All Uploaded CVs</button>`;
+  h+=`</div>`;
+  if(!list.length){
+    h+=`<div class="card"><b>No CVs uploaded yet.</b><p class="mu">Go to the <a href="#/cv">CV Match tab</a>, upload a resume (PDF/DOCX/TXT) and it will be saved here automatically.</p></div>`;
+    return h;
+  }
+  // Stats
+  const hitachiCount=list.filter(u=>u.isHitachi).length;
+  const matchedCount=list.filter(u=>!u.isHitachi&&u.jd1).length;
+  h+=`<div class="stats-bar" style="margin-bottom:14px">`;
+  h+=`<div class="stat"><div class="stat-val">${list.length}</div><div class="stat-label">Total CVs</div></div>`;
+  h+=`<div class="stat"><div class="stat-val">${matchedCount}</div><div class="stat-label">JD Matched</div></div>`;
+  h+=`<div class="stat"><div class="stat-val">${hitachiCount}</div><div class="stat-label">Hitachi Pool</div></div>`;
+  h+=`</div>`;
+  // Hitachi bucket first if any
+  const hitachi=list.filter(u=>u.isHitachi);
+  const matched=list.filter(u=>!u.isHitachi);
+  if(hitachi.length){
+    h+=`<div class="sl-company-section"><div class="sl-company-header"><span class="sl-company-name">🏢 Hitachi <span class="tag" style="font-size:12px;font-weight:500">(≥1yr exp, no JD match)</span></span><span class="tag">${hitachi.length} CV${hitachi.length===1?'':'s'}</span></div>`;
+    hitachi.forEach(u=>{
+      h+=ucvCard(u);
+    });
+    h+=`</div>`;
+  }
+  // JD-matched CVs grouped by top company
+  const byCompany={};
+  matched.forEach(u=>{
+    const co=u.jd1?u.jd1.company:'Unmatched';
+    if(!byCompany[co])byCompany[co]=[];
+    byCompany[co].push(u);
+  });
+  Object.entries(byCompany).forEach(([co,items])=>{
+    h+=`<div class="sl-company-section"><div class="sl-company-header"><span class="sl-company-name">🏢 ${E(co)}</span><span class="tag">${items.length} CV${items.length===1?'':'s'}</span></div>`;
+    items.forEach(u=>h+=ucvCard(u));
+    h+=`</div>`;
+  });
+  return h;
+}
+
+function ucvCard(u){
+  const ts=u.uploadedAt?new Date(u.uploadedAt).toLocaleString():'';
+  return `<div class="sl-card" style="margin-bottom:8px">
+    <div class="top"><b>${E(u.name||u.fileName)}</b>${u.isHitachi?'<span class="tag tag-blue">Hitachi Pool</span>':''}</div>
+    <div class="mu" style="font-size:12px">${u.em?'✉ '+E(u.em)+'&nbsp;&nbsp;':''} ${u.ph?'📞 '+E(u.ph)+'&nbsp;&nbsp;':''} ${u.expYrs!==null&&u.expYrs!==undefined?'🕐 '+u.expYrs+' yrs exp&nbsp;&nbsp;':''}</div>
+    ${u.jd1?`<div class="chips" style="margin-top:4px">
+      <span class="chip cg">#1: ${E(u.jd1.company)} — ${E(u.jd1.role)} (${u.jd1.pct}%)</span>
+      ${u.jd2?`<span class="chip cy">#2: ${E(u.jd2.company)} — ${E(u.jd2.role)} (${u.jd2.pct}%)</span>`:''}
+    </div>`:'<div class="mu" style="font-size:12px">No JD match found</div>'}
+    <div class="mu" style="font-size:11px">📄 ${E(u.fileName)} · Uploaded: ${E(ts)}</div>
+    <div class="act"><button data-rm-ucv="${E(u._id)}" class="dng" style="font-size:12px">✕ Remove</button></div>
+  </div>`;
+}
+
+/* ====== Uploaded CVs Excel Builder ====== */
+async function buildUploadedCvWb(){
+  await loadX();
+  const wb=new ExcelJS.Workbook();
+  const list=S.uploadedCvs||[];
+  // ---- Sheet 1: All uploaded CVs ----
+  // Columns as requested:
+  // Company Name | Job Role | % Match JD1 | % Match JD2 | Name | Mail id | Contact No | Current Organization |
+  // Relevant experience in years | Relevant Skillset | Disability Type | Disability% | Current location |
+  // Preferred Relocation | Current ctc | Expected ctc | Notice Period | Full Address | Upload cv | Column 1
+  const UCOLS=['Company Name','Job Role','% Match (JD 1)','% Match (JD 2)','Name','Mail id','Contact No',
+    'Current Organization','Relevant experience in years','Relevant Skillset','Disability Type','Disability%',
+    'Current location','Preferred Relocation','Current ctc','Expected ctc','Notice Period','Full Address','Upload cv','Column 1'];
+
+  function makeSheet(wb,name,items,coLabel){
+    const wsName=(name||'CVs').replace(/[\\/?*\[\]:]/g,' ').slice(0,31);
+    const ws=wb.addWorksheet(wsName);
+    const hdr=ws.addRow(UCOLS);
+    hdr.eachCell(x=>{x.font={bold:true,color:{argb:'FFFFFFFF'}};x.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1F2937'}};x.alignment={horizontal:'center',vertical:'middle',wrapText:true}});
+    ws.getRow(1).height=22;
+    items.forEach(u=>{
+      // For each uploaded CV we output one row per JD match (up to 2), or one row if no match
+      const matches=u.isHitachi?[{company:coLabel||'Hitachi',role:'General Pool',pct1:'N/A',pct2:'N/A'}]
+        :u.topMatches&&u.topMatches.length?u.topMatches.slice(0,1).map((_,idx)=>({company:u.jd1?u.jd1.company:'',role:u.jd1?u.jd1.role:'',pct1:u.jd1?u.jd1.pct+'%':'',pct2:u.jd2?u.jd2.pct+'%':''}))
+        :[{company:'',role:'',pct1:'',pct2:''}];
+      matches.forEach(m=>{
+        const row=ws.addRow([
+          m.company,
+          m.role,
+          m.pct1,
+          m.pct2,
+          u.name||'',
+          u.em||'',
+          u.ph||'',
+          '',// Current Organization – not easily parsed from CV text
+          u.expYrs!=null?u.expYrs:'',
+          '',// Relevant Skillset – not parsed
+          '',// Disability Type
+          '',// Disability%
+          '',// Current location
+          '',// Preferred Relocation
+          '',// Current ctc
+          '',// Expected ctc
+          '',// Notice Period
+          u.ad||'',
+          u.fileName,
+          ''// Column 1
+        ]);
+        // Light green fill for matched rows, light yellow for Hitachi
+        const fg=u.isHitachi?'FFFFFF99':'FFEAFAF0';
+        row.eachCell({includeEmpty:true},x=>{x.fill={type:'pattern',pattern:'solid',fgColor:{argb:fg}};x.alignment={vertical:'middle',wrapText:false}});
+      });
+    });
+    [22,34,14,14,24,28,14,26,12,26,20,10,18,18,12,12,14,40,36,20].forEach((w,i)=>ws.getColumn(i+1).width=w);
+    ws.views=[{state:'frozen',ySplit:1}];
+    ws.autoFilter={from:'A1',to:{row:1,column:UCOLS.length}};
+    return ws;
+  }
+
+  // Main sheet: all CVs
+  makeSheet(wb,'All Uploaded CVs',list,'Hitachi');
+
+  // Hitachi sheet (separate)
+  const hitachiList=list.filter(u=>u.isHitachi);
+  if(hitachiList.length)makeSheet(wb,'Hitachi Pool',hitachiList,'Hitachi');
+
+  // Per-company sheets for matched CVs
+  const byCompany={};
+  list.filter(u=>!u.isHitachi&&u.jd1).forEach(u=>{
+    const co=u.jd1.company;
+    if(!byCompany[co])byCompany[co]=[];
+    byCompany[co].push(u);
+  });
+  Object.entries(byCompany).forEach(([co,items])=>makeSheet(wb,co,items,co));
+
+  return wb;
+}
+
+async function dlUploadedCvs(){
+  try{await loadX()}catch(e){alert('Could not load Excel library.');return}
+  const wb=await buildUploadedCvWb();
+  const buf=await wb.xlsx.writeBuffer();
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
+  a.download='Uploaded CVs - Job Fair.xlsx';
+  document.body.appendChild(a);a.click();a.remove();
 }
 
 /* ====== Candidate Pool Upload (Google Sheet / Excel) ====== */
@@ -1422,7 +1627,7 @@ function render(){
   if(!D)return;
   updateNav();
   const[v,a]=location.hash.slice(2).split('/');
-  app.innerHTML=v==='c'?vCo(a):v==='j'?vJd(a):v==='u'?vUn():v==='multi'?vMulti():v==='shortlist'?vShortlist():v==='cv'?vCvMatch():v==='pool'?vPoolUpload():vHome();
+  app.innerHTML=v==='c'?vCo(a):v==='j'?vJd(a):v==='u'?vUn():v==='multi'?vMulti():v==='shortlist'?vShortlist():v==='cv'?vCvMatch():v==='pool'?vPoolUpload():v==='uploaded-cvs'?vUploadedCvs():vHome();
   // Bind CV upload events
   if(v==='cv'&&!cvState.loading&&!cvState.results){
     const drop=document.getElementById('cv-drop');
@@ -1482,10 +1687,15 @@ app.addEventListener('click',e=>{const b=e.target.closest('button,a[data-slrm]')
   else if(d.xlslCo!=null){dlSlCo(+d.xlslCo)}
   else if('cvnew' in d){cvState={text:null,file:null,results:null,loading:false,progress:0,step:''};render()}
   else if('clearpol' in d){if(confirm('Clear all '+S.pool.length+' pool candidates? This cannot be undone.')){S.pool=[];save();rebuildCandidateList();render()}}
+  else if('dlUcvs' in d){dlUploadedCvs()}
+  else if('clearUcvs' in d){if(confirm('Clear all '+S.uploadedCvs.length+' uploaded CVs? This cannot be undone.')){S.uploadedCvs=[];save();render()}}
+  else if(d.rmUcv){const idx=S.uploadedCvs.findIndex(u=>u._id===d.rmUcv);if(idx>=0){S.uploadedCvs.splice(idx,1);save();render()}}
 });
 
-addEventListener('hashchange',()=>{pend=null;showRm=false;activeTab='zones';render();scrollTo(0,0)});
-$('#reset').onclick=()=>{if(confirm('This will reset ALL your changes (zone moves, shortlists, notes, custom questions, pool candidates). Continue?')){S={ov:{},log:[],sl:{},qe:{},pool:[]};save();rebuildCandidateList();render()}};
+addEventListener('hashchange',()=>{pend=null;showRm=false;activeTab='zones';render();scrollTo(0,0);
+  // Sync uploaded CVs nav link active state
+  const h2=location.hash;document.querySelectorAll('.nav-links a').forEach(a=>{a.classList.toggle('active',a.getAttribute('href')===h2||((!h2||h2==='#/')&&a.id==='nav-home'))});});
+$('#reset').onclick=()=>{if(confirm('This will reset ALL your changes (zone moves, shortlists, notes, custom questions, pool candidates, uploaded CVs). Continue?')){S={ov:{},log:[],sl:{},qe:{},pool:[],uploadedCvs:[]};save();rebuildCandidateList();render()}};
 
 const api=async p=>{const r=await fetch('/api/data',{headers:{'x-password':p||''}});if(!r.ok)throw r.status;return r.json()};
 function start(d){

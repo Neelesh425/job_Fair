@@ -1,0 +1,10 @@
+﻿======================================================================
+FRESHERS IN EXPERIENCE-REQUIRED JDs (TRUE VIOLATIONS ONLY)
+======================================================================
+
+======================================================================
+RESULT: ZERO TRUE VIOLATIONS
+All experience-gated JDs only contain candidates who meet the minimum.
+(Infosys/Wipro 'freshers and experienced' JDs are intentionally open.)
+(CGI freshers are intentionally 0-exp.)
+======================================================================

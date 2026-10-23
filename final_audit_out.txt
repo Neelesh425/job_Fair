@@ -1,0 +1,20 @@
+﻿
+======================================================================
+TOTAL VIOLATIONS: 0
+ALL CLEAN - Experience gate is 100% enforced across all JDs!
+======================================================================
+
+SUMMARY BY COMPANY:
+  Allstate                            2 JDs, 162 cands => CLEAN
+  Asian Paints                        25 JDs, 930 cands => CLEAN
+  Axis Max Life Insurance             18 JDs, 197 cands => CLEAN
+  CGI                                 3 JDs, 64 cands => CLEAN
+  Dell                                3 JDs, 334 cands => CLEAN
+  Firstsource                         1 JDs, 51 cands => CLEAN
+  GoHighLevel                         2 JDs, 75 cands => CLEAN
+  Hitachi                             10 JDs, 290 cands => CLEAN
+  Indigo                              1 JDs, 12 cands => CLEAN
+  Infosys                             6 JDs, 335 cands => CLEAN
+  Other roles (not in your JD sheet)  19 JDs, 725 cands => CLEAN
+  Titan                               2 JDs, 58 cands => CLEAN
+  Wipro                               1 JDs, 43 cands => CLEAN

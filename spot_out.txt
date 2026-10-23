@@ -1,0 +1,98 @@
+﻿======================================================================
+SPOT CHECK ΓÇö Real candidates in key JDs
+======================================================================
+
+[GoHighLevel] SDE2 Fullstack CRM - Shwetha C
+  Expected: GoHighLevel 3-5yr
+  JD says:  '3ΓÇô5 years'
+  Candidates: 20 | Exp: 3.0 - 22.0 yr | Freshers(0): 0 | <1yr: 0
+  Top 5 candidates:
+    Adedokun Promise                    exp='5' (5.0yr)
+    Kelechi Okpani                      exp='5 years' (5.0yr)
+    Praise Ayodele Alabi                exp='4' (4.0yr)
+    Neha Saraf                          exp='6 Year(s) 6 Month(s)' (6.5yr)
+    Sutirtha Soor                       exp='5' (5.0yr)
+
+[Allstate] AI Engineer
+  Expected: Allstate 4yr
+  JD says:  '4ΓÇô10 years'
+  Candidates: 32 | Exp: 4.0 - 14.0 yr | Freshers(0): 0 | <1yr: 0
+  Top 5 candidates:
+    Jitendra Kumar Sharma               exp='6 Year(s) 6 Month(s)' (6.5yr)
+    Rekha Ramesh                        exp='8Yrs' (8.0yr)
+    G Chandrasekhar Reddy               exp='4 Year(s) 2 Month(s)' (4.2yr)
+    Jaidev Chatterjee                   exp='6Yrs' (6.0yr)
+    Sagar Math                          exp='9Yrs' (9.0yr)
+
+[Dell] Data Engineering / AI Engineer ΓÇô Bengaluru
+  Expected: Dell 5-8yr
+  JD says:  '5ΓÇô8 years; 1 opening'
+  Candidates: 30 | Exp: 5.0 - 16.0 yr | Freshers(0): 0 | <1yr: 0
+  Top 5 candidates:
+    Jitendra Kumar Sharma               exp='6 Year(s) 6 Month(s)' (6.5yr)
+    Rekha Ramesh                        exp='8Yrs' (8.0yr)
+    Meda Anil Kumar                     exp='6 YEARS' (6.0yr)
+    Dolly Asrani                        exp='5.5Yrs' (5.0yr)
+    Anil Jainapur                       exp='5+ years' (5.0yr)
+
+[Indigo] Corporate Jobs for PwD Candidates ΓÇô Gurugram Walk-in
+  Expected: Indigo 4-6yr
+  JD says:  '4ΓÇô6 years; 1 opening'
+  Candidates: 12 | Exp: 5.0 - 20.0 yr | Freshers(0): 0 | <1yr: 0
+  Top 5 candidates:
+    Akhilesh kumar Sharma               exp='6 year' (6.0yr)
+    Meena Choudhary                     exp='6 years' (6.0yr)
+    Rajeev Kumar Soni                   exp='4.6 YEAR' (6.0yr)
+    Sumit Thakur                        exp='5 Years' (5.0yr)
+    Nitish jauhari                      exp='6+' (6.0yr)
+
+[CGI] AI Fresher
+  Expected: CGI freshers only
+  JD says:  'Fresher (0-6 months internship)'
+  Candidates: 52 | Exp: 0.0 - 0.0 yr | Freshers(0): 52 | <1yr: 52
+  *** FRESHERS FOUND ΓÇö potential issue ***
+  Top 5 candidates:
+    Harshit Ranjan                      exp='' (0.0yr) <-- FRESHER!
+    Abhay Tiwari                        exp='' (0.0yr) <-- FRESHER!
+    Divyansh Gautam                     exp='' (0.0yr) <-- FRESHER!
+    Krishna Dixit                       exp='' (0.0yr) <-- FRESHER!
+    Mohd Kaif                           exp='' (0.0yr) <-- FRESHER!
+
+[Hitachi] Java Developer
+  Expected: Hitachi >1yr
+  JD says:  'More than 1 year'
+  Candidates: 16 | Exp: 2.0 - 16.0 yr | Freshers(0): 0 | <1yr: 0
+  Top 5 candidates:
+    Faizan Ahmed Ansari                 exp='4 Years 10 Months' (4.8yr)
+    Marediya                            exp='2' (2.0yr)
+    Anil Jainapur                       exp='8 years of work experienc' (8.0yr)
+    Sharma                              exp='4' (4.0yr)
+    Kumar Vhatkar                       exp='1-3 years' (3.0yr)
+
+[Infosys] Finance & Accounting Associate
+  Expected: Hitachi Finance >1yr
+  JD says:  'Freshers and experienced candidates can apply'
+  Candidates: 148 | Exp: 0.0 - 19.0 yr | Freshers(0): 29 | <1yr: 32
+  *** FRESHERS FOUND ΓÇö potential issue ***
+  Top 5 candidates:
+    Abhishek A                          exp='1-3 years' (3.0yr)
+    Adarsh AA                           exp='0-1 years' (1.0yr)
+    Riya Dan                            exp='1-3 years' (3.0yr)
+    Deepika Sadashiv Ahire              exp='1 Year(s) 9 Month(s)' (1.8yr)
+    Rupali Dubey                        exp='2 Year(s) 3 Month(s)' (2.2yr)
+
+[Infosys] Sourcing & Procurement Associate
+  Expected: Hitachi Procurement >1yr
+  JD says:  'Freshers and experienced candidates can apply'
+  Candidates: 94 | Exp: 0.0 - 22.0 yr | Freshers(0): 1 | <1yr: 3
+  *** FRESHERS FOUND ΓÇö potential issue ***
+  Top 5 candidates:
+    Sandeep S                           exp='3 Year(s) 5 Month(s)' (3.4yr)
+    Dhareppa Mali                       exp='2 Year(s) 0 Month(s)' (2.0yr)
+    Shashidhar Pujari                   exp='2 Year(s) 0 Month(s)' (2.0yr)
+    Abhishek Sangamnavar                exp='1 Year(s) 1 Month(s)' (1.1yr)
+    Akash Raju Patil                    exp='2 Year(s) 0 Month(s)' (2.0yr)
+
+======================================================================
+Total freshers (0 exp) found in non-fresher JDs: 178
+======================================================================

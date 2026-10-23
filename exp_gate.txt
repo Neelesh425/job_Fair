@@ -1,0 +1,96 @@
+﻿=== ALL JD EXPERIENCE REQUIREMENTS ===
+[Asian Paints] Executive ΓÇô Enterprise Networking                       => '2ΓÇô5 years (L2 networking support)'
+[Asian Paints] DevSecOps Engineer                                      => '1ΓÇô2 years (preferred)'
+[Asian Paints] Executive II ΓÇô IT Infra & Ops (VMware)                  => '1ΓÇô5 years'
+[Asian Paints] Executive ΓÇô Demand Planning                             => '3+ years (supply chain / distribution)'
+[Asian Paints] Executive N ΓÇô Systems (OCIO)                            => '1ΓÇô2 years (accounting)'
+[Asian Paints] Executive N ΓÇô PMDI (Packing Material Development)       => '1ΓÇô3 years'
+[Asian Paints] Executive ΓÇô CMD (Contract Manufacturing ΓÇô Commercial)   => '1ΓÇô3 years (commercial / purchase)'
+[Asian Paints] Executive Trainee ΓÇô Plant Engineering (GET)             => 'Trainee (experience not specified)'
+[Asian Paints] Executive ΓÇô Distribution (Outbound Logistics & Warehous => 'Fresher (no experience required at Executive-I level)'
+[Asian Paints] Executive ΓÇô Purchased Products (Commercial)             => '5ΓÇô6 years (minimum)'
+[Asian Paints] Executive N ΓÇô New Products Support (NPS)                => 'Fresher'
+[Asian Paints] Executive ΓÇô Imports                                     => '1ΓÇô3 years (export / import handling)'
+[Asian Paints] Executive ΓÇô Purchased Products (Execution)              => '1 year (fresher also fine)'
+[Asian Paints] Executive I ΓÇô EHS (SCRC)                                => '0ΓÇô3 years'
+[Allstate] AI Engineer                                             => '4ΓÇô10 years'
+[Firstsource] CSA (Customer Service Associate) ΓÇô Grade H2             => 'Fresher'
+[Axis Max Life Insurance] Sr. Manager ΓÇô MIS Reporting (BIIG)                      => '7ΓÇô8 years (business reporting teams)'
+[Axis Max Life Insurance] Sr. Manager ΓÇô Data Security (Enterprise Risk Mgmt / Inf => '5ΓÇô8 years (DLP, DRM, data classification, privacy)'
+[Axis Max Life Insurance] Sr. Manager ΓÇô AI Risk Management (Enterprise Risk Mgmt) => '3ΓÇô5 years (ML, model validation, AI risk)'
+[Axis Max Life Insurance] Sr. Manager ΓÇô Customer Experience (Control Tower)       => '4ΓÇô6 years (customer escalation / CAPA)'
+[Axis Max Life Insurance] Deputy Manager ΓÇô Renewals                               => '3ΓÇô7 years (min. 5 yrs in life insurance onboarding controls)'
+[Axis Max Life Insurance] Chief Manager ΓÇô Business Planning & Analytics (Renewals => '8ΓÇô12 years (analytics / business planning, BFSI)'
+[Axis Max Life Insurance] Manager ΓÇô Product Manager (POS)                         => '7ΓÇô10 years (life insurance ops / business analysis)'
+[Axis Max Life Insurance] Sr. Manager ΓÇô POS (Payout Operations)                   => '10ΓÇô12 years (insurance, team handling)'
+[Axis Max Life Insurance] Sr. Manager ΓÇô Policy Administration (PAG)               => '7ΓÇô15 years (insurance; Ingenium knowledge)'
+[Axis Max Life Insurance] Sr. Associate / Asst. Manager / Deputy Manager ΓÇô Custom => '1ΓÇô2 yrs (Sr. Associate); 2ΓÇô3 yrs (Asst. Manager)'
+[Axis Max Life Insurance] Manager ΓÇô Business Planning & Analytics                 => '1ΓÇô2 years (business planning, analytics, retail ops)'
+[Axis Max Life Insurance] Sr. Manager ΓÇô Business Planning & Analytics             => '4ΓÇô5 years (business planning, analytics, retail ops)'
+[Axis Max Life Insurance] Executive ΓÇô Customer Engagement (Agency)                => '1ΓÇô2 years (front-end customer service)'
+[Axis Max Life Insurance] Asst. Manager ΓÇô Customer Engagement                     => '2ΓÇô3 years (front-end customer service)'
+[Axis Max Life Insurance] Deputy Manager ΓÇô Customer Engagement                    => '5ΓÇô7 years (front-end customer service)'
+[Axis Max Life Insurance] Chief Manager / Sr. Manager ΓÇô Quality & Service Excelle => '8+ years (Lean Six Sigma Black Belt mandatory, BFSI)'
+[Axis Max Life Insurance] Asst. Manager ΓÇô Core Platform COE (Functional)          => '2ΓÇô5 years (Ingenium functional)'
+[Axis Max Life Insurance] System Engineer (Backend)                               => '2ΓÇô3 years (Core Java, Spring Boot)'
+[Axis Max Life Insurance] Solution Architect                                      => '12+ years (7+ yrs cloud migration)'
+[Axis Max Life Insurance] Manager ΓÇô Business System Analyst                       => '5ΓÇô7 years (product mgmt, system design)'
+[Titan] Sr. Executive / Asst. Manager - Automation & Systems De => '3ΓÇô5 years (software dev, automation, integration)'
+[Titan] Functional Consultant ΓÇô SAP MM & Salesforce             => '5+ years (SAP MM consulting)'
+[Infosys] Finance & Accounting Associate                          => 'Freshers and experienced candidates can apply'
+[Infosys] Sourcing & Procurement Associate                        => 'Freshers and experienced candidates can apply'
+[Infosys] Technical Support Associate                             => 'Freshers and experienced candidates can apply'
+[Infosys] Insurance Operations Associate                          => 'Freshers and experienced candidates can apply'
+[Infosys] Healthcare Operations Associate                         => 'Freshers and experienced candidates can apply'
+[Infosys] Customer Service Associate                              => 'Freshers and experienced candidates can apply'
+[GoHighLevel] SDE2 Fullstack CRM - Shwetha C                          => '3ΓÇô5 years'
+[GoHighLevel] Revenue Operations Analyst II                           => '2ΓÇô4 years; 2 PMΓÇô11 PM IST shift'
+[Dell] Application Security / Software Engineering ΓÇô Bengaluru => 'Internships: BTech students graduating 2028; full-time roles: graduati'
+[Dell] Data Engineering / AI Engineer ΓÇô Bengaluru              => '5ΓÇô8 years; 1 opening'
+[Indigo] Corporate Jobs for PwD Candidates ΓÇô Gurugram Walk-in    => '4ΓÇô6 years; 1 opening'
+[Wipro] Wipro ΓÇô Associate Content Moderator (Non-Voice)         => 'Fresh graduates only; immediate joiners preferred. Any graduate; final'
+[CGI] AI Fresher                                              => 'Fresher (0-6 months internship)'
+[CGI] IT Support                                              => 'Fresher (0-6 months internship)'
+[CGI] .NET Fresher                                            => 'Fresher (0-6 months internship)'
+[Hitachi] Java Developer                                          => 'More than 1 year'
+[Hitachi] Full Stack Developer                                    => 'More than 1 year'
+[Hitachi] .NET Developer                                          => 'More than 1 year'
+[Hitachi] Agentic AI Professional                                 => 'More than 1 year'
+[Hitachi] Generative AI Professional                              => 'More than 1 year'
+[Hitachi] Software Developer                                      => 'More than 1 year'
+[Hitachi] Software Tester                                         => 'More than 1 year'
+[Hitachi] Finance                                                 => 'More than 1 year'
+[Hitachi] Human Resources (HR)                                    => 'More than 1 year'
+[Hitachi] Procurement                                             => 'More than 1 year'
+
+JDs WITH exp requirement: 63
+JDs WITHOUT exp requirement: 37
+
+=== EXP GATE VIOLATIONS: Freshers in Experience-Required JDs ===
+FOUND 743 VIOLATIONS:
+  [Asian Paints] Executive ΓÇô Enterprise Networking        needs >=5.0yr | Mohan Mittapally has 4.0yr (raw: '4 years')
+  [Asian Paints] Executive ΓÇô Enterprise Networking        needs >=5.0yr | Alka Dutta has 2.0yr (raw: '2 Year(s) 0 Month(s)')
+  [Asian Paints] Executive ΓÇô Enterprise Networking        needs >=5.0yr | Harisankar Panda has 2.6yr (raw: '2 Year(s) 7 Month(s)')
+  [Asian Paints] Executive ΓÇô Enterprise Networking        needs >=5.0yr | G Chandrasekhar Reddy has 4.2yr (raw: '4 Year(s) 2 Month(s)')
+  [Asian Paints] Executive ΓÇô Enterprise Networking        needs >=5.0yr | Akshay Pratap Singh has 4.0yr (raw: '4 years')
+  [Asian Paints] Executive ΓÇô Enterprise Networking        needs >=5.0yr | Apratim Kayarkar has 3.0yr (raw: '3 y')
+  [Asian Paints] Executive ΓÇô Enterprise Networking        needs >=5.0yr | Vivek Srivastav has 0.0yr (raw: 'Azure PaaS')
+  [Asian Paints] Executive ΓÇô Enterprise Networking        needs >=5.0yr | Anoop Kumar Gupta has 0.0yr (raw: '')
+  [Asian Paints] Executive ΓÇô Enterprise Networking        needs >=5.0yr | Shubham Gunawat has 0.3yr (raw: '0 Year(s) 4 Month(s)')
+  [Asian Paints] Executive ΓÇô Enterprise Networking        needs >=5.0yr | Amir has 0.0yr (raw: 'VLSI circuit design and manufacturing')
+  [Asian Paints] Executive ΓÇô Enterprise Networking        needs >=5.0yr | Darshan P Garag has 0.0yr (raw: 'Fresher')
+  [Asian Paints] DevSecOps Engineer                       needs >=2.0yr | Mavuluru priyatham kumar has 1.0yr (raw: '1 year')
+  [Asian Paints] DevSecOps Engineer                       needs >=2.0yr | Avishkar Lakade has 1.0yr (raw: '1')
+  [Asian Paints] DevSecOps Engineer                       needs >=2.0yr | Anurag Wagh has 1.3yr (raw: '1 Year(s) 4 Month(s)')
+  [Asian Paints] DevSecOps Engineer                       needs >=2.0yr | Karan Kumar Singh has 1.5yr (raw: '1 Year(s) 6 Month(s)')
+  [Asian Paints] DevSecOps Engineer                       needs >=2.0yr | Eshwar Poshala has 1.5yr (raw: '1 Year(s) 6 Month(s)')
+  [Asian Paints] DevSecOps Engineer                       needs >=2.0yr | Sahil Johari has 1.5yr (raw: '1 Year(s) 6 Month(s)')
+  [Asian Paints] DevSecOps Engineer                       needs >=2.0yr | Vallepu Jithendra Narayana has 1.0yr (raw: '1 Year(s) 0 Month(s)')
+  [Asian Paints] DevSecOps Engineer                       needs >=2.0yr | Arun Krishna Lola has 1.0yr (raw: '1Yrs')
+  [Asian Paints] DevSecOps Engineer                       needs >=2.0yr | Supreetha H M has 1.0yr (raw: '1 Year(s) 0 Month(s)')
+  ... and 723 more
+
+=== SAMPLE: What does 'e' field in a JD look like? ===
+  JD id=0 t='Executive ΓÇô Enterprise Networking' e='2ΓÇô5 years (L2 networking support)' keys=['id', 'c', 't', 'ty', 'e', 'l', 'u']
+  JD id=1 t='InfoSec Analyst / Lead ΓÇô OT Security' e='' keys=['id', 'c', 't', 'ty', 'e', 'l', 'u']
+  JD id=2 t='Executive ΓÇô Information Security (SOC)' e='' keys=['id', 'c', 't', 'ty', 'e', 'l', 'u']

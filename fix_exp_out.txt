@@ -1,0 +1,36 @@
+﻿Removed   5 from [Asian Paints] Executive ΓÇô Enterprise Networking (min 2.0yr)
+Removed  87 from [Asian Paints] DevSecOps Engineer (min 1.0yr)
+Removed  11 from [Asian Paints] Executive II ΓÇô IT Infra & Ops (VMware) (min 1.0yr)
+Removed   2 from [Asian Paints] Executive ΓÇô Demand Planning (min 3.0yr)
+Removed  24 from [Asian Paints] Executive N ΓÇô Systems (OCIO) (min 1.0yr)
+Removed  60 from [Asian Paints] Executive N ΓÇô PMDI (Packing Material Development) (min 1.0yr)
+Removed   1 from [Asian Paints] Executive ΓÇô CMD (Contract Manufacturing ΓÇô Commerci (min 1.0yr)
+Removed   2 from [Asian Paints] Executive ΓÇô Purchased Products (Commercial) (min 5.0yr)
+Removed  19 from [Asian Paints] Executive ΓÇô Purchased Products (Execution) (min 1.0yr)
+Removed  34 from [Allstate] AI Engineer (min 4.0yr)
+Removed   1 from [Axis Max Life Insurance] Sr. Manager ΓÇô MIS Reporting (BIIG) (min 7.0yr)
+Removed   3 from [Axis Max Life Insurance] Sr. Manager ΓÇô Data Security (Enterprise Risk Mgmt  (min 5.0yr)
+Removed   2 from [Axis Max Life Insurance] Sr. Manager ΓÇô AI Risk Management (Enterprise Risk  (min 3.0yr)
+Removed   6 from [Axis Max Life Insurance] Sr. Manager ΓÇô Customer Experience (Control Tower) (min 4.0yr)
+Removed   1 from [Axis Max Life Insurance] Manager ΓÇô Product Manager (POS) (min 7.0yr)
+Removed   5 from [Axis Max Life Insurance] Sr. Associate / Asst. Manager / Deputy Manager ΓÇô C (min 1.0yr)
+Removed  32 from [Axis Max Life Insurance] Manager ΓÇô Business Planning & Analytics (min 1.0yr)
+Removed   8 from [Axis Max Life Insurance] Sr. Manager ΓÇô Business Planning & Analytics (min 4.0yr)
+Removed   7 from [Axis Max Life Insurance] Executive ΓÇô Customer Engagement (Agency) (min 1.0yr)
+Removed   3 from [Axis Max Life Insurance] Asst. Manager ΓÇô Customer Engagement (min 2.0yr)
+Removed   4 from [Axis Max Life Insurance] Deputy Manager ΓÇô Customer Engagement (min 5.0yr)
+Removed   7 from [Axis Max Life Insurance] System Engineer (Backend) (min 2.0yr)
+Removed   2 from [Axis Max Life Insurance] Solution Architect (min 12.0yr)
+Removed   9 from [Axis Max Life Insurance] Manager ΓÇô Business System Analyst (min 5.0yr)
+Removed  10 from [Titan] Sr. Executive / Asst. Manager - Automation & Syste (min 3.0yr)
+Removed   1 from [Titan] Functional Consultant ΓÇô SAP MM & Salesforce (min 5.0yr)
+Removed  12 from [GoHighLevel] SDE2 Fullstack CRM - Shwetha C (min 3.0yr)
+Removed  32 from [GoHighLevel] Revenue Operations Analyst II (min 2.0yr)
+Removed  29 from [Dell] Data Engineering / AI Engineer ΓÇô Bengaluru (min 5.0yr)
+Removed  13 from [Indigo] Corporate Jobs for PwD Candidates ΓÇô Gurugram Walk- (min 4.0yr)
+
+Total removed: 432
+Original placements: 3708
+New placements: 3276
+
+data/data.json updated ΓÇö experience gate enforced on all JDs.

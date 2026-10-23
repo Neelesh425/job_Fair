@@ -1,0 +1,232 @@
+﻿======================================================================
+COMPREHENSIVE CANDIDATE-JD MATCHING AUDIT
+======================================================================
+Γ£à [Asian Paints] Executive ΓÇô Enterprise Networking | 20 cands | exp range: 2.0-7.0yr | top: ['Mohan Mittapally', 'Alka Dutta', 'Harisankar Panda']
+
+≡ƒö┤ [Asian Paints] InfoSec Analyst / Lead ΓÇô OT Security (58 candidates)
+  ΓÜá DOMAIN MISMATCH: Gagan Sai (IT: Network Manager; IT & Information Security; A results-orient) in non-IT JD 'InfoSec Analyst / Lead ΓÇô OT Security'
+  ΓÜá DOMAIN MISMATCH: Paras Sharma (IT: IT & Information Security - Other; IT & Information Security) in non-IT JD 'InfoSec Analyst / Lead ΓÇô OT Security'
+  ΓÜá DOMAIN MISMATCH: Shubham Gunawat (IT: Data Science & Analytics - Other; Data Science & Analytics; ) in non-IT JD 'InfoSec Analyst / Lead ΓÇô OT Security'
+  ΓÜá DOMAIN MISMATCH: Syed Afroz (IT: Data Science & Analytics - Other; Data Science & Analytics; ) in non-IT JD 'InfoSec Analyst / Lead ΓÇô OT Security'
+  ΓÜá DOMAIN MISMATCH: Rohit Dhillon (IT: Not Mentioned; I have 1 year of cyber security diploma in cr) in non-IT JD 'InfoSec Analyst / Lead ΓÇô OT Security'
+  ΓÜá DOMAIN MISMATCH: Akshit Verma (IT: IT & Information Security - Other; IT & Information Security) in non-IT JD 'InfoSec Analyst / Lead ΓÇô OT Security'
+Γ£à [Asian Paints] Executive ΓÇô Information Security (SOC) | 25 cands | exp range: 0.0-9.0yr | top: ['Daisy Kalita', 'Akshit Verma', 'Gagan Sai']
+
+≡ƒö┤ [Asian Paints] DevSecOps Engineer (144 candidates)
+  ΓÜá DOMAIN MISMATCH: Eshwar Poshala (NonIT: SAP MM Consultant | S/4HANA | Procurement, Inventory, Vendor) in IT JD 'DevSecOps Engineer'
+
+≡ƒö┤ [Asian Paints] Sales Administration Executive (30 candidates)
+  ΓÜá DOMAIN MISMATCH: Pasupathy Madhu (IT: Seasoned professional with 6 months of experience. Expert in) in non-IT JD 'Sales Administration Executive'
+  ΓÜá DOMAIN MISMATCH: Mohd Tauseef Ali (IT: Was preparing for UPSC (IAS) exam, then decided to quit and ) in non-IT JD 'Sales Administration Executive'
+  ΓÜá DOMAIN MISMATCH: Nikhil Mundra (IT: Not Mentioned) in non-IT JD 'Sales Administration Executive'
+  ΓÜá DOMAIN MISMATCH: Manoj Gaya (IT: Motivated and detail-oriented IT professional with hands-on ) in non-IT JD 'Sales Administration Executive'
+
+≡ƒö┤ [Asian Paints] Commercial Executive - Sales & Warehouse Operations (19 candidates)
+  ΓÜá DOMAIN MISMATCH: Pasupathy Madhu (IT: Seasoned professional with 6 months of experience. Expert in) in non-IT JD 'Commercial Executive - Sales & Warehouse Operations'
+Γ£à [Asian Paints] Executive II ΓÇô IT Infra & Ops (VMware) | 35 cands | exp range: 1.0-3.4yr | top: ['Manoj Gaya', 'Shraddha Tari', 'Rahul Pawar']
+Γ£à [Asian Paints] Executive ΓÇô Demand Planning | 4 cands | exp range: 1.5-11.0yr | top: ['Spandan  Bhattacharyay', 'Nilesh Kamble', 'Abhishek Pawar']
+
+≡ƒö┤ [Asian Paints] Executive ΓÇô Manufacturing Technology (Admin) (19 candidates)
+  ΓÜá DOMAIN MISMATCH: Thota Sai Krishna (IT: Full Stack Developer; Engineering - Software & QA; Passionat) in non-IT JD 'Executive ΓÇô Manufacturing Technology (Admin)'
+  ΓÜá DOMAIN MISMATCH: Atul Kumar Dubey (IT: Software Development - Other; Engineering - Software & QA; m) in non-IT JD 'Executive ΓÇô Manufacturing Technology (Admin)'
+  ΓÜá DOMAIN MISMATCH: Saurabh Kumar (IT: Not Mentioned; i a. saurabh kumar from National Institute of) in non-IT JD 'Executive ΓÇô Manufacturing Technology (Admin)'
+  ΓÜá DOMAIN MISMATCH: shaik.Arifa (IT: "Passionate Computer Science graduate with strong skills in ) in non-IT JD 'Executive ΓÇô Manufacturing Technology (Admin)'
+  ΓÜá DOMAIN MISMATCH: Prathmesh Sanjay Vhatkar (IT: Aspiring Full-stack developer with expertise in modern web t) in non-IT JD 'Executive ΓÇô Manufacturing Technology (Admin)'
+  ΓÜá DOMAIN MISMATCH: harsh vishnoi (IT: Motivated Full Stack Web Developer with expertise in modern ) in non-IT JD 'Executive ΓÇô Manufacturing Technology (Admin)'
+  ΓÜá DOMAIN MISMATCH: Jay Anjana (IT: I see myself as an innovative and creative individual and ke) in non-IT JD 'Executive ΓÇô Manufacturing Technology (Admin)'
+  ΓÜá DOMAIN MISMATCH: Pawan Singh (IT: My background aligns well with the required key skills, incl) in non-IT JD 'Executive ΓÇô Manufacturing Technology (Admin)'
+  ΓÜá DOMAIN MISMATCH: Guntakanti Prasad (IT: Civil Engineer; Construction & Site Engineering; Recently I ) in non-IT JD 'Executive ΓÇô Manufacturing Technology (Admin)'
+  ΓÜá DOMAIN MISMATCH: Nikhil Mundra (IT: Not Mentioned) in non-IT JD 'Executive ΓÇô Manufacturing Technology (Admin)'
+  ΓÜá DOMAIN MISMATCH: Manchala Vaishnavi (IT: Other; Electronics and communication engineering 
+Bachelor o) in non-IT JD 'Executive ΓÇô Manufacturing Technology (Admin)'
+  ΓÜá DOMAIN MISMATCH: mohd adil (IT: Not Mentioned) in non-IT JD 'Executive ΓÇô Manufacturing Technology (Admin)'
+  ΓÜá DOMAIN MISMATCH: Manish Kumar Sharma (IT: MCA in Computers from Maulana Azad National Institute of Tec) in non-IT JD 'Executive ΓÇô Manufacturing Technology (Admin)'
+
+≡ƒö┤ [Asian Paints] Executive N ΓÇô RM Purchase (135 candidates)
+  ΓÜá DOMAIN MISMATCH: Sandeep S (IT: A seasoned professional with over 3.5 years experience in Gl) in non-IT JD 'Executive N ΓÇô RM Purchase'
+  ΓÜá DOMAIN MISMATCH: Bhakti Bhise (IT: Curriculum Vitae with 3 year of experience in B.SC. I.T; Pur) in non-IT JD 'Executive N ΓÇô RM Purchase'
+  ΓÜá DOMAIN MISMATCH: Chitrali Bonde (IT: SAP Functional Consultant Trainee| Cross-Module Integration ) in non-IT JD 'Executive N ΓÇô RM Purchase'
+  ΓÜá DOMAIN MISMATCH: Dhareppa Mali (IT: A seasoned professional with over 3 years of experience in G) in non-IT JD 'Executive N ΓÇô RM Purchase'
+  ΓÜá DOMAIN MISMATCH: Abhishek Sangamnavar (IT: A seasoned professional with over 1 year of experience in Gl) in non-IT JD 'Executive N ΓÇô RM Purchase'
+  ΓÜá DOMAIN MISMATCH: Mohmad Ajaz Desai (IT: am a job seeker from Belagavi with a Bachelor of Commerce (B) in non-IT JD 'Executive N ΓÇô RM Purchase'
+Γ£à [Asian Paints] Executive N ΓÇô Systems (OCIO) | 27 cands | exp range: 0.0-2.5yr | top: ['Nitin Prajapati', 'Vignesh K', 'Kalaiarasan A']
+Γ£à [Asian Paints] Executive N ΓÇô PMDI (Packing Material Development) | 109 cands | exp range: 1.1-4.0yr | top: ['Devalla Thirupathiraju', 'Aaditya Desai', 'Shashidhar Pujari']
+Γ£à [Asian Paints] Executive ΓÇô Material Planning (Execution) | 3 cands | exp range: 0.0-0.5yr | top: ['Gagan singh', 'Nikhil Mundra', 'D Raghavendra']
+Γ£à [Asian Paints] Executive ΓÇô CMD (Contract Manufacturing ΓÇô Commercial) | 11 cands | exp range: 1.0-2.4yr | top: ['Karan Kumar Singh', 'Mohmad Ajaz Desai', 'Aasif Mohammed Tauhid Ansari']
+Γ£à [Asian Paints] Executive Trainee ΓÇô Plant Engineering (GET) | 88 cands | exp range: 0.0-2.0yr | top: ['Karan Kumar Singh', 'Aditya Kumar Sah', 'Gagan singh']
+
+≡ƒö┤ [Asian Paints] Executive N ΓÇô Purchase (Packing Materials) (60 candidates)
+  ΓÜá DOMAIN MISMATCH: Brajal Gadpayle (IT: Detail-oriented professional with 1.8 years of experience in) in non-IT JD 'Executive N ΓÇô Purchase (Packing Materials)'
+  ΓÜá DOMAIN MISMATCH: sahil jaiswar (IT: I am working SAP software of 2 years experience with materia) in non-IT JD 'Executive N ΓÇô Purchase (Packing Materials)'
+  ΓÜá DOMAIN MISMATCH: Rutukesh Raju Jadhav (IT: Jobseeker with B.Tech Mechanical currently working in As Pro) in non-IT JD 'Executive N ΓÇô Purchase (Packing Materials)'
+  ΓÜá DOMAIN MISMATCH: Nilesh Kamble (IT: Seasoned professional with 10 years of experience. Expert in) in non-IT JD 'Executive N ΓÇô Purchase (Packing Materials)'
+  ΓÜá DOMAIN MISMATCH: Rohan Salunke (IT: Seasoned professional with 15 years of experience. Expert in) in non-IT JD 'Executive N ΓÇô Purchase (Packing Materials)'
+  ΓÜá DOMAIN MISMATCH: Chitrali Bonde (IT: SAP Functional Consultant Trainee| Cross-Module Integration ) in non-IT JD 'Executive N ΓÇô Purchase (Packing Materials)'
+Γ£à [Asian Paints] Executive ΓÇô Materials Planning (Generation) | 11 cands | exp range: 0.0-11.0yr | top: ['Nilesh Kamble', 'Vinayak Somning Koli', 'Rottelaraghavendra']
+Γ£à [Asian Paints] Executive ΓÇô Distribution (Outbound Logistics & Warehousing) | 11 cands | exp range: 1.0-3.2yr | top: ['Aniket Bhagwan Kirpan', 'Pasupathy Madhu', 'Niyati']
+Γ£à [Asian Paints] Executive ΓÇô Inbound Logistics | 6 cands | exp range: 1.0-14.0yr | top: ['Aniket Bhagwan Kirpan', 'Rupali Swapnil Govekar', 'Siddharth Dighe']
+Γ£à [Asian Paints] Executive ΓÇô Materials Planning (Costing) | 5 cands | exp range: 0.0-11.0yr | top: ['Nilesh Kamble', 'Prashant Ramdas Bodke', 'Vinayak Somning Koli']
+
+≡ƒö┤ [Asian Paints] Executive ΓÇô Purchased Products (Commercial) (44 candidates)
+  ΓÜá DOMAIN MISMATCH: Spandan  Bhattacharyay (IT: Target-driven Purchasing Manager with 7 years of Experience ) in non-IT JD 'Executive ΓÇô Purchased Products (Commercial)'
+  ΓÜá DOMAIN MISMATCH: Bhakti Bhise (IT: Curriculum Vitae with 3 year of experience in B.SC. I.T; Pur) in non-IT JD 'Executive ΓÇô Purchased Products (Commercial)'
+  ΓÜá DOMAIN MISMATCH: Kamal Vennam (IT: Seasoned professional with 5+ Years of experience. Expert in) in non-IT JD 'Executive ΓÇô Purchased Products (Commercial)'
+  ΓÜá DOMAIN MISMATCH: Vishwanath Sagvekar (IT: Senior Purchasing Specialist with experience of working in P) in non-IT JD 'Executive ΓÇô Purchased Products (Commercial)'
+  ΓÜá DOMAIN MISMATCH: Tanvi Manohar Bhosale (IT: Seeking an entry level BBI position in progressive organisat) in non-IT JD 'Executive ΓÇô Purchased Products (Commercial)'
+  ΓÜá DOMAIN MISMATCH: Durvesh Narendra Pavaskar (IT: Job seeker with B.Com currently living in Andheri, mumbai,Ma) in non-IT JD 'Executive ΓÇô Purchased Products (Commercial)'
+  ΓÜá DOMAIN MISMATCH: Rohit Shinde (IT: back office cum Mis executive with 3 years experience; Purch) in non-IT JD 'Executive ΓÇô Purchased Products (Commercial)'
+  ΓÜá DOMAIN MISMATCH: Dayanand reddy (IT: Service / Maintenance Supervisor; Production, Manufacturing ) in non-IT JD 'Executive ΓÇô Purchased Products (Commercial)'
+  ΓÜá DOMAIN MISMATCH: Rushikesh Sawant (IT: Job seeker with diploma in Graphics / Web designing and 3D a) in non-IT JD 'Executive ΓÇô Purchased Products (Commercial)'
+
+≡ƒö┤ [Asian Paints] Executive N ΓÇô New Products Support (NPS) (19 candidates)
+  ΓÜá DOMAIN MISMATCH: Jinay Gosar (NonIT: Business Process Analyst | Bachelor's in Accounting and Fina) in IT JD 'Executive N ΓÇô New Products Support (NPS)'
+  ΓÜá DOMAIN MISMATCH: Jannat Ahmed (NonIT: Eagerness to learn new things; Purchase Executive) in IT JD 'Executive N ΓÇô New Products Support (NPS)'
+
+≡ƒö┤ [Asian Paints] Executive ΓÇô Purchased Products (Execution) (156 candidates)
+  ΓÜá DOMAIN MISMATCH: Chitrali Bonde (IT: SAP Functional Consultant Trainee| Cross-Module Integration ) in non-IT JD 'Executive ΓÇô Purchased Products (Execution)'
+  ΓÜá DOMAIN MISMATCH: Dhareppa Mali (IT: A seasoned professional with over 3 years of experience in G) in non-IT JD 'Executive ΓÇô Purchased Products (Execution)'
+  ΓÜá DOMAIN MISMATCH: Abhishek Sangamnavar (IT: A seasoned professional with over 1 year of experience in Gl) in non-IT JD 'Executive ΓÇô Purchased Products (Execution)'
+  ΓÜá DOMAIN MISMATCH: Mohmad Ajaz Desai (IT: am a job seeker from Belagavi with a Bachelor of Commerce (B) in non-IT JD 'Executive ΓÇô Purchased Products (Execution)'
+Γ£à [Asian Paints] Executive N ΓÇô JVC Commercial | 11 cands | exp range: 0.0-14.0yr | top: ['Mohmad Ajaz Desai', 'Aasif Mohammed Tauhid Ansari', 'Rajesh G Acharya']
+
+≡ƒö┤ [Asian Paints] Executive I ΓÇô Purchased Products (Quality) (91 candidates)
+  ΓÜá DOMAIN MISMATCH: Bhakti Bhise (IT: Curriculum Vitae with 3 year of experience in B.SC. I.T; Pur) in non-IT JD 'Executive I ΓÇô Purchased Products (Quality)'
+  ΓÜá DOMAIN MISMATCH: Chitrali Bonde (IT: SAP Functional Consultant Trainee| Cross-Module Integration ) in non-IT JD 'Executive I ΓÇô Purchased Products (Quality)'
+Γ£à [Allstate] AI Engineer | 66 cands | exp range: 4.2-9.0yr | top: ['Jitendra Kumar Sharma', 'Rekha Ramesh', 'G Chandrasekhar Reddy']
+Γ£à [Allstate] Java Fullstack (1) | 130 cands | exp range: 0.0-0.5yr | top: ['Akshit Verma', 'Mahankali Sandeep', 'Mohd Daniyal Ashraf']
+Γ£à [Firstsource] CSA (Customer Service Associate) ΓÇô Grade H2 | 51 cands | exp range: 0.0-0.0yr | top: ['Anand Patel', 'md faiaz alam', 'Shankar']
+
+≡ƒö┤ [Axis Max Life Insurance] Sr. Manager ΓÇô Operations (Axis) ΓÇô Grievance/Freelook Insighting (5 candidates)
+  ΓÜá DOMAIN MISMATCH: Gagan Sai (IT: Network Manager; IT & Information Security; A results-orient) in non-IT JD 'Sr. Manager ΓÇô Operations (Axis) ΓÇô Grievance/Freelook Insighting'
+  ΓÜá DOMAIN MISMATCH: Ambrish Tripathi (IT: Data Science & Analytics - Other; Data Science & Analytics; ) in non-IT JD 'Sr. Manager ΓÇô Operations (Axis) ΓÇô Grievance/Freelook Insighting'
+Γ£à [Axis Max Life Insurance] Sr. Manager ΓÇô MIS Reporting (BIIG) | 5 cands | exp range: 0.0-19.0yr | top: ['Rohit Shinde', 'Himamshu Rai', 'Vaidehi vichare']
+
+≡ƒö┤ [Axis Max Life Insurance] Sr. Manager ΓÇô Data Security (Enterprise Risk Mgmt / InfoSec) (14 candidates)
+  ΓÜá DOMAIN MISMATCH: pramodchavhan (NonIT: Data analyst) in IT JD 'Sr. Manager ΓÇô Data Security (Enterprise Risk Mgmt / InfoSec)'
+
+≡ƒö┤ [Axis Max Life Insurance] Sr. Manager ΓÇô AI Risk Management (Enterprise Risk Mgmt) (5 candidates)
+  ΓÜá DOMAIN MISMATCH: T. Ravi kiran (NonIT: Purchase Executive | Procurement & Vendor Management | PO Ma) in IT JD 'Sr. Manager ΓÇô AI Risk Management (Enterprise Risk Mgmt)'
+Γ£à [Axis Max Life Insurance] Sr. Manager ΓÇô Customer Experience (Control Tower) | 31 cands | exp range: 4.4-8.0yr | top: ['Pallavi Jalinder Borde', 'Neha Saraf', 'Sagar Sonavane']
+Γ£à [Axis Max Life Insurance] Chief Manager ΓÇô Business Planning & Analytics (Renewals) | 2 cands | exp range: 11.0-14.0yr | top: ['Rajesh G Acharya', 'Nilesh Kamble']
+Γ£à [Axis Max Life Insurance] Manager ΓÇô Product Manager (POS) | 4 cands | exp range: 0.0-17.0yr | top: ['Spandan  Bhattacharyay', 'Harjit Singh', 'P.Venkateswara Rao']
+
+≡ƒö┤ [Axis Max Life Insurance] Sr. Manager ΓÇô Policy Administration (PAG) (3 candidates)
+  ΓÜá DOMAIN MISMATCH: Anil Kumar (IT: Food, Beverage & Hospitality - Other; Food, Beverage & Hospi) in non-IT JD 'Sr. Manager ΓÇô Policy Administration (PAG)'
+Γ£à [Axis Max Life Insurance] Sr. Associate / Asst. Manager / Deputy Manager ΓÇô Customer Care (PAG) | 14 cands | exp range: 1.2-3.5yr | top: ['Md Ariph', 'Akshay Anil Garud', 'Namburi soundarya Keerthi']
+Γ£à [Axis Max Life Insurance] Manager ΓÇô Business Planning & Analytics | 53 cands | exp range: 1.1-3.5yr | top: ['Riddhi Umap', 'Hariom Yadav', 'Sandeep S']
+Γ£à [Axis Max Life Insurance] Sr. Manager ΓÇô Business Planning & Analytics | 12 cands | exp range: 3.4-7.7yr | top: ['Zeenath ara', 'Riddhi Umap', 'Hariom Yadav']
+Γ£à [Axis Max Life Insurance] Executive ΓÇô Customer Engagement (Agency) | 18 cands | exp range: 1.2-3.5yr | top: ['Akshay Anil Garud', 'Namburi soundarya Keerthi', 'Shashank']
+Γ£à [Axis Max Life Insurance] Asst. Manager ΓÇô Customer Engagement | 16 cands | exp range: 2.0-4.4yr | top: ['Akshay Anil Garud', 'Shaik Idmail', 'Namburi soundarya Keerthi']
+Γ£à [Axis Max Life Insurance] Deputy Manager ΓÇô Customer Engagement | 11 cands | exp range: 6.0-9.0yr | top: ['Neha Saraf', 'Zeenath ara', 'Veerendra Kumar Pandey']
+Γ£à [Axis Max Life Insurance] Customer Retention Officer | 17 cands | exp range: 0.0-6.5yr | top: ['Neha Saraf', 'Vikash Kumar', 'Anand Patel']
+Γ£à [Axis Max Life Insurance] Asst. Manager ΓÇô Core Platform COE (Functional) | 3 cands | exp range: 3.1-8.0yr | top: ['Manoj Kamble', 'Jeelani Muddebihal', 'Jugal Chauhan']
+Γ£à [Axis Max Life Insurance] System Engineer (Backend) | 52 cands | exp range: 2.0-3.5yr | top: ['Nitin Prajapati', 'Kalaiarasan A', 'Tushar Patil']
+Γ£à [Axis Max Life Insurance] Solution Architect | 2 cands | exp range: 0.0-0.0yr | top: ['Jitendra Hirpara', 'Manjesh M S']
+
+≡ƒö┤ [Axis Max Life Insurance] Manager ΓÇô Business System Analyst (20 candidates)
+  ΓÜá DOMAIN MISMATCH: Vansh Doshi (IT: Not Mentioned; Hello, my name is VANSH DOSHI. I recently gra) in non-IT JD 'Manager ΓÇô Business System Analyst'
+  ΓÜá DOMAIN MISMATCH: Ambrish Tripathi (IT: Data Science & Analytics - Other; Data Science & Analytics; ) in non-IT JD 'Manager ΓÇô Business System Analyst'
+Γ£à [Titan] Sr. Executive / Asst. Manager - Automation & Systems Development | 52 cands | exp range: 3.5-6.5yr | top: ['Jitendra Kumar Sharma', 'Riddhi Umap', 'Tushar Patil']
+Γ£à [Titan] Functional Consultant ΓÇô SAP MM & Salesforce | 17 cands | exp range: 5.0-11.2yr | top: ['Priti Dabhade', 'Aparna Pawar', 'yogita']
+Γ£à [Infosys] Finance & Accounting Associate | 148 cands | exp range: 1.0-3.0yr | top: ['Abhishek A', 'Adarsh AA', 'Riya Dan']
+
+≡ƒö┤ [Infosys] Sourcing & Procurement Associate (94 candidates)
+  ΓÜá DOMAIN MISMATCH: Sandeep S (IT: A seasoned professional with over 3.5 years experience in Gl) in non-IT JD 'Sourcing & Procurement Associate'
+  ΓÜá DOMAIN MISMATCH: Dhareppa Mali (IT: A seasoned professional with over 3 years of experience in G) in non-IT JD 'Sourcing & Procurement Associate'
+  ΓÜá DOMAIN MISMATCH: Abhishek Sangamnavar (IT: A seasoned professional with over 1 year of experience in Gl) in non-IT JD 'Sourcing & Procurement Associate'
+  ΓÜá DOMAIN MISMATCH: Akash Raju Patil (IT: A seasoned professional with over 2 years of experience in G) in non-IT JD 'Sourcing & Procurement Associate'
+  ΓÜá DOMAIN MISMATCH: Sakshi Parmod Kudachikar (IT: IMMEDIATE JOINER - A professional with over one year of expe) in non-IT JD 'Sourcing & Procurement Associate'
+  ΓÜá DOMAIN MISMATCH: Kamal Vennam (IT: Seasoned professional with 5+ Years of experience. Expert in) in non-IT JD 'Sourcing & Procurement Associate'
+  ΓÜá DOMAIN MISMATCH: Aftab Mulla (IT: A seasoned professional with over 2.7 years of experience in) in non-IT JD 'Sourcing & Procurement Associate'
+  ΓÜá DOMAIN MISMATCH: Pushpa Ichalakaranji (IT: Seasoned professional with 1 years of experience. Expert in ) in non-IT JD 'Sourcing & Procurement Associate'
+  ΓÜá DOMAIN MISMATCH: Sonali Patil (IT: As seasoned professional with over 2+ years of experience in) in non-IT JD 'Sourcing & Procurement Associate'
+  ΓÜá DOMAIN MISMATCH: Brajal Gadpayle (IT: Detail-oriented professional with 1.8 years of experience in) in non-IT JD 'Sourcing & Procurement Associate'
+  ΓÜá DOMAIN MISMATCH: Faizan Mujawar (IT: A seasoned professional with 2 years of experience in Global) in non-IT JD 'Sourcing & Procurement Associate'
+  ΓÜá DOMAIN MISMATCH: Vikrant M Jadhav (IT: A seasoned professional with over 1 year of experience in gl) in non-IT JD 'Sourcing & Procurement Associate'
+  ΓÜá DOMAIN MISMATCH: Gargi patil (IT: A seasoned professional with over 1 year of experience in Gl) in non-IT JD 'Sourcing & Procurement Associate'
+
+≡ƒö┤ [Infosys] Technical Support Associate (37 candidates)
+  ΓÜá DOMAIN MISMATCH: Mohammed Shoaib (NonIT: I am an Experienced Purchase Officer and I have good Technic) in IT JD 'Technical Support Associate'
+Γ£à [Infosys] Insurance Operations Associate | 8 cands | exp range: 1.0-5.0yr | top: ['Jagannath kj', 'Aneesh V', 'Nirupam Zutshi']
+
+≡ƒö┤ [Infosys] Healthcare Operations Associate (6 candidates)
+  ΓÜá DOMAIN MISMATCH: Anil Kumar (IT: Food, Beverage & Hospitality - Other; Food, Beverage & Hospi) in non-IT JD 'Healthcare Operations Associate'
+  ΓÜá DOMAIN MISMATCH: Apoorva Srivastav (IT: Not Mentioned; I hold a Bachelor's degree in Pharmacy and am) in non-IT JD 'Healthcare Operations Associate'
+Γ£à [Infosys] Customer Service Associate | 42 cands | exp range: 0.0-6.5yr | top: ['Swapnil Gokhale', 'Akshay Anil Garud', 'Shaik Idmail']
+Γ£à [GoHighLevel] SDE2 Fullstack CRM - Shwetha C | 32 cands | exp range: 4.0-6.5yr | top: ['Adedokun Promise', 'Kelechi Okpani', 'Praise Ayodele Alabi']
+
+≡ƒö┤ [GoHighLevel] Revenue Operations Analyst II (87 candidates)
+  ΓÜá DOMAIN MISMATCH: Shaik Idmail (IT: Technical Support - Voice / Blended; Customer Success, Servi) in non-IT JD 'Revenue Operations Analyst II'
+  ΓÜá DOMAIN MISMATCH: Tanish Dua (IT: Both Positions) in non-IT JD 'Revenue Operations Analyst II'
+  ΓÜá DOMAIN MISMATCH: Sonali Ashok Sarak (IT: Dynamic Process Associate L1 with 2.7 years of experience in) in non-IT JD 'Revenue Operations Analyst II'
+  ΓÜá DOMAIN MISMATCH: Akash Raju Patil (IT: A seasoned professional with over 2 years of experience in G) in non-IT JD 'Revenue Operations Analyst II'
+  ΓÜá DOMAIN MISMATCH: Sonali Patil (IT: As seasoned professional with over 2+ years of experience in) in non-IT JD 'Revenue Operations Analyst II'
+Γ£à [Dell] Fresher Opportunities ΓÇô Internships & Full-Time Roles (Bengaluru) | 164 cands | exp range: 0.0-1.0yr | top: ['Diwakar', 'Hinthan D Gowda', 'Arpitha JK']
+Γ£à [Dell] Application Security / Software Engineering ΓÇô Bengaluru | 140 cands | exp range: 0.0-4.2yr | top: ['Supreetha H M', 'Swathi S', 'G Chandrasekhar Reddy']
+Γ£à [Dell] Data Engineering / AI Engineer ΓÇô Bengaluru | 59 cands | exp range: 5.0-8.0yr | top: ['Jitendra Kumar Sharma', 'Rekha Ramesh', 'Meda Anil Kumar']
+Γ£à [Indigo] Corporate Jobs for PwD Candidates ΓÇô Gurugram Walk-in | 25 cands | exp range: 5.0-6.0yr | top: ['Akhilesh kumar Sharma', 'Meena Choudhary', 'Rajeev Kumar Soni']
+Γ£à [Wipro] Wipro ΓÇô Associate Content Moderator (Non-Voice) | 43 cands | exp range: 1.5-11.0yr | top: ['Nachiket Manjunatha Naik', 'Mohammed Magdoom', 'Pravin Deepak Bhingardive']
+Γ£à [Other roles (not in your JD sheet)] Operations Specialist - Pune (no matching JD) | 9 cands | exp range: 1.0-5.0yr | top: ['Harshvardhan Ingale', 'Jitendra', 'Raman Rajkumar chame']
+Γ£à [Other roles (not in your JD sheet)] Software Engineer - Bangalore (no matching JD) | 20 cands | exp range: 1.0-5.0yr | top: ['Danapana Rahul Reddy', 'Shohan Konchada', 'Harsh Rai']
+Γ£à [Other roles (not in your JD sheet)] Data Analyst - Bangalore (no matching JD) | 18 cands | exp range: 1.0-5.0yr | top: ['Edwin Lawrence', 'Aneesh V', 'Meena']
+Γ£à [Other roles (not in your JD sheet)] Product Manager - Pune (no matching JD) | 5 cands | exp range: 1.0-5.0yr | top: ['Digvijay', 'Ganesh maruti salunke', 'Sameer Kumar Mahapatra']
+Γ£à [Other roles (not in your JD sheet)] Capital Markets Data Specialist (no matching JD) | 23 cands | exp range: 3.0-19.0yr | top: ['Suraj Dhamanekar', 'Sai Chaitanya Muthakani', 'Lokesh Bollineni']
+Γ£à [Other roles (not in your JD sheet)] Salesforce CRM (Sales Cloud and Service Cloud) and Customer Loyalty platforms (no matching JD) | 11 cands | exp range: 0.0-15.0yr | top: ['Kumar Raja Burela', 'Mohammed Magdoom', 'Mohammad Shahrukh Nadeem']
+Γ£à [Other roles (not in your JD sheet)] Picker & Packer: Picker Packer | 72 cands | exp range: 0.0-0.0yr | top: ['Lakshmanna GN', 'Mr sabir', 'M sreeramulu Naik']
+Γ£à [Other roles (not in your JD sheet)] Picker & Packer: Helper In Kitchen | 5 cands | exp range: 0.0-0.0yr | top: ['Subhashchandrashekhar S desai', 'Ganjeraboina Sudhanandeswara', 'Annam Balaraj u']
+Γ£à [Other roles (not in your JD sheet)] Picker & Packer: House Keeper | 1 cands | exp range: 0.0-0.0yr | top: ['Akash Jabre']
+Γ£à [Other roles (not in your JD sheet)] Picker & Packer: Pantry | 1 cands | exp range: 0.0-0.0yr | top: ['Girish prakash Nehete']
+Γ£à [CGI] AI Fresher | 52 cands | exp range: 0.0-0.0yr | top: ['Harshit Ranjan', 'Abhay Tiwari', 'Divyansh Gautam']
+Γ£à [CGI] IT Support | 11 cands | exp range: 0.0-0.0yr | top: ['Pruthvi raj r', 'AbdulRaheem', 'Dhanush R']
+Γ£à [CGI] .NET Fresher | 1 cands | exp range: 0.0-0.0yr | top: ['Tarique Shaikh']
+Γ£à [Other roles (not in your JD sheet)] Part-time PAN card job: Part-time 5-9 PM | 1 cands | exp range: 0.0-0.0yr | top: ['Shaik Saleem']
+Γ£à [Other roles (not in your JD sheet)] V-Mart: Retail Store | 1 cands | exp range: 0.0-0.0yr | top: ['Siddhi Pawar']
+
+≡ƒö┤ [Other roles (not in your JD sheet)] Global Visa: Telesales (22 candidates)
+  ΓÜá DOMAIN MISMATCH: Hitesh pal (IT: ) in non-IT JD 'Global Visa: Telesales'
+  ΓÜá DOMAIN MISMATCH: Rahul Jadaun (IT: ) in non-IT JD 'Global Visa: Telesales'
+  ΓÜá DOMAIN MISMATCH: Dangeti. Naveen kumar (IT: ) in non-IT JD 'Global Visa: Telesales'
+  ΓÜá DOMAIN MISMATCH: Ajay Ravindra Patil (IT: ) in non-IT JD 'Global Visa: Telesales'
+  ΓÜá DOMAIN MISMATCH: rahul dongare (IT: ) in non-IT JD 'Global Visa: Telesales'
+  ΓÜá DOMAIN MISMATCH: Kumar Raja Burela (IT: ) in non-IT JD 'Global Visa: Telesales'
+  ΓÜá DOMAIN MISMATCH: Shaik Saleem (IT: ) in non-IT JD 'Global Visa: Telesales'
+  ΓÜá DOMAIN MISMATCH: Gayatri Patil (IT: ) in non-IT JD 'Global Visa: Telesales'
+Γ£à [Other roles (not in your JD sheet)] Deloitte: Application (role not captured by form) | 115 cands | exp range: 1.0-6.0yr | top: ['Rakesh Kumar Tiwari', 'Avishkar Shantaram Lakade', 'Jonnada']
+Γ£à [Other roles (not in your JD sheet)] Customer Support (sheet name unclear): Customer Support | 41 cands | exp range: 0.0-5.0yr | top: ['Durgarao Chittimadala', 'junaid hassan', 'shashank yadav']
+Γ£à [Other roles (not in your JD sheet)] Unlabelled sheet (Form Responses 6): Application (role not captured by form) | 13 cands | exp range: 0.0-6.0yr | top: ['Deepak Bhaiyalal Yadav', 'Sangamesh m Kagalgomb', 'ABHISHEK Shrihari Lande']
+
+≡ƒö┤ [Other roles (not in your JD sheet)] Unlabelled sheet (Form Responses 2): Apprenticeship, IT & finance roles (mixed) (27 candidates)
+  ΓÜá DOMAIN MISMATCH: Mohd Faisal (IT: IT HELP DESK) in non-IT JD 'Unlabelled sheet (Form Responses 2): Apprenticeship, IT & finance roles (mixed)'
+  ΓÜá DOMAIN MISMATCH: Ande jhansi rani (IT: Non IT apprenticeship) in non-IT JD 'Unlabelled sheet (Form Responses 2): Apprenticeship, IT & finance roles (mixed)'
+  ΓÜá DOMAIN MISMATCH: Vishal Pal (IT: Software engineer) in non-IT JD 'Unlabelled sheet (Form Responses 2): Apprenticeship, IT & finance roles (mixed)'
+  ΓÜá DOMAIN MISMATCH: K Sathish (IT: Non-technical) in non-IT JD 'Unlabelled sheet (Form Responses 2): Apprenticeship, IT & finance roles (mixed)'
+  ΓÜá DOMAIN MISMATCH: Banoth Karthikeya (IT: Non-Technical Apprenticeship) in non-IT JD 'Unlabelled sheet (Form Responses 2): Apprenticeship, IT & finance roles (mixed)'
+  ΓÜá DOMAIN MISMATCH: Sushil Kumar (IT: Non technical) in non-IT JD 'Unlabelled sheet (Form Responses 2): Apprenticeship, IT & finance roles (mixed)'
+  ΓÜá DOMAIN MISMATCH: Mohd FAISAL (IT: IT Help desk support) in non-IT JD 'Unlabelled sheet (Form Responses 2): Apprenticeship, IT & finance roles (mixed)'
+  ΓÜá DOMAIN MISMATCH: Alka Dutt (IT: Non technical) in non-IT JD 'Unlabelled sheet (Form Responses 2): Apprenticeship, IT & finance roles (mixed)'
+  ΓÜá DOMAIN MISMATCH: Harsh Kumar (IT: Harsh Kumar) in non-IT JD 'Unlabelled sheet (Form Responses 2): Apprenticeship, IT & finance roles (mixed)'
+  ΓÜá DOMAIN MISMATCH: Ankit Kumar Maghaia (IT: Software testing) in non-IT JD 'Unlabelled sheet (Form Responses 2): Apprenticeship, IT & finance roles (mixed)'
+Γ£à [Other roles (not in your JD sheet)] Cargo sheet (Form Responses 1): Cargo & airport operations (mixed) | 104 cands | exp range: 1.0-15.0yr | top: ['Ganesh Nayansingh Rathod', 'Sachin Pitre', 'Archana Kumari']
+Γ£à [Other roles (not in your JD sheet)] Talent pool: no matching JD yet | 236 cands | exp range: 0.0-19.0yr | top: ['Khalikun Nisha', 'Vedanti Thosare', 'Samuktha Pandiaraj']
+Γ£à [Hitachi] Java Developer | 16 cands | exp range: 2.0-8.0yr | top: ['Faizan Ahmed Ansari', 'Marediya', 'Anil Jainapur']
+Γ£à [Hitachi] Full Stack Developer | 22 cands | exp range: 2.0-6.5yr | top: ['Tarique Shaikh', 'Shiva Shashank', 'Devalla Thirupathiraju']
+Γ£à [Hitachi] .NET Developer | 7 cands | exp range: 1.6-14.0yr | top: ['Ramesh Shukla', 'Kishan Gohel', 'Tushar Sambhaji Dalvi']
+Γ£à [Hitachi] Agentic AI Professional | 1 cands | exp range: 3.0-3.0yr | top: ['Tarique Shaikh']
+Γ£à [Hitachi] Generative AI Professional | 2 cands | exp range: 3.0-6.0yr | top: ['Talla Sai Sree', 'Shresth Sinha']
+Γ£à [Hitachi] Software Developer | 32 cands | exp range: 2.0-8.0yr | top: ['Anil Jainapur', 'Faizan Ahmed Ansari', 'Md Shadan Altmash']
+Γ£à [Hitachi] Software Tester | 15 cands | exp range: 5.0-8.0yr | top: ['Chandrakant Nannaware', 'Srinivas Kasavajjula', 'Jitendra Kumar Sharma']
+
+≡ƒö┤ [Hitachi] Finance (113 candidates)
+  ΓÜá DOMAIN MISMATCH: Rajesh Basa (IT: ) in non-IT JD 'Finance'
+  ΓÜá DOMAIN MISMATCH: Archana Kumari (IT: Cargo) in non-IT JD 'Finance'
+  ΓÜá DOMAIN MISMATCH: Abin Shaji (IT: Capital Markets Data Specialist) in non-IT JD 'Finance'
+  ΓÜá DOMAIN MISMATCH: Yatish Mehrotra (IT: ) in non-IT JD 'Finance'
+Γ£à [Hitachi] Human Resources (HR) | 3 cands | exp range: 3.0-6.5yr | top: ['Yusuf Dawasaz', 'Heena Sharma', 'Neha Saraf']
+
+≡ƒö┤ [Hitachi] Procurement (79 candidates)
+  ΓÜá DOMAIN MISMATCH: Anil Kumar (IT: Food, Beverage & Hospitality - Other; Food, Beverage & Hospi) in non-IT JD 'Procurement'
+
+======================================================================
+SUMMARY: 105 VIOLATIONS found
+Γ¥î 105 violations need to be fixed
+======================================================================

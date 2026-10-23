@@ -141,19 +141,65 @@ details{margin-top:6px}
 .cv-exp-fail-banner{background:var(--rb);color:var(--r);border:1px solid var(--r);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;margin:4px 40px 0;display:flex;align-items:center;gap:6px}
 /* Candidate pool badge */
 .pool-badge{background:var(--bluebg);color:var(--blue);padding:2px 10px;border-radius:99px;font-size:11px;font-weight:600}
+/* ====== GiftAbled Management Dashboard ====== */
+.mgmt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin:14px 0}
+.mgmt-stat{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;text-align:center}
+.mgmt-stat-val{font-size:28px;font-weight:800;background:linear-gradient(135deg,var(--ac),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2}
+.mgmt-stat-label{font-size:11px;color:var(--mu);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+.mgmt-section{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:14px}
+.mgmt-section h2{margin:0 0 12px;font-size:16px;display:flex;align-items:center;gap:8px}
+.mgmt-table{width:100%;border-collapse:collapse;font-size:13px}
+.mgmt-table th{text-align:left;padding:6px 10px;background:var(--bg);color:var(--mu);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--bd)}
+.mgmt-table td{padding:7px 10px;border-bottom:1px solid var(--bd);vertical-align:top}
+.mgmt-table tr:last-child td{border-bottom:none}
+.mgmt-table tr:hover td{background:var(--bg)}
+/* ====== Caller Coordination ====== */
+.caller-card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:12px}
+.caller-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.caller-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--purple));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:16px;flex-shrink:0}
+.caller-name{font-weight:700;font-size:16px}
+.caller-meta{font-size:12px;color:var(--mu)}
+.caller-stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.cstat{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:5px 12px;text-align:center;min-width:70px}
+.cstat-val{font-size:18px;font-weight:700;color:var(--ac)}
+.cstat-label{font-size:10px;color:var(--mu);text-transform:uppercase}
+/* ====== HR Submission Tracker ====== */
+.sub-card{background:var(--card);border:1px solid var(--bd);border-left:4px solid var(--ac);border-radius:8px;padding:12px;margin-bottom:8px}
+.sub-status{display:inline-flex;align-items:center;padding:2px 10px;border-radius:99px;font-size:11px;font-weight:700}
+.sub-submitted{background:var(--bluebg);color:var(--blue)}
+.sub-selected{background:var(--gb);color:var(--g)}
+.sub-rejected{background:var(--rb);color:var(--r)}
+.sub-pending{background:var(--yb);color:var(--y)}
+.sub-interview{background:var(--purplebg);color:var(--purple)}
+/* ====== Job Fair Attendance ====== */
+.jf-card{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:12px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start}
+.jf-badge{padding:2px 10px;border-radius:99px;font-size:11px;font-weight:700;white-space:nowrap}
+.jf-confirmed{background:var(--gb);color:var(--g)}
+.jf-pending{background:var(--yb);color:var(--y)}
+.jf-declined{background:var(--rb);color:var(--r)}
+.jf-noshow{background:var(--bd);color:var(--mu)}
+/* ====== Duplicate Review ====== */
+.dup-card{background:var(--card);border:1px solid var(--y);border-left:4px solid var(--y);border-radius:8px;padding:12px;margin-bottom:8px}
+/* Inline edit */
+.inline-edit{border:none;border-bottom:1px solid var(--bd);background:transparent;color:var(--tx);font:inherit;font-size:13px;padding:2px 4px;outline:none}
+.inline-edit:focus{border-bottom-color:var(--ac)}
 </style></head><body>
 <header>
-<span class="logo">♿ Job Fair Tracker</span>
+<span class="logo">♿ GiftAbled Tracker</span>
 <span class="tag">PwD Hiring</span>
 <div class="nav-links">
-<a href="#/" id="nav-home">Companies</a>
-<a href="#/multi" id="nav-multi">Multi-JD</a>
+<a href="#/" id="nav-home">Dashboard</a>
+<a href="#/companies" id="nav-companies">Companies</a>
+<a href="#/callers" id="nav-callers">Callers</a>
+<a href="#/submission" id="nav-submission">HR Submission</a>
+<a href="#/jobfair" id="nav-jobfair">Job Fair</a>
 <a href="#/shortlist" id="nav-sl">Shortlisted</a>
+<a href="#/multi" id="nav-multi">Multi-JD</a>
 <a href="#/cv" id="nav-cv">CV Match</a>
 <a href="#/pool" id="nav-pool">+ Pool Upload</a>
-<a href="#/uploaded-cvs" id="nav-uploaded-cvs">📁 Uploaded CVs</a>
+<a href="#/uploaded-cvs" id="nav-uploaded-cvs">CVs</a>
 </div>
-<span class="mu">Screening score is rule-based, from form answers. CVs are linked, not read.</span>
+<span class="mu">GiftAbled Recruitment Tracker — rule-based screening, CVs linked not read.</span>
 <button id="reset">Reset all data</button>
 </header>
 <main class="wrap" id="app"></main>
@@ -162,8 +208,16 @@ let D;
 const ZN={g:'Green',y:'Yellow',r:'Red'};
 const $=s=>document.querySelector(s);
 const E=s=>String(s==null?'':s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
-let S={ov:{},log:[],sl:{},qe:{},pool:[],uploadedCvs:[]};
-try{const raw=JSON.parse(localStorage.getItem('jf')||'null');if(raw){S.ov=raw.ov||{};S.log=raw.log||[];S.sl=raw.sl||{};S.qe=raw.qe||{};S.pool=raw.pool||[];S.uploadedCvs=raw.uploadedCvs||[]}}catch(e){}
+let S={ov:{},log:[],sl:{},qe:{},pool:[],uploadedCvs:[],callers:[],submissions:{},jfAttend:{}};
+// Default callers if not set
+const DEFAULT_CALLERS=['Caller 1','Caller 2','Caller 3','Caller 4','Caller 5'];
+// Submission statuses
+const SUB_STATUS=['Approved for Submission','Submitted to HR','Interview Scheduled','Selected','Rejected','Offer/Joining Pending'];
+// Job Fair attendance statuses
+const JF_STATUS=['Invitation Sent','Confirmed','Declined','Travel Arranged','Attended','No Show','Cancelled'];
+// Caller call statuses
+const CALL_STATUS=['Not Contacted','Call Pending','No Answer','Callback Required','Contacted','Interested','Not Interested','Screening Pending','Hold—Verification Required','Eligible','Not Eligible'];
+try{const raw=JSON.parse(localStorage.getItem('jf')||'null');if(raw){S.ov=raw.ov||{};S.log=raw.log||[];S.sl=raw.sl||{};S.qe=raw.qe||{};S.pool=raw.pool||[];S.uploadedCvs=raw.uploadedCvs||[];S.callers=raw.callers||[];S.submissions=raw.submissions||{};S.jfAttend=raw.jfAttend||{}}}catch(e){}
 const save=()=>{try{localStorage.setItem('jf',JSON.stringify(S))}catch(e){}};
 
 /* ====== Disability Benchmark Check ====== */
@@ -403,14 +457,121 @@ function getShortlistedByCompany(){
 
 /* ====== Views ====== */
 let C=[];
+
+/* ====== MANAGEMENT DASHBOARD (new vHome) ====== */
 function vHome(){
+  const allLive=C.filter(c=>!gone(c));
+  const uniquePeople=new Set(allLive.map(c=>(c.em||c.ph||c.n).toLowerCase())).size;
+  const multiCount=getMultiJdCandidates().length;
+  const slCount=Object.keys(S.sl).length;
+  const subCount=Object.keys(S.submissions).length;
+  const subStatuses=Object.values(S.submissions);
+  const subSubmitted=subStatuses.filter(s=>s.status&&s.status!=='Approved for Submission').length;
+  const subInterview=subStatuses.filter(s=>s.status==='Interview Scheduled').length;
+  const subSelected=subStatuses.filter(s=>s.status==='Selected').length;
+  const jfCount=Object.keys(S.jfAttend).length;
+  const jfConfirmed=Object.values(S.jfAttend).filter(a=>a.status==='Confirmed'||a.status==='Travel Arranged'||a.status==='Attended').length;
+  // Caller metrics
+  const callerData=getCallerData();
+  const totalAssigned=Object.values(callerData).reduce((n,cl)=>n+cl.total,0);
+  const totalContacted=Object.values(callerData).reduce((n,cl)=>n+cl.contacted,0);
+  // Green candidates = potential eligible
+  const greenCount=allLive.filter(c=>zone(c,D.jds[jdOf(c)])==='g').length;
+  const overdueCount=Object.values(S.ov).filter(o=>o.callStatus==='Callback Required').length;
+
+  const today=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+  let h='<h1>📊 GiftAbled Recruitment Dashboard</h1><p class="mu">Reporting as of '+today+' | PwD Disability Job Fair</p>';
+
+  // KPI grid
+  h+=`<div class="mgmt-grid">
+    <div class="mgmt-stat"><div class="mgmt-stat-val">${uniquePeople}</div><div class="mgmt-stat-label">Unique Candidates</div></div>
+    <div class="mgmt-stat"><div class="mgmt-stat-val">${D.jds.filter(j=>j.ty!=='Not in JD sheet').length}</div><div class="mgmt-stat-label">Active JDs</div></div>
+    <div class="mgmt-stat"><div class="mgmt-stat-val">${D.cos.length}</div><div class="mgmt-stat-label">Companies</div></div>
+    <div class="mgmt-stat"><div class="mgmt-stat-val">${greenCount}</div><div class="mgmt-stat-label">Green (Eligible)</div></div>
+    <div class="mgmt-stat"><div class="mgmt-stat-val">${slCount}</div><div class="mgmt-stat-label">Shortlisted</div></div>
+    <div class="mgmt-stat"><div class="mgmt-stat-val">${subCount}</div><div class="mgmt-stat-label">Approved for Sub.</div></div>
+    <div class="mgmt-stat"><div class="mgmt-stat-val">${subSubmitted}</div><div class="mgmt-stat-label">Submitted to HR</div></div>
+    <div class="mgmt-stat"><div class="mgmt-stat-val">${subInterview}</div><div class="mgmt-stat-label">Interviews Sched.</div></div>
+    <div class="mgmt-stat"><div class="mgmt-stat-val">${subSelected}</div><div class="mgmt-stat-label">Selected</div></div>
+    <div class="mgmt-stat"><div class="mgmt-stat-val">${jfCount}</div><div class="mgmt-stat-label">JF Invitations</div></div>
+    <div class="mgmt-stat"><div class="mgmt-stat-val">${jfConfirmed}</div><div class="mgmt-stat-label">JF Confirmed</div></div>
+    <div class="mgmt-stat"><div class="mgmt-stat-val" style="${overdueCount>0?'-webkit-text-fill-color:var(--r)':''}">${overdueCount}</div><div class="mgmt-stat-label">Overdue Callbacks</div></div>
+  </div>`;
+
+  // Company-wise summary table
+  h+=`<div class="mgmt-section"><h2>🏢 Company Overview</h2>
+  <div class="tw"><table class="mgmt-table">
+    <thead><tr><th>Company</th><th>JDs</th><th>Candidates</th><th>Green</th><th>Yellow</th><th>Red</th><th>Shortlisted</th><th>Submitted</th></tr></thead>
+    <tbody>`;
+  D.cos.forEach((coName,coIdx)=>{
+    const js=D.jds.filter(j=>j.c===coIdx);
+    const cands=js.flatMap(j=>byJd(j.id)).filter(c=>!gone(c));
+    const s=st(cands);
+    const slForCo=cands.filter(c=>isShortlisted(c.id)).length;
+    const subForCo=Object.values(S.submissions).filter(sub=>sub.coIdx===coIdx).length;
+    if(!cands.length&&!js.length)return;
+    h+=`<tr>
+      <td><a href="#/c/${coIdx}" style="font-weight:600">${E(coName)}</a></td>
+      <td>${js.length}</td>
+      <td>${s.n}</td>
+      <td><span class="chip cg">${s.g}</span></td>
+      <td><span class="chip cy">${s.y}</span></td>
+      <td><span class="chip cr">${s.r}</span></td>
+      <td>${slForCo}</td>
+      <td>${subForCo}</td>
+    </tr>`;
+  });
+  h+=`</tbody></table></div></div>`;
+
+  // Caller summary
+  if(Object.keys(callerData).length){
+    h+=`<div class="mgmt-section"><h2>📞 Caller Summary</h2>
+    <div class="tw"><table class="mgmt-table">
+      <thead><tr><th>Caller</th><th>Assigned</th><th>Contacted</th><th>Eligible</th><th>Pending</th><th>Callbacks Due</th></tr></thead><tbody>`;
+    Object.entries(callerData).forEach(([name,cl])=>{
+      h+=`<tr><td><b>${E(name)}</b></td><td>${cl.total}</td><td>${cl.contacted}</td><td>${cl.eligible}</td><td>${cl.pending}</td><td>${cl.callbacks}</td></tr>`;
+    });
+    h+=`</tbody></table></div></div>`;
+  }
+
+  // Shortlisted candidates printable list
+  const slCands=getShortlisted();
+  if(slCands.length){
+    h+=`<div class="mgmt-section"><h2>✅ Shortlisted Candidates — Submission Ready</h2>
+    <div class="act" style="margin-bottom:10px"><button data-xlsl-all>⬇ Download All (.xlsx)</button></div>
+    <div class="tw"><table class="mgmt-table">
+      <thead><tr><th>Name</th><th>Contact</th><th>Experience</th><th>Key Skills</th><th>Location</th><th>JD</th><th>Company</th><th>CV</th></tr></thead><tbody>`;
+    slCands.slice(0,50).forEach(({c,jd})=>{
+      h+=`<tr>
+        <td><b>${E(c.n)}</b></td>
+        <td>${E(c.ph||c.em||'—')}</td>
+        <td>${E(c.e||'—')}</td>
+        <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${E((c.sk||'').slice(0,80))}</td>
+        <td>${E(c.loc||'—')}</td>
+        <td>${jd?E(jd.t):'—'}</td>
+        <td>${jd?E(D.cos[jd.c]):'—'}</td>
+        <td>${c.cv?`<a href="${E(c.cv)}" target="_blank" rel="noopener">CV</a>`:'—'}</td>
+      </tr>`;
+    });
+    if(slCands.length>50)h+=`<tr><td colspan="8" class="mu">... and ${slCands.length-50} more. Download xlsx for full list.</td></tr>`;
+    h+=`</tbody></table></div></div>`;
+  }
+
+  // Change log
+  h+=`<div class="mgmt-section"><details><summary style="cursor:pointer;font-weight:600">📋 Change Log (${S.log.length})</summary>
+  <div style="margin-top:8px;max-height:200px;overflow-y:auto">`+(S.log.map(l=>'<div class="mu" style="padding:3px 0;border-bottom:1px solid var(--bd)">'+E(l)+'</div>').join('')||'<div class="mu">No changes yet.</div>')+`</div></details></div>`;
+
+  return h;
+}
+
+/* ====== COMPANIES VIEW (old vHome content) ====== */
+function vCompanies(){
   const un=C.filter(c=>jdOf(c)==null&&!gone(c));
   const allLive=C.filter(c=>!gone(c));
   const uniquePeople=new Set(allLive.map(c=>(c.em||c.ph||c.n).toLowerCase())).size;
   const multiCount=getMultiJdCandidates().length;
   const slCount=Object.keys(S.sl).length;
-  let h=head('PwD Disability Job Fair','Candidate screening & shortlisting dashboard');
-  // Stats bar
+  let h=head('Companies & JDs',`${D.cos.length} companies · ${D.jds.length} JDs · ${uniquePeople} unique candidates`);
   h+=`<div class="stats-bar">
     <div class="stat"><div class="stat-val">${uniquePeople}</div><div class="stat-label">Total People</div></div>
     <div class="stat"><div class="stat-val">${D.jds.length}</div><div class="stat-label">Total JDs</div></div>
@@ -422,8 +583,199 @@ function vHome(){
    h+=`<a class="card" href="#/c/${i}"><b>${E(n)}</b><div class="mu">${js.length} JD${js.length==1?'':'s'}, ${s.n?s.n+' candidate'+(s.n==1?'':'s'):'no applicants yet'}</div>${s.n?`<div class="chips">${chips(s)}</div>`:''}</a>`;});
   if(un.length)h+=`<a class="card warn" href="#/u"><b>Unassigned</b><div class="mu">${un.length} candidates whose role matched no JD</div></a>`;
   h+='</div>';
-  // Change log
-  h+='<details><summary>Change log ('+S.log.length+')</summary>'+(S.log.map(l=>'<div class="mu">'+E(l)+'</div>').join('')||'<div class="mu">No changes yet.</div>')+'</details>';
+  return h;
+}
+
+/* ====== CALLER COORDINATION ====== */
+function getCallerNames(){
+  if(S.callers&&S.callers.length)return S.callers;
+  return DEFAULT_CALLERS;
+}
+function getCallerForCand(cid){return(S.ov[cid]&&S.ov[cid].caller)||null;}
+function setCallerForCand(cid,caller){S.ov[cid]=Object.assign(S.ov[cid]||{},caller?{caller}:{caller:null});save();}
+function getCallStatus(cid){return(S.ov[cid]&&S.ov[cid].callStatus)||'Not Contacted';}
+function setCallStatus(cid,st2){S.ov[cid]=Object.assign(S.ov[cid]||{},{callStatus:st2});save();}
+function getCallerData(){
+  const callers=getCallerNames();
+  const data={};
+  callers.forEach(name=>{data[name]={name,total:0,contacted:0,eligible:0,pending:0,callbacks:0,cands:[]};});
+  C.forEach(c=>{
+    if(gone(c))return;
+    const caller=getCallerForCand(c.id);
+    if(!caller||!data[caller])return;
+    data[caller].total++;
+    data[caller].cands.push(c);
+    const cs=getCallStatus(c.id);
+    if(['Contacted','Interested','Not Interested','Screening Pending','Eligible','Not Eligible'].includes(cs))data[caller].contacted++;
+    if(cs==='Eligible')data[caller].eligible++;
+    if(['Not Contacted','Call Pending','No Answer'].includes(cs))data[caller].pending++;
+    if(cs==='Callback Required')data[caller].callbacks++;
+  });
+  return data;
+}
+
+function vCallers(){
+  const callerData=getCallerData();
+  const callerNames=getCallerNames();
+  let h=head('Caller Coordination','Assign companies to callers and track screening progress');
+  // Caller setup
+  h+=`<div class="mgmt-section"><h2>⚙️ Manage Callers</h2>
+    <div class="mu" style="margin-bottom:8px">Enter caller names (one per line). These are the TA team members making screening calls.</div>
+    <textarea id="caller-names-edit" rows="5" style="width:100%;max-width:400px;padding:8px;border:1px solid var(--bd);border-radius:8px;font:inherit;font-size:13px;background:var(--bg);color:var(--tx)">${E(callerNames.join('\n'))}</textarea>
+    <div class="act" style="margin-top:8px"><button data-save-callers>Save Caller Names</button></div>
+  </div>`;
+  // Per-caller view
+  callerNames.forEach(callerName=>{
+    const cl=callerData[callerName]||{total:0,contacted:0,eligible:0,pending:0,callbacks:0,cands:[]};
+    const initial=(callerName||'?').charAt(0).toUpperCase();
+    h+=`<div class="caller-card">
+      <div class="caller-header">
+        <div class="caller-avatar">${initial}</div>
+        <div><div class="caller-name">${E(callerName)}</div>
+        <div class="caller-meta">${cl.total} assigned · ${cl.contacted} contacted · ${cl.eligible} eligible</div></div>
+      </div>
+      <div class="caller-stats">
+        <div class="cstat"><div class="cstat-val">${cl.total}</div><div class="cstat-label">Assigned</div></div>
+        <div class="cstat"><div class="cstat-val">${cl.contacted}</div><div class="cstat-label">Contacted</div></div>
+        <div class="cstat"><div class="cstat-val" style="${cl.pending>0?'color:var(--y)':''}">${cl.pending}</div><div class="cstat-label">Pending</div></div>
+        <div class="cstat"><div class="cstat-val" style="${cl.callbacks>0?'color:var(--r)':''}">${cl.callbacks}</div><div class="cstat-label">Callbacks</div></div>
+        <div class="cstat"><div class="cstat-val" style="color:var(--g)">${cl.eligible}</div><div class="cstat-label">Eligible</div></div>
+      </div>`;
+    if(cl.cands.length){
+      h+=`<div class="tw"><table class="mgmt-table"><thead><tr><th>Candidate</th><th>JD</th><th>Experience</th><th>Location</th><th>Call Status</th><th>CV</th></tr></thead><tbody>`;
+      cl.cands.slice(0,20).forEach(c=>{
+        const j=D.jds[jdOf(c)];
+        const cs=getCallStatus(c.id);
+        const statusCls=cs==='Eligible'?'sub-selected':cs==='Callback Required'?'sub-pending':cs==='Not Interested'||cs==='Not Eligible'?'sub-rejected':'';
+        h+=`<tr><td>${c.cv?`<a href="${E(c.cv)}" target="_blank" rel="noopener">${E(c.n)}</a>`:`<b>${E(c.n)}</b>`}</td>
+          <td>${j?E(j.t):'—'}</td>
+          <td>${E(c.e||'—')}</td>
+          <td>${E(c.loc||'—')}</td>
+          <td><select data-csstatus="${c.id}" style="font-size:12px;padding:2px 6px">${CALL_STATUS.map(s2=>`<option value="${s2}" ${s2===cs?'selected':''}>${s2}</option>`).join('')}</select></td>
+          <td>${c.cv?`<a href="${E(c.cv)}" target="_blank" rel="noopener" style="font-size:12px">CV</a>`:'—'}</td>
+        </tr>`;
+      });
+      if(cl.cands.length>20)h+=`<tr><td colspan="6" class="mu">...and ${cl.cands.length-20} more. Assign more from JD pages.</td></tr>`;
+      h+=`</tbody></table></div>`;
+    } else {
+      h+=`<p class="mu">No candidates assigned to this caller yet. Go to a JD page and use "Assign Caller" on candidate cards.</p>`;
+    }
+    h+=`</div>`;
+  });
+  return h;
+}
+
+/* ====== HR SUBMISSION TRACKER ====== */
+function vSubmission(){
+  const subs=S.submissions;
+  const subList=Object.entries(subs).map(([id,sub])=>({id,...sub}));
+  subList.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  let h=head('HR Submission & Interview Tracker',`${subList.length} profiles tracked`);
+  h+=`<div class="act" style="margin-bottom:14px">
+    <button data-add-sub>+ Add Submission</button>
+    <span class="mu" style="margin-left:8px">Track profiles submitted to HR, interview status and feedback.</span>
+  </div>`;
+
+  // Stats
+  const byStatus={};
+  subList.forEach(s2=>{byStatus[s2.status||'Pending']=(byStatus[s2.status||'Pending']||0)+1;});
+  h+=`<div class="mgmt-grid" style="margin-bottom:14px">`;
+  SUB_STATUS.concat(['Pending']).forEach(st2=>{
+    if(byStatus[st2]){
+      h+=`<div class="mgmt-stat"><div class="mgmt-stat-val">${byStatus[st2]}</div><div class="mgmt-stat-label">${st2}</div></div>`;
+    }
+  });
+  h+=`</div>`;
+
+  if(!subList.length){
+    h+=`<div class="card"><b>No submissions tracked yet.</b><p class="mu">Click "+ Add Submission" to record a profile submitted to HR. Only shortlisted candidates should be submitted.</p></div>`;
+    return h;
+  }
+
+  // Group by company
+  const byCompany={};
+  subList.forEach(sub=>{
+    const key=sub.company||'Unknown';
+    if(!byCompany[key])byCompany[key]=[];
+    byCompany[key].push(sub);
+  });
+
+  Object.entries(byCompany).forEach(([company,compSubs])=>{
+    h+=`<div class="mgmt-section"><h2>🏢 ${E(company)} <span class="tag">${compSubs.length}</span></h2>`;
+    compSubs.forEach(sub=>{
+      const stCls=sub.status==='Selected'?'sub-selected':sub.status==='Rejected'?'sub-rejected':sub.status==='Interview Scheduled'?'sub-interview':sub.status==='Submitted to HR'?'sub-submitted':'sub-pending';
+      h+=`<div class="sub-card">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px">
+          <b>${E(sub.candidateName||'Unknown')}</b>
+          <span class="sub-status ${stCls}">${E(sub.status||'Pending')}</span>
+          ${sub.jd?`<span class="tag">${E(sub.jd)}</span>`:''}
+          <span class="mu" style="margin-left:auto;font-size:11px">${E(sub.date||'')}</span>
+        </div>
+        <div class="mu">${sub.phone?`📞 ${E(sub.phone)}`:''}${sub.email?` · ${E(sub.email)}`:''}${sub.cv?` · <a href="${E(sub.cv)}" target="_blank" rel="noopener">CV</a>`:''}</div>
+        ${sub.hrContact?`<div class="mu">HR SPOC: ${E(sub.hrContact)}</div>`:''}
+        ${sub.feedback?`<div style="margin-top:4px;font-size:13px;background:var(--bg);padding:4px 8px;border-radius:6px"><b>HR Feedback:</b> ${E(sub.feedback)}</div>`:''}
+        ${sub.interviewDate?`<div class="mu">Interview: ${E(sub.interviewDate)}</div>`:''}
+        <div class="act" style="margin-top:8px">
+          <select data-sub-status="${sub.id}" style="font-size:12px">${SUB_STATUS.map(st2=>`<option value="${st2}" ${st2===sub.status?'selected':''}>${st2}</option>`).join('')}</select>
+          <button data-sub-feedback="${sub.id}" style="font-size:12px">Add Feedback</button>
+          <button class="dng" data-sub-del="${sub.id}" style="font-size:12px">Remove</button>
+        </div>
+      </div>`;
+    });
+    h+=`</div>`;
+  });
+  return h;
+}
+
+/* ====== JOB FAIR ATTENDANCE ====== */
+function vJobFair(){
+  const attend=S.jfAttend;
+  const attendList=Object.entries(attend).map(([id,a])=>({id,...a}));
+  attendList.sort((a,b)=>(a.candidateName||'').localeCompare(b.candidateName||''));
+  let h=head('Job Fair Attendance & Travel','Track candidate invitations, confirmations and attendance');
+  // Stats
+  const byStatus={};
+  attendList.forEach(a=>{byStatus[a.status||'Invitation Sent']=(byStatus[a.status||'Invitation Sent']||0)+1;});
+  h+=`<div class="mgmt-grid" style="margin-bottom:14px">`;
+  JF_STATUS.forEach(st2=>{
+    if(byStatus[st2]){
+      const cls=st2==='Confirmed'||st2==='Travel Arranged'||st2==='Attended'?'jf-confirmed':st2==='Declined'||st2==='No Show'||st2==='Cancelled'?'jf-declined':'jf-pending';
+      h+=`<div class="mgmt-stat"><div class="mgmt-stat-val">${byStatus[st2]}</div><div class="mgmt-stat-label">${st2}</div></div>`;
+    }
+  });
+  h+=`</div>`;
+  h+=`<div class="act" style="margin-bottom:14px">
+    <button data-jf-add-sl>+ Add from Shortlist</button>
+    <button data-jf-add>+ Add Manually</button>
+  </div>`;
+  if(!attendList.length){
+    h+=`<div class="card"><b>No attendance records yet.</b><p class="mu">Click "+ Add from Shortlist" to bulk-invite shortlisted candidates. Track confirmation, travel and attendance on the day.</p></div>`;
+    return h;
+  }
+  // Group by company
+  const byCompany={};
+  attendList.forEach(a=>{const key=a.company||'General';if(!byCompany[key])byCompany[key]=[];byCompany[key].push(a);});
+  Object.entries(byCompany).forEach(([company,items])=>{
+    h+=`<div class="mgmt-section"><h2>🏢 ${E(company)} <span class="tag">${items.length}</span></h2>`;
+    items.forEach(a=>{
+      const stCls=a.status==='Confirmed'||a.status==='Travel Arranged'||a.status==='Attended'?'jf-confirmed':a.status==='Declined'||a.status==='No Show'||a.status==='Cancelled'?'jf-declined':'jf-pending';
+      h+=`<div class="jf-card">
+        <div style="flex:1">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <b>${E(a.candidateName)}</b>
+            <span class="jf-badge ${stCls}">${E(a.status||'Invitation Sent')}</span>
+            ${a.jd?`<span class="tag">${E(a.jd)}</span>`:''}
+          </div>
+          <div class="mu" style="margin-top:4px">${a.phone?`📞 ${E(a.phone)}`:''}${a.travel?` | Travel: ${E(a.travel)}`:''}</div>
+          ${a.remarks?`<div style="font-size:12px;color:var(--mu);margin-top:2px">${E(a.remarks)}</div>`:''}
+        </div>
+        <div style="flex-shrink:0">
+          <select data-jf-status="${a.id}" style="font-size:12px">${JF_STATUS.map(st2=>`<option value="${st2}" ${st2===a.status?'selected':''}>${st2}</option>`).join('')}</select>
+        </div>
+      </div>`;
+    });
+    h+=`</div>`;
+  });
   return h;
 }
 
@@ -1791,7 +2143,7 @@ function render(){
   if(!D)return;
   updateNav();
   const[v,a]=location.hash.slice(2).split('/');
-  app.innerHTML=v==='c'?vCo(a):v==='j'?vJd(a):v==='u'?vUn():v==='multi'?vMulti():v==='shortlist'?vShortlist():v==='cv'?vCvMatch():v==='pool'?vPoolUpload():v==='uploaded-cvs'?vUploadedCvs():vHome();
+  app.innerHTML=v==='c'?vCo(a):v==='j'?vJd(a):v==='u'?vUn():v==='multi'?vMulti():v==='shortlist'?vShortlist():v==='cv'?vCvMatch():v==='pool'?vPoolUpload():v==='uploaded-cvs'?vUploadedCvs():v==='companies'?vCompanies():v==='callers'?vCallers():v==='submission'?vSubmission():v==='jobfair'?vJobFair():vHome();
   // Bind CV upload events
   if(v==='cv'&&!cvState.loading&&!cvState.results&&!cvState.batchDone){
     const drop=document.getElementById('cv-drop');
@@ -1818,9 +2170,20 @@ function render(){
   }
 }
 
-// Delegated events
-app.addEventListener('change',e=>{const t=e.target,c=C.find(x=>x.id===(t.dataset.mv||t.dataset.as));if(!c||!t.value)return;
-  if(t.dataset.mv)set(c.id,{z:t.value},`${c.n}: ${ZN[zone(c)]} to ${ZN[t.value]}`);else set(c.id,{jd:+t.value},`${c.n}: assigned to ${D.jds[+t.value].t}`)});
+// Delegated change events
+app.addEventListener('change',e=>{
+  const t=e.target;
+  const c=C.find(x=>x.id===(t.dataset.mv||t.dataset.as));
+  if(c&&t.value){
+    if(t.dataset.mv)set(c.id,{z:t.value},`${c.n}: ${ZN[zone(c)]} to ${ZN[t.value]}`);else set(c.id,{jd:+t.value},`${c.n}: assigned to ${D.jds[+t.value].t}`);
+  }
+  // Call status update
+  if(t.dataset.csstatus){setCallStatus(t.dataset.csstatus,t.value);render();}
+  // Sub status update
+  if(t.dataset.subStatus){if(S.submissions[t.dataset.subStatus])S.submissions[t.dataset.subStatus].status=t.value;save();render();}
+  // JF attendance status update
+  if(t.dataset.jfStatus){if(S.jfAttend[t.dataset.jfStatus])S.jfAttend[t.dataset.jfStatus].status=t.value;save();render();}
+});
 
 app.addEventListener('input',e=>{
   const t=e.target;
@@ -1856,12 +2219,71 @@ app.addEventListener('click',e=>{const b=e.target.closest('button,a[data-slrm]')
   else if('dlUcvs' in d){dlUploadedCvs()}
   else if('clearUcvs' in d){if(confirm('Clear all '+S.uploadedCvs.length+' uploaded CVs? This cannot be undone.')){S.uploadedCvs=[];save();render()}}
   else if(d.rmUcv){const idx=S.uploadedCvs.findIndex(u=>u._id===d.rmUcv);if(idx>=0){S.uploadedCvs.splice(idx,1);save();render()}}
+  // ====== GiftAbled Actions ======
+  else if('saveCallers' in d){
+    const ta=document.getElementById('caller-names-edit');
+    if(ta){S.callers=ta.value.split('\n').map(s=>s.trim()).filter(Boolean);save();render();}
+  }
+  else if('addSub' in d){
+    const sl=getShortlisted();
+    if(!sl.length){alert('No shortlisted candidates. Shortlist candidates first from JD pages.');return;}
+    const names=sl.map(({c,jd},i)=>`${i+1}. ${c.n}${jd?' → '+jd.t:''}`).join('\n');
+    const pick=prompt('Select a candidate number to add to HR Submission:\n\n'+names);
+    if(!pick)return;
+    const idx=parseInt(pick)-1;
+    if(isNaN(idx)||idx<0||idx>=sl.length)return;
+    const {c,jd}=sl[idx];
+    const hrContact=prompt('HR contact/SPOC name (optional):','');
+    const subId='sub_'+(Date.now());
+    S.submissions[subId]={candidateName:c.n,phone:c.ph||'',email:c.em||'',cv:c.cv||'',jd:jd?jd.t:'',company:jd?D.cos[jd.c]:'',coIdx:jd?jd.c:-1,hrContact:hrContact||'',status:'Approved for Submission',date:new Date().toLocaleDateString('en-IN'),feedback:'',interviewDate:''};
+    S.log.unshift(new Date().toLocaleString()+': Added '+c.n+' to HR Submission for '+(jd?jd.t:'?'));
+    S.log=S.log.slice(0,100);
+    save();render();
+  }
+  else if(d.subFeedback){
+    const sub=S.submissions[d.subFeedback];
+    if(!sub)return;
+    const fb=prompt('Enter HR feedback for '+sub.candidateName+':',sub.feedback||'');
+    if(fb===null)return;
+    sub.feedback=fb;
+    const intDate=prompt('Interview date (optional, e.g. 30 Oct 2026):',sub.interviewDate||'');
+    if(intDate!==null)sub.interviewDate=intDate;
+    save();render();
+  }
+  else if(d.subDel){
+    if(confirm('Remove this submission record?')){delete S.submissions[d.subDel];save();render();}
+  }
+  // Job Fair Attendance
+  else if('jfAddSl' in d){
+    const sl=getShortlisted();
+    if(!sl.length){alert('No shortlisted candidates. Shortlist candidates from JD pages first.');return;}
+    let added2=0;
+    sl.forEach(({c,jd})=>{
+      const jfId='jf_'+c.id;
+      if(!S.jfAttend[jfId]){
+        S.jfAttend[jfId]={candidateName:c.n,phone:c.ph||'',jd:jd?jd.t:'',company:jd?D.cos[jd.c]:'',status:'Invitation Sent',travel:'',remarks:''};
+        added2++;
+      }
+    });
+    S.log.unshift(new Date().toLocaleString()+': Added '+added2+' candidates to Job Fair attendance tracker');
+    S.log=S.log.slice(0,100);
+    save();render();
+  }
+  else if('jfAdd' in d){
+    const name=prompt('Candidate name:');
+    if(!name)return;
+    const phone=prompt('Phone number:','');
+    const company=prompt('Company / JD:','');
+    const jfId='jf_manual_'+Date.now();
+    S.jfAttend[jfId]={candidateName:name,phone:phone||'',jd:'',company:company||'',status:'Invitation Sent',travel:'',remarks:''};
+    save();render();
+  }
 });
 
 addEventListener('hashchange',()=>{pend=null;showRm=false;activeTab='zones';render();scrollTo(0,0);
-  // Sync uploaded CVs nav link active state
   const h2=location.hash;document.querySelectorAll('.nav-links a').forEach(a=>{a.classList.toggle('active',a.getAttribute('href')===h2||((!h2||h2==='#/')&&a.id==='nav-home'))});});
-$('#reset').onclick=()=>{if(confirm('This will reset ALL your changes (zone moves, shortlists, notes, custom questions, pool candidates, uploaded CVs). Continue?')){S={ov:{},log:[],sl:{},qe:{},pool:[],uploadedCvs:[]};save();rebuildCandidateList();render()}};
+$('#reset').onclick=()=>{if(confirm('This will reset ALL your changes (zone moves, shortlists, notes, custom questions, pool candidates, callers, submissions, job fair data). Continue?')){S={ov:{},log:[],sl:{},qe:{},pool:[],uploadedCvs:[],callers:[],submissions:{},jfAttend:{}};save();rebuildCandidateList();render()}};
+
 
 const api=async p=>{const r=await fetch('/api/data',{headers:{'x-password':p||''}});if(!r.ok)throw r.status;return r.json()};
 function start(d){

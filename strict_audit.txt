@@ -1,0 +1,60 @@
+﻿======================================================================
+STRICT RULE AUDIT: CGI and Hitachi
+======================================================================
+
+--- [CGI] AI Fresher (52 candidates) ---
+  CLEAN - no violations
+  Sample: Harshit Ranjan ( exp), Abhay Tiwari ( exp), Divyansh Gautam ( exp), Krishna Dixit ( exp), Mohd Kaif ( exp)
+
+--- [CGI] IT Support (11 candidates) ---
+  CLEAN - no violations
+  Sample: Pruthvi raj r ( exp), AbdulRaheem ( exp), Dhanush R ( exp), Syed Adil ( exp), Ishu Kumar ( exp)
+
+--- [CGI] .NET Fresher (1 candidates) ---
+  CLEAN - no violations
+  Sample: Tarique Shaikh ( exp)
+
+--- [Hitachi] Java Developer (16 candidates) ---
+  CLEAN - no violations
+  Sample: Faizan Ahmed Ansari (4 Years 10 Months exp), Marediya (2 exp), Anil Jainapur (8 years of work experience exp), Sharma (4 exp), Kumar Vhatkar (1-3 years exp)
+
+--- [Hitachi] Full Stack Developer (22 candidates) ---
+  CLEAN - no violations
+  Sample: Tarique Shaikh (3 exp), Shiva Shashank (6.5 exp), Devalla Thirupathiraju (2 Year(s) 1 Month(s) exp), Rohan Suresh Chavan (2 exp), Aniket Kumar (2 exp)
+
+--- [Hitachi] .NET Developer (7 candidates) ---
+  CLEAN - no violations
+  Sample: Ramesh Shukla (14 exp), Kishan Gohel (10 exp), Tushar Sambhaji Dalvi (2 exp), Tushar Sambhaji Dalvi (1.6 exp), Jugal Chauhan (8+ exp)
+
+--- [Hitachi] Agentic AI Professional (1 candidates) ---
+  CLEAN - no violations
+  Sample: Tarique Shaikh (3 exp)
+
+--- [Hitachi] Generative AI Professional (2 candidates) ---
+  CLEAN - no violations
+  Sample: Talla Sai Sree (6 exp), Shresth Sinha (1-3 years exp)
+
+--- [Hitachi] Software Developer (32 candidates) ---
+  CLEAN - no violations
+  Sample: Anil Jainapur (8 years of work experience exp), Faizan Ahmed Ansari (4 Years 10 Months exp), Md Shadan Altmash (5 Year(s) 6 Month(s) exp), Aniket Kumar (2 exp), Nitin Prajapati (2 Year(s) 0 Month(s) exp)
+
+--- [Hitachi] Software Tester (15 candidates) ---
+  CLEAN - no violations
+  Sample: Chandrakant Nannaware (8.5 years exp), Srinivas Kasavajjula (More than 6 years exp), Jitendra Kumar Sharma (6 Year(s) 6 Month(s) exp), Anil Jainapur (8 years of work experience exp), Anil Jainapur (8 years of work experience exp)
+
+--- [Hitachi] Finance (113 candidates) ---
+  CLEAN - no violations
+  Sample: Kumar N (17 Year(s) 0 Month(s) exp), Archana Kumari (5+ exp), Rajesh Basa (More than 6 years exp), Shefali Kulkarni (4 exp), Lakshmanna GN (More than 6 years exp)
+
+--- [Hitachi] Human Resources (HR) (3 candidates) ---
+  CLEAN - no violations
+  Sample: Yusuf Dawasaz (5+ Years exp), Heena Sharma (more than 3 years exp), Neha Saraf (6 Year(s) 6 Month(s) exp)
+
+--- [Hitachi] Procurement (79 candidates) ---
+  CLEAN - no violations
+  Sample: P.Venkateswara Rao (17 Year(s) 0 Month(s) exp), Anil Kumar (10 Year(s) 0 Month(s) exp), T. Ravi kiran (2 Year(s) 6 Month(s) exp), Aniket Lolayekar (17 Year(s) 0 Month(s) exp), Vaidehi vichare (14 Year(s) 0 Month(s) exp)
+
+======================================================================
+TOTAL HARD VIOLATIONS: 0
+ALL CLEAN - CGI and Hitachi matching is correct!
+======================================================================

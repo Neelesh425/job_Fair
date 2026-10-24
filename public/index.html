@@ -253,15 +253,15 @@ function parseYrs(t){
   const v=t.match(/\d+(?:\.\d+)?/g);
   if(!v||parseFloat(v[0])>40)return null;
   if(/month/.test(t)&&!/year/.test(t)&&v.length===1)return Math.round(parseFloat(v[0])/12*10)/10;
-  if(v.length>=2&&/\d\s*[-–to]\s*\d/.test(t))return(parseFloat(v[0])+parseFloat(v[1]))/2;
+  if(v.length>=2&&/\d\s*[-\u2013to]\s*\d/.test(t))return(parseFloat(v[0])+parseFloat(v[1]))/2;
   return parseFloat(v[0]);
 }
 function parseExpRange(e,title){
-  if(!e)e='';
-  e=e.toLowerCase();title=(title||'').toLowerCase();
+  if(!e)e="";
+  e=e.toLowerCase();title=(title||"").toLowerCase();
   if(/fresher/.test(e)&&/experience/.test(e))return null;
   if(/fresher/.test(e)||((/fresher/.test(title))&&!e))return[0,1];
-  let m=e.match(/(\d+)\s*[–\-]\s*(\d+)/);
+  let m=e.match(/(\d+)\s*[\u2013\-]\s*(\d+)/);
   if(m)return[parseFloat(m[1]),parseFloat(m[2])];
   m=e.match(/(\d+)\s*(\+|yr|year)/);
   return m?[parseFloat(m[1]),null]:null;
@@ -269,36 +269,93 @@ function parseExpRange(e,title){
 function expMatch(candExp,jdExp,jdTitle){
   const y=parseYrs(candExp);
   const rng=parseExpRange(jdExp,jdTitle);
-  if(y===null||rng===null)return {match:'unknown',y,rng,strict:false};
-  const [lo,hi]=rng;
-  const inRange=y>=lo && (hi===null||y<=hi+2);
-  return {match:inRange?'yes':'no',y,rng,strict:!inRange};
+  if(y===null||rng===null)return{match:"unknown",y,rng,strict:false};
+  const[lo,hi]=rng;
+  const inRange=y>=lo&&(hi===null||y<=hi+2);
+  return{match:inRange?"yes":"no",y,rng,strict:!inRange};
 }
 
-/* ====== AI zone (recalculated with disability & experience strictness) ====== */
+/* ====== Qualification Red-Line Check ====== */
+function qualMatch(candQ,jdQ){
+  if(!jdQ||!jdQ.trim())return{ok:true,label:"No qualification requirement"};
+  const q=(candQ||"").toLowerCase();
+  const jq=jdQ.toLowerCase();
+  const bcoms=["b.com","bcom","b com","bachelor of commerce","commerce graduate","commerce"];
+  const mcom=["m.com","mcom","m com","master of commerce","postgraduate","pg"];
+  const btech=["b.tech","btech","b tech","bachelor of technology","b.e","be"];
+  const mba=["mba","master of business"];
+  const mca=["mca","master of computer"];
+  const anyGrad=["graduate","graduation","degree","bachelor"];
+  const needsCommerce=bcoms.some(k=>jq.includes(k))||jq.includes("account")||jq.includes("finance");
+  const hasBcom=bcoms.some(k=>q.includes(k));
+  const hasMcom=mcom.some(k=>q.includes(k));
+  const hasRelated=hasBcom||hasMcom||q.includes("commerce")||q.includes("account")||q.includes("finance")||q.includes("financial")||mba.some(k=>q.includes(k));
+  const hasGrad=anyGrad.some(k=>q.includes(k))||hasBcom||hasMcom||btech.some(k=>q.includes(k))||mba.some(k=>q.includes(k))||mca.some(k=>q.includes(k))||q.includes("bsc")||q.includes("b.sc");
+  if(needsCommerce){
+    return{ok:hasRelated,label:hasRelated?"Qualification ✓":"❌ Qual red-line: Commerce/Accounting/Finance degree required"};
+  }
+  if(jq.includes("graduate")||jq.includes("bachelor")){
+    return{ok:hasGrad,label:hasGrad?"Qualification ✓":"❌ Qual red-line: Graduate degree required"};
+  }
+  return{ok:true,label:"Qualification ✓"};
+}
+
+/* ====== JD Skill Keyword Scoring ====== */
+function jdSkillScore(c,j){
+  if(!j||!j.sk)return{hits:0,total:0,pct:0,hitList:[],missList:[]};
+  const candText=((c.sk||"")+" "+(c.q||"")+" "+(c.role||"")+" "+(c.org||"")).toLowerCase();
+  const jdKeywords=j.sk.toLowerCase().split(/[\s,\/\.\-]+/).filter(w=>w.length>2);
+  const unique=[...new Set(jdKeywords)];
+  let hits=0;const hitList=[];const missList=[];
+  unique.forEach(kw=>{
+    const matched=candText.includes(kw)||(kw.length>5&&(candText.includes(kw.slice(0,5))||candText.includes(kw.slice(0,-2))));
+    if(matched){hits++;hitList.push(kw);}else{missList.push(kw);}
+  });
+  const pct=unique.length>0?Math.round(hits/unique.length*100):0;
+  return{hits,total:unique.length,pct,hitList,missList};
+}
+
+/* ====== AI zone (experience, qualification & skill red-lines) ====== */
 function ai(c,j){
-  if(c._ai && c._ai_jid===j?.id)return c._ai;
-  const base=c._a||(c._a={s:c.sc,z:c.sc>=D.thr[0]?'g':c.sc>=D.thr[1]?'y':'r',r:c.rs});
+  if(c._ai&&c._ai_jid===j?.id)return c._ai;
+  const base=c._a||(c._a={s:c.sc,z:c.sc>=D.thr[0]?"g":(c.sc>=D.thr[1]?"y":"r"),r:c.rs});
   if(!j){c._ai=base;c._ai_jid=null;return base}
   const dc=disCheck(c);
   const em=expMatch(c.e,j.e,j.t);
+  const qm=qualMatch(c.q,j.q||"");
+  const isPool=c.pool||(c.sc===50&&!(c.rs&&c.rs.length>10));
   let s=base.s;
-  let reasons=[base.r];
-  // Penalty: disability criteria not met -> cannot be green
-  if(!dc.ok){
-    reasons.push('⚠ Disability: '+dc.label);
-    if(s>=D.thr[0])s=D.thr[0]-1; // drop from green
+  let reasons=[base.r||""];
+  if(isPool&&j.sk){
+    const sk=jdSkillScore(c,j);
+    s=30+Math.round(sk.pct*0.6);
+    reasons=["Skill match: "+sk.pct+"% ("+sk.hits+"/"+sk.total+" keywords)"];
+    if(sk.hitList.length)reasons.push("✓ "+sk.hitList.slice(0,5).join(", "));
+    if(sk.missList.length>0&&sk.missList.length<=5)reasons.push("✗ Missing: "+sk.missList.join(", "));
+    else if(sk.missList.length>5)reasons.push("✗ Missing "+sk.missList.length+" skills");
   }
-  // Penalty: experience clearly out of range -> cannot be green
-  if(em.strict){
-    reasons.push('⚠ Experience mismatch: candidate '+em.y+'yrs vs JD '+(j.e||'not specified'));
+  // RED LINE 1: disability
+  if(!dc.ok){
+    reasons.push("⚠ Disability: "+dc.label);
     if(s>=D.thr[0])s=D.thr[0]-1;
   }
-  const z=s>=D.thr[0]?'g':s>=D.thr[1]?'y':'r';
-  const result={s,z,r:reasons.join('; ')};
+  // RED LINE 2: experience
+  if(em.strict){
+    reasons.push("[EXP RED-LINE] "+em.y+"yrs vs JD "+(j.e||"not specified"));
+    if(s>=D.thr[0])s=D.thr[0]-1;
+    s=Math.min(s,D.thr[1]-1);
+  }
+  // RED LINE 3: qualification
+  if(!qm.ok){
+    reasons.push(qm.label);
+    if(s>=D.thr[0])s=D.thr[0]-1;
+  }
+  const z=s>=D.thr[0]?"g":(s>=D.thr[1]?"y":"r");
+  const result={s,z,r:reasons.join("; ")};
   c._ai=result;c._ai_jid=j?.id;
   return result;
 }
+
 const jdOf=c=>S.ov[c.id]?.jd??c.jd;
 const zone=(c,j)=>{
   const ov=S.ov[c.id]?.z;
@@ -364,6 +421,10 @@ function genQuestions(j){
   if(/picker|packer|warehouse|retail/i.test(t))qs.push({cat:'Role-Specific',q:'Are you comfortable with physical tasks such as standing, lifting, or moving inventory for extended periods?'});
   if(/account|finance/i.test(t))qs.push({cat:'Role-Specific',q:'Describe your experience with financial reporting, accounting software, or ERP systems.'});
   if(/plant|engineering|automation/i.test(t))qs.push({cat:'Role-Specific',q:'What experience do you have with plant operations, automation systems, or industrial equipment?'});
+  if(/procurement|buyer|purchase/i.test(t))qs.push({cat:'Role-Specific',q:'Describe your experience managing purchase orders, supplier coordination and procurement operations. Which ERP systems (SAP, Oracle PO) have you used?'},{cat:'Role-Specific',q:'How do you handle supplier rebates, inventory valuation and WMS/ERP reconciliation?'});
+  if(/fixed asset|asset accountant/i.test(t))qs.push({cat:'Role-Specific',q:'Walk us through your experience with fixed asset accounting: capitalization, depreciation, and asset reconciliation. Have you used Oracle Fusion Financials or BlackLine?'},{cat:'Role-Specific',q:'How do you handle month-end closing for fixed assets and what Power BI reports have you built?'});
+  if(/cash application|accounts receivable|receivable/i.test(t))qs.push({cat:'Role-Specific',q:'Describe your Order-to-Cash (O2C) experience — how do you handle unapplied cash, invoice reconciliation, and customer query management?'},{cat:'Role-Specific',q:'Which cash application tools have you used: Oracle, HighRadius, APRO, or similar? How do you produce customer ageing reports?'});
+  if(/full stack|fullstack/i.test(t))qs.push({cat:'Role-Specific',q:'Describe a full-stack project where you used React.js and Node.js/Express.js. How did you structure the PostgreSQL schema and REST APIs?'},{cat:'Role-Specific',q:'How do you approach CI/CD pipelines, production support, and database optimization in your current/previous role?'});
   return qs;
 }
 function getJdQuestions(jid){
